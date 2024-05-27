@@ -1,8 +1,8 @@
+import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { NextUIProvider } from "@nextui-org/react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="h-full">
+      <body className='h-full dark:bg-zinc-800'>
+        <ThemeProvider>
+          <NextUIProvider>
+            {children}
+          </NextUIProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
