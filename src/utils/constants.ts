@@ -1,3 +1,3 @@
 export const constants = {
-  themeKey: 'onde-ir:theme'
-}
+  themeKey: 'onde-ir:theme',
+};
