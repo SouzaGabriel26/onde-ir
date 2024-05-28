@@ -1,14 +1,16 @@
-'use client'
+'use client';
 
-import { useTheme } from "@/contexts/ThemeProvider";
-import { sanitizeClassName } from "@/utils/sanitizeClassName";
-import { Button } from "@nextui-org/react";
-import { Moon } from "./icons/Moon";
-import { Sun } from "./icons/Sun";
+import { Button } from '@nextui-org/react';
+
+import { useTheme } from '@/contexts/ThemeProvider';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
+
+import { Moon } from './icons/Moon';
+import { Sun } from './icons/Sun';
 
 type ToggleThemeButtonProps = {
   className?: string;
-}
+};
 
 export function ToggleThemeButton({ className }: ToggleThemeButtonProps) {
   const { handleSetTheme, theme } = useTheme();
@@ -16,26 +18,22 @@ export function ToggleThemeButton({ className }: ToggleThemeButtonProps) {
   return (
     <Button
       onClick={handleSetTheme}
-      className={sanitizeClassName(`
+      className={sanitizeClassName(
+        `
+        group
         h-fit
         w-fit
-        p-2
         rounded-full
         border
+        p-2
         hover:brightness-110
-        group
       `,
-        className
-      )}>
+        className,
+      )}
+    >
       <label title={theme} className="cursor-pointer">
-        {
-          theme === 'dark' ? (
-            <Sun />
-          ) : (
-            <Moon />
-          )
-        }
+        {theme === 'dark' ? <Sun /> : <Moon />}
       </label>
     </Button>
-  )
+  );
 }

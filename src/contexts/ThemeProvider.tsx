@@ -1,14 +1,15 @@
-'use client'
+'use client';
 
-import { constants } from "@/utils/constants";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from 'react';
+
+import { constants } from '@/utils/constants';
 
 export type Theme = 'light' | 'dark';
 
 type ThemeContextProps = {
-  theme: Theme,
-  handleSetTheme: () => void
-}
+  theme: Theme;
+  handleSetTheme: () => void;
+};
 
 const ThemeContext = createContext({} as ThemeContextProps);
 
@@ -32,21 +33,20 @@ export function ThemeProvider({ children }: React.PropsWithChildren<{}>) {
   }, [theme]);
 
   function handleSetTheme() {
-    setTheme(previousTheme => (
-      previousTheme === 'light' ? 'dark' : 'light'
-    ));
+    setTheme((previousTheme) => (previousTheme === 'light' ? 'dark' : 'light'));
   }
 
   return (
-    <ThemeContext.Provider value={{
-      theme,
-      handleSetTheme,
-    }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        handleSetTheme,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
-  )
+  );
 }
-
 
 export function useTheme() {
   return useContext(ThemeContext);
