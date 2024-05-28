@@ -3,8 +3,7 @@
 import { constants } from "@/utils/constants";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const supportedThemes = ['light', 'dark'];
-export type Theme = typeof supportedThemes[number];
+export type Theme = 'light' | 'dark';
 
 type ThemeContextProps = {
   theme: Theme,
@@ -16,7 +15,7 @@ const ThemeContext = createContext({} as ThemeContextProps);
 export function ThemeProvider({ children }: React.PropsWithChildren<{}>) {
   const [theme, setTheme] = useState<Theme>(() => {
     const storedTheme = localStorage.getItem(constants.themeKey);
-    if (storedTheme && supportedThemes.includes(storedTheme)) {
+    if (storedTheme && ['light', 'dark'].includes(storedTheme)) {
       return storedTheme as Theme;
     }
     return 'light';
