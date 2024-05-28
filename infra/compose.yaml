@@ -1,0 +1,12 @@
+services:
+  where-to-go-postgres:
+    image: 'postgres'
+    container_name: 'where-to-go-postgres'
+    environment:
+      - POSTGRES_USER=${DEFAULT_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${DEFAULT_POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${DEFAULT_POSTGRES_HOST}
+      - POSTGRES_POST=${DEFAULT_POSTGRES_PORT}
+      - POSTGRES_DB=${DEFAULT_POSTGRES_DB}
+    ports:
+      - '${DEFAULT_POSTGRES_PORT}:5432'

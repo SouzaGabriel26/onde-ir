@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "pnpm services:up && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:compose": "docker compose -f ./infra/compose.yaml --env-file .env",
+    "services:up": "pnpm docker:compose up -d",
+    "services:down": "pnpm docker:compose down"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.0",
