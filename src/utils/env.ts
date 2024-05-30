@@ -1,3 +1,11 @@
+import { config } from 'dotenv';
+
+config();
+
 export const env = Object.freeze({
-  default_database_url: process.env.DEFAULT_DATABASE_URL!,
+  db_user: process.env.DEFAULT_POSTGRES_USER!,
+  db_password: process.env.DEFAULT_POSTGRES_PASSWORD!,
+  db_host: process.env.DEFAULT_POSTGRES_HOST!,
+  db_port: process.env.DEFAULT_POSTGRES_PORT!,
+  default_db: process.env.DEFAULT_POSTGRES_DB!,
 });

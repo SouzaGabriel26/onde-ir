@@ -4,8 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     typecheck: {
-      enabled: true
+      enabled: true,
     },
-    root: './tests'
-  }
-})
+  },
+});
