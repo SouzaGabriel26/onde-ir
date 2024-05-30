@@ -20,4 +20,4 @@ pnpm dev
 
 ## Database Modeling 📅
 
-![modeling](./onde-ir-modelagem.png)
+![modeling](./onde-ir-data-modeling.png)
