@@ -13,11 +13,11 @@ type ToggleThemeButtonProps = {
 };
 
 export function ToggleThemeButton({ className }: ToggleThemeButtonProps) {
-  const { handleSetTheme, theme } = useTheme();
+  const { handleToggleTheme, theme } = useTheme();
 
   return (
     <Button
-      onClick={handleSetTheme}
+      onClick={handleToggleTheme}
       className={sanitizeClassName(
         `
         group
