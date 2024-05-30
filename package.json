@@ -10,7 +10,8 @@
     "docker:compose": "docker compose -f ./infra/compose.yaml --env-file .env",
     "services:up": "pnpm docker:compose up -d",
     "services:down": "pnpm docker:compose down",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.0",
@@ -36,7 +37,8 @@
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^1.6.0"
   },
   "engines": {
     "pnpm": ">=8",
