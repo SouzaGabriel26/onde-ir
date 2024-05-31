@@ -1,6 +1,5 @@
-import { Button } from '@nextui-org/react';
-
 import { Menu } from './icons/Menu';
+import { NavButton } from './NavButton';
 import { ToggleThemeButton } from './ToggleThemeButton';
 
 export function Header() {
@@ -13,13 +12,26 @@ export function Header() {
         justify-between
         border-b
         px-4
+        dark:border-zinc-700
       `}
     >
-      <Button className="h-fit w-fit p-2">
-        <Menu className="dark:stroke-white" />
-      </Button>
+      <div className="group md:w-56">
+        <label
+          htmlFor="sidebar"
+          className="block w-fit cursor-pointer transition-transform hover:scale-105"
+        >
+          <Menu className="dark:stroke-white" />
+          <input type="checkbox" id="sidebar" className="hidden" />
+        </label>
+      </div>
+
       <h1 className="text-2xl">Onde Ir?</h1>
-      <ToggleThemeButton />
+
+      <nav className="flex items-center">
+        <NavButton href="/signin" title="Entrar" />
+        <NavButton href="/signup" title="Cadastrar" />
+        <ToggleThemeButton />
+      </nav>
     </header>
   );
 }
