@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="h-full dark:bg-zinc-800">
+      <body className="h-full bg-slate-100 dark:bg-zinc-950">
         <ThemeProvider>
           <NextUIProvider>{children}</NextUIProvider>
         </ThemeProvider>

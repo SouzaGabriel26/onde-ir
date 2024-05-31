@@ -15,7 +15,7 @@ export function Header() {
         dark:border-zinc-700
       `}
     >
-      <div className="group md:w-56">
+      <div className="md:w-56">
         <label
           htmlFor="sidebar"
           className="block w-fit cursor-pointer transition-transform hover:scale-105"
