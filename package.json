@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm services:up && next dev",
+    "dev": "vitest tests/reset-database.test.ts --watch=false && pnpm services:up && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -11,7 +11,7 @@
     "services:up": "pnpm docker:compose up -d",
     "services:down": "pnpm docker:compose down",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest --exclude **/tests/reset-database.test.ts"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.0",
