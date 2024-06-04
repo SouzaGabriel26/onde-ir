@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vitest tests/reset-database.test.ts --watch=false && pnpm services:up && next dev",
+    "dev": "pnpm services:up && pnpm services:wait && pnpm database:reset && next dev",
     "build": "next build",
     "start": "next start",
     "docker:compose": "docker compose -f ./infra/compose.yaml --env-file .env",
+    "database:reset": "node --import tsx infra/scripts/reset-tables.ts",
+    "services:wait": "node --import tsx infra/scripts/wait-services.ts",
     "services:up": "pnpm docker:compose up -d",
     "services:down": "pnpm docker:compose down",
     "prepare": "husky",
@@ -43,6 +45,7 @@
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.11.2",
     "typescript": "^5",
     "vitest": "^1.6.0"
   },
