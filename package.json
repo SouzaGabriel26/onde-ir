@@ -6,11 +6,14 @@
     "dev": "vitest tests/reset-database.test.ts --watch=false && pnpm services:up && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "docker:compose": "docker compose -f ./infra/compose.yaml --env-file .env",
     "services:up": "pnpm docker:compose up -d",
     "services:down": "pnpm docker:compose down",
     "prepare": "husky",
+    "lint": "pnpm lint:next && pnpm lint:prettier",
+    "lint:next": "next lint --max-warnings=0 --dir .",
+    "lint:prettier": "prettier --check .",
+    "lint:fix": "pnpm eslint --fix . && pnpm prettier --write .",
     "test": "vitest --exclude **/tests/reset-database.test.ts"
   },
   "dependencies": {
