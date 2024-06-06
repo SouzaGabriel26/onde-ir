@@ -12,6 +12,7 @@ INSERT INTO restaurants
     latitude,
     longitude,
     approved,
+    approved_by,
     created_by
   )
 VALUES
@@ -22,6 +23,7 @@ VALUES
     -20.3155,
     -40.3128,
     TRUE,
+    (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -31,6 +33,7 @@ VALUES
     -20.3341,
     -40.2935,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -40,6 +43,7 @@ VALUES
     -20.2976,
     -40.2958,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -49,6 +53,7 @@ VALUES
     -20.1211,
     -40.3075,
     TRUE,
+    (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM user_ids WHERE row_num = 2)
   ),
   (
@@ -58,6 +63,7 @@ VALUES
     -20.3155,
     -40.3058,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 2)
   ),
   (
@@ -67,6 +73,7 @@ VALUES
     -20.6500,
     -40.5090,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -76,6 +83,7 @@ VALUES
     -20.3155,
     -40.2969,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -85,6 +93,7 @@ VALUES
     -20.3274,
     -40.2922,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -94,6 +103,7 @@ VALUES
     -20.3155,
     -40.3010,
     FALSE,
+    NULL,
     (SELECT id FROM user_ids WHERE row_num = 1)
   ),
   (
@@ -103,5 +113,6 @@ VALUES
     -20.2630,
     -40.4166,
     TRUE,
+    (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM user_ids WHERE row_num = 2)
   );

@@ -22,3 +22,4 @@ VALUES
     '$2b$10$Vtq78yo4RxbWPtARY6R7CO2vVeGu1Nd4XASIhxB/PylfTL1/Bf3TG'
   );
 
+-- password: 123456

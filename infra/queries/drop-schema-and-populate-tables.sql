@@ -18,13 +18,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE reset_password_tokens (
-  user_id UUID NOT NULL,
+  user_id UUID NOT NULL REFERENCES users(id),
   reset_token VARCHAR(255) NOT NULL,
   used BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  CONSTRAINT reset_password_tokens_pkey PRIMARY KEY (user_id, reset_token),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  CONSTRAINT reset_password_tokens_pkey PRIMARY KEY (user_id, reset_token)
 );
 
 CREATE TABLE restaurants (
@@ -35,53 +34,42 @@ CREATE TABLE restaurants (
   latitude DOUBLE PRECISION,
   longitude DOUBLE PRECISION,
   approved BOOLEAN DEFAULT FALSE,
-  created_by UUID NOT NULL,
+  approved_by UUID REFERENCES users(id),
+  created_by UUID NOT NULL REFERENCES users(id),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (created_by) REFERENCES users(id)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurant_images (
   id UUID DEFAULT uuid_generate_v4() CONSTRAINT restaurant_images_pkey PRIMARY KEY,
-  restaurant_id UUID NOT NULL,
+  restaurant_id UUID NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
   url VARCHAR(255) NOT NULL,
-  description VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
+  description VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurant_likes (
   id UUID DEFAULT uuid_generate_v4() CONSTRAINT restaurant_likes_pkey PRIMARY KEY,
-  restaurant_id UUID NOT NULL,
-  user_id UUID NOT NULL,
+  restaurant_id UUID NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
   UNIQUE (restaurant_id, user_id)
 );
 
 CREATE TABLE restaurant_comments (
   id UUID DEFAULT uuid_generate_v4() CONSTRAINT restaurant_comments_pkey PRIMARY KEY,
-  restaurant_id UUID NOT NULL,
-  user_id UUID NOT NULL,
-  parent_comment_id UUID,
+  restaurant_id UUID NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  parent_comment_id UUID REFERENCES restaurant_comments(id) ON DELETE CASCADE,
   description VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (parent_comment_id) REFERENCES restaurant_comments(id)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurant_comment_likes (
   id UUID DEFAULT uuid_generate_v4() CONSTRAINT restaurant_comment_likes_pkey PRIMARY KEY,
-  comment_id UUID NOT NULL,
-  user_id UUID NOT NULL,
+  comment_id UUID NOT NULL REFERENCES restaurant_comments(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
-  FOREIGN KEY (comment_id) REFERENCES restaurant_comments(id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
   UNIQUE (comment_id, user_id)
 );
