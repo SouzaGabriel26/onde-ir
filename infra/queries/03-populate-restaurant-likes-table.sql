@@ -1,18 +1,18 @@
 WITH approved_restaurants as (
 	SELECT
-  	id,
-  	created_by as user_id,
-  	ROW_NUMBER() OVER() as row_num
+    id,
+    created_by as user_id,
+    ROW_NUMBER() OVER() as row_num
   FROM
     restaurants
   WHERE
-  	restaurants.approved
+    restaurants.approved
 )
 INSERT INTO restaurant_likes
 	(
     restaurant_id,
     user_id
- 	)
+	)
 VALUES
 	-- restaurant created by user: 1 like
 	(
