@@ -1,4 +1,4 @@
-import { Menu } from './icons/Menu';
+import { Input } from './Input';
 import { NavButton } from './NavButton';
 import { ToggleThemeButton } from './ToggleThemeButton';
 
@@ -15,17 +15,13 @@ export function Header() {
         dark:border-zinc-700
       `}
     >
-      <div className="md:w-56">
-        <label
-          htmlFor="sidebar"
-          className="block w-fit cursor-pointer transition-transform hover:scale-105"
-        >
-          <Menu className="dark:stroke-white" />
-          <input type="checkbox" id="sidebar" className="hidden" />
-        </label>
-      </div>
-
       <h1 className="text-2xl">Onde Ir?</h1>
+
+      <Input
+        id="input_search"
+        label="Search for resturants"
+        className="md:w-96"
+      />
 
       <nav className="flex items-center">
         <NavButton href="/signin" title="Entrar" />
