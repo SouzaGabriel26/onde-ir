@@ -17,7 +17,7 @@ export function Input({ label, id, className, ...props }: InputProps) {
             peer
             h-12
             w-full
-            rounded
+            rounded-lg
             border
             border-gray-300
             px-3
@@ -41,7 +41,7 @@ export function Input({ label, id, className, ...props }: InputProps) {
           text-xs
           text-gray-500
           transition-all
-          peer-placeholder-shown:top-3
+          peer-placeholder-shown:top-3.5
           peer-placeholder-shown:text-sm
           dark:text-slate-200
         `}

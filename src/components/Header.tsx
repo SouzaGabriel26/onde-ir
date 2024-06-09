@@ -23,9 +23,9 @@ export function Header() {
         className="md:w-96"
       />
 
-      <nav className="flex items-center">
-        <NavButton href="/signin" title="Entrar" />
-        <NavButton href="/signup" title="Cadastrar" />
+      <nav className="flex items-center gap-4">
+        <NavButton href="/auth/signin" title="Entrar" />
+        <NavButton href="/auth/signup" title="Cadastrar" />
         <ToggleThemeButton />
       </nav>
     </header>
