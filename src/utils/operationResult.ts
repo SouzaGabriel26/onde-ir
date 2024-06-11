@@ -1,16 +1,16 @@
-type Failure<T = unknown> = {
+export type Failure<T = unknown> = {
   data: null;
   error: {
     message: string;
   } & T;
 };
 
-type Success<T> = {
+export type Success<T> = {
   data: T;
   error: null;
 };
 
-function failure<T>(error: Failure['error'] & T): Failure {
+function failure<T>(error: Failure['error'] & T): Failure<T> {
   return {
     data: null,
     error,

@@ -8,4 +8,5 @@ export const env = Object.freeze({
   db_host: process.env.DEFAULT_POSTGRES_HOST!,
   db_port: process.env.DEFAULT_POSTGRES_PORT!,
   default_db: process.env.DEFAULT_POSTGRES_DB!,
+  jwt_secret: process.env.JWT_SECRET_KEY!,
 });

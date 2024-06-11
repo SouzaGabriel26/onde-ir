@@ -1,24 +1,22 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import z from 'zod';
 
-import { operationResult } from '@/utils/operationResult';
+import { env } from '@/utils/env';
+import { Failure, operationResult, Success } from '@/utils/operationResult';
 
 import { AuthenticationDataSource } from '../data/authentication';
+import { SignInProps, SignUpProps } from '../types';
 
 type FailureAuthResponse = {
   message: string;
-  fields: string[];
+  fields: Array<AvailableSignUpFields>;
 };
 
-export type SignUpProps = {
-  email: string;
-  name: string;
-  userName: string;
-  password: string;
-  confirmPassword: string;
-};
+type AvailableSignUpFields = keyof SignUpProps;
 
 export const auth = Object.freeze({
+  signIn,
   signUp,
 });
 
@@ -58,10 +56,18 @@ const signUpSchema = z.object({
     }),
 });
 
+type SignUpResponse =
+  | Failure<FailureAuthResponse>
+  | Success<{
+      email: string;
+      name: string;
+      userName: string;
+    }>;
+
 async function signUp(
   authDataSource: AuthenticationDataSource,
   input: SignUpProps,
-) {
+): Promise<SignUpResponse> {
   const isPasswordConfirmationValid = input.password === input.confirmPassword;
 
   if (!isPasswordConfirmationValid) {
@@ -76,7 +82,7 @@ async function signUp(
   if (!validatedInput.success) {
     return operationResult.failure<FailureAuthResponse>({
       message: validatedInput.error.issues[0].message,
-      fields: validatedInput.error.errors[0].path as string[],
+      fields: validatedInput.error.errors[0].path as AvailableSignUpFields[],
     });
   }
 
@@ -114,4 +120,83 @@ async function signUp(
   });
 
   return operationResult.success({ email, name, userName });
+}
+
+const signInSchema = z.object({
+  email: z
+    .string({
+      required_error: 'O e-mail é obrigatório',
+    })
+    .email({
+      message: 'O e-mail precisa ser válido',
+    }),
+  password: z.string({
+    required_error: 'A senha é obrigatória',
+  }),
+});
+
+type SignInResponse =
+  | Failure<FailureAuthResponse>
+  | Success<{
+      accessToken: string;
+    }>;
+
+async function signIn(
+  authDataSource: AuthenticationDataSource,
+  input: SignInProps,
+): Promise<SignInResponse> {
+  const validatedInput = signInSchema.safeParse(input);
+
+  if (!validatedInput.success) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: validatedInput.error.issues[0].message,
+      fields: validatedInput.error.errors[0].path as AvailableSignUpFields[],
+    });
+  }
+
+  const { email, password } = validatedInput.data;
+
+  const user = await authDataSource.findUserByEmail({ email });
+
+  if (!user) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Credenciais inválidas',
+      fields: ['email', 'password'],
+    });
+  }
+
+  const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+  if (!isPasswordValid) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Credenciais inválidas',
+      fields: ['email', 'password'],
+    });
+  }
+
+  const { accessToken } = generateAccessToken({
+    id: user.id,
+  });
+
+  return operationResult.success({
+    accessToken,
+  });
+}
+
+type TokenPayload = {
+  id: string;
+};
+
+function generateAccessToken({ id }: TokenPayload) {
+  const accessToken = jwt.sign(
+    {
+      sub: id,
+    },
+    env.jwt_secret,
+    {
+      expiresIn: '1d',
+    },
+  );
+
+  return { accessToken };
 }
