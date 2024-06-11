@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="relative grid h-screen place-items-center">
       {children}
       <Link
-        title="navigate home"
+        title="Página inicial"
         href="/"
         className="absolute left-4 top-4 rounded-md border bg-white transition-opacity hover:opacity-70"
       >
