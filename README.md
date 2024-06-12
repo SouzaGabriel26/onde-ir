@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# About "Onde ir"
+
+"Onde ir" is a food advisory platform designed to help users discover and share experiences about various food establishments. Similar to a trip advisor, "Onde ir" allows users to create posts and leave comments and evaluations on restaurants and other food spots. User-generated content helps others make informed food choices. Additionally, administrators oversee the content, approving or rejecting user posts to ensure quality and reliability.
+
+## Status 🚧
+
+- Work in progress
 
 ## Getting Started 💻
 
