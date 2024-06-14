@@ -2,8 +2,8 @@
 
 import { Button } from '@nextui-org/react';
 
-import { useTheme } from '@/contexts/ThemeProvider';
-import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { useTheme } from '@/src/contexts/ThemeProvider';
+import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 import { Moon } from './icons/Moon';
 import { Sun } from './icons/Sun';

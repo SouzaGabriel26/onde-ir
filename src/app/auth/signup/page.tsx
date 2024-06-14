@@ -2,17 +2,16 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Input } from '@/components/Input';
-import { SubmitButton } from '@/components/SubmitButton';
-import { form } from '@/utils/form';
-
-import { createAuthenticationDataSource } from '../../../../data/authentication';
+import { createAuthenticationDataSource } from '@/data/authentication';
 import {
   auth,
   AvailableSignUpFields,
   SignUpResponse,
-} from '../../../../models/authentication';
-import { SignUpProps } from '../../../../types';
+} from '@/models/authentication';
+import { Input } from '@/src/components/Input';
+import { SubmitButton } from '@/src/components/SubmitButton';
+import { form } from '@/src/utils/form';
+import { SignUpProps } from '@/types';
 
 let signUpResponse: SignUpResponse;
 

@@ -1,6 +1,6 @@
 import { Client, Pool, QueryConfig } from 'pg';
 
-import { env } from '../src/utils/env';
+import { env } from '@/src/utils/env';
 
 const IS_PRODUCTION_ENVIRONMENT = process.env.NODE_ENV === 'production';
 

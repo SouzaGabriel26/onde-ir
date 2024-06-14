@@ -1,7 +1,7 @@
 import { NextUIProvider } from '@nextui-org/react';
 import type { Metadata } from 'next';
 
-import { ThemeProvider } from '@/contexts/ThemeProvider';
+import { ThemeProvider } from '@/src/contexts/ThemeProvider';
 import './globals.css';
 
 export const metadata: Metadata = {

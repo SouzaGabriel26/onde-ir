@@ -1,6 +1,7 @@
+import { Route } from 'next';
 import Link from 'next/link';
 
-import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 import { About } from './icons/About';
 import { ArrowLeft } from './icons/ArrowLeft';
@@ -56,7 +57,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 
       {NAVIGATION_OPTIONS.map((option) => (
         <Link
-          href={option.href}
+          href={option.href as Route}
           key={option.href}
           title={option.title}
           className="flex items-center gap-2 transition-transform hover:scale-105"
