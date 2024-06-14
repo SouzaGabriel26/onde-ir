@@ -152,8 +152,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail é obrigatório',
-          fields: ['email'],
+          message: 'O nome é obrigatório',
+          fields: ['name'],
         },
       });
     });

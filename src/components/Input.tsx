@@ -3,9 +3,10 @@ import { sanitizeClassName } from '@/utils/sanitizeClassName';
 type InputProps = JSX.IntrinsicElements['input'] & {
   id: string;
   label: string;
+  error?: string;
 };
 
-export function Input({ label, id, className, ...props }: InputProps) {
+export function Input({ label, id, className, error, ...props }: InputProps) {
   return (
     <div className="relative">
       <input
@@ -48,6 +49,8 @@ export function Input({ label, id, className, ...props }: InputProps) {
       >
         {label}
       </label>
+
+      {error && <p className="px-3 text-xs text-red-500">{error}</p>}
     </div>
   );
 }
