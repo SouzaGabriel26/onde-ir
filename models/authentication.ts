@@ -13,7 +13,13 @@ type FailureAuthResponse = {
   fields: Array<AvailableSignUpFields>;
 };
 
-type AvailableSignUpFields = keyof SignUpProps;
+type SuccessAuthSignUpResponse = {
+  email: string;
+  name: string;
+  userName: string;
+};
+
+export type AvailableSignUpFields = keyof SignUpProps;
 
 export const auth = Object.freeze({
   signIn,
@@ -21,19 +27,19 @@ export const auth = Object.freeze({
 });
 
 const signUpSchema = z.object({
-  email: z
-    .string({
-      required_error: 'O e-mail é obrigatório',
-    })
-    .email({
-      message: 'O e-mail precisa ser válido',
-    }),
   name: z
     .string({
       required_error: 'O nome é obrigatório',
     })
     .min(3, {
       message: 'O nome precisa ter no mínimo 3 caracteres',
+    }),
+  email: z
+    .string({
+      required_error: 'O e-mail é obrigatório',
+    })
+    .email({
+      message: 'O e-mail precisa ser válido',
     }),
   userName: z
     .string({
@@ -56,13 +62,9 @@ const signUpSchema = z.object({
     }),
 });
 
-type SignUpResponse =
+export type SignUpResponse =
   | Failure<FailureAuthResponse>
-  | Success<{
-      email: string;
-      name: string;
-      userName: string;
-    }>;
+  | Success<SuccessAuthSignUpResponse>;
 
 async function signUp(
   authDataSource: AuthenticationDataSource,

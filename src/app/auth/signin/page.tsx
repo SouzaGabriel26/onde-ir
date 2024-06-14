@@ -3,9 +3,18 @@ import Link from 'next/link';
 import { Input } from '@/components/Input';
 import { SubmitButton } from '@/components/SubmitButton';
 
-export default function Page() {
+type Props = {
+  searchParams: {
+    userName?: string;
+  };
+};
+
+export default function Page({ searchParams }: Props) {
+  const { userName } = searchParams;
+
   return (
     <div className="space-y-4">
+      {userName && <p>Faça login para o usuário {userName}</p>}
       <h1 className="text-2xl">Entrar</h1>
       <p>
         Não possui uma conta?{' '}
