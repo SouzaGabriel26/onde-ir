@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { Input } from '@/components/Input';
-import { SubmitButton } from '@/components/SubmitButton';
+import { Input } from '@/src/components/Input';
+import { SubmitButton } from '@/src/components/SubmitButton';
 
 type Props = {
   searchParams: {

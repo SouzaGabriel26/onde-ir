@@ -1,6 +1,6 @@
 import { Button } from '@nextui-org/react';
 
-import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 type SubmitButtonProps = {
   children: React.ReactNode;

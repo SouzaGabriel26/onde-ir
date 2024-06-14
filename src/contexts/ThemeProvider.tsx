@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { constants } from '@/utils/constants';
+import { constants } from '@/src/utils/constants';
 
 export type Theme = 'light' | 'dark';
 

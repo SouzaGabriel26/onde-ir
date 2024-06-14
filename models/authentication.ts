@@ -2,11 +2,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import z from 'zod';
 
-import { env } from '@/utils/env';
-import { Failure, operationResult, Success } from '@/utils/operationResult';
-
-import { AuthenticationDataSource } from '../data/authentication';
-import { SignInProps, SignUpProps } from '../types';
+import { AuthenticationDataSource } from '@/data/authentication';
+import { env } from '@/src/utils/env';
+import { Failure, operationResult, Success } from '@/src/utils/operationResult';
+import { SignInProps, SignUpProps } from '@/types';
 
 type FailureAuthResponse = {
   message: string;

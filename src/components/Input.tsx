@@ -1,4 +1,4 @@
-import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 type InputProps = JSX.IntrinsicElements['input'] & {
   id: string;

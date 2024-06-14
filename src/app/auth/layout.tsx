@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { ArrowLeft } from '@/components/icons/ArrowLeft';
+import { ArrowLeft } from '@/src/components/icons/ArrowLeft';
 
 type LayoutProps = {
   children: React.ReactNode;
