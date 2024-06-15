@@ -9,7 +9,7 @@ import { SignInProps, SignUpProps } from '@/types';
 
 type FailureAuthResponse = {
   message: string;
-  fields: Array<AvailableSignUpFields>;
+  fields: Array<AvailableSignUpFields | AvailableSignInFields>;
 };
 
 type SuccessAuthSignUpResponse = {
@@ -19,6 +19,7 @@ type SuccessAuthSignUpResponse = {
 };
 
 export type AvailableSignUpFields = keyof SignUpProps;
+export type AvailableSignInFields = keyof SignInProps;
 
 export const auth = Object.freeze({
   signIn,
@@ -136,7 +137,7 @@ const signInSchema = z.object({
   }),
 });
 
-type SignInResponse =
+export type SignInResponse =
   | Failure<FailureAuthResponse>
   | Success<{
       accessToken: string;
