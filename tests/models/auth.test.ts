@@ -1,8 +1,8 @@
-import { createAuthenticationDataSource } from '../../data/authentication';
-import { database } from '../../infra/database';
-import { auth } from '../../models/authentication';
-import { SignInProps, SignUpProps } from '../../types';
-import { orchestrator } from '../orchestrator';
+import { createAuthenticationDataSource } from '@/data/authentication';
+import { database } from '@/infra/database';
+import { auth } from '@/models/authentication';
+import { orchestrator } from '@/tests/orchestrator';
+import { SignInProps, SignUpProps } from '@/types';
 
 beforeAll(async () => {
   await orchestrator.resetDatabase();
