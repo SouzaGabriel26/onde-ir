@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 import z from 'zod';
 
 import { AuthenticationDataSource } from '@/data/authentication';
+import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 import { SignInProps, SignUpProps } from '@/types';
@@ -24,6 +26,7 @@ export type AvailableSignInFields = keyof SignInProps;
 export const auth = Object.freeze({
   signIn,
   signUp,
+  verifyAccessToken,
 });
 
 const signUpSchema = z.object({
@@ -201,4 +204,27 @@ function generateAccessToken({ id }: TokenPayload) {
   );
 
   return { accessToken };
+}
+
+type VerifyAccessTokenProps = {
+  accessToken?: string;
+};
+
+function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
+  if (!accessToken) return null;
+
+  try {
+    type Payload = {
+      sub: string;
+      iat: number;
+      exp: number;
+    };
+
+    const payload = jwt.verify(accessToken, env.jwt_secret);
+
+    return payload as Payload;
+  } catch {
+    cookies().delete(constants.accessTokenKey);
+    return null;
+  }
 }
