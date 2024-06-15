@@ -1,7 +1,11 @@
 import { NavButton } from './NavButton';
 import { ToggleThemeButton } from './ToggleThemeButton';
 
-export function Header() {
+type HeaderProps = {
+  signedIn?: boolean;
+};
+
+export function Header({ signedIn = false }: HeaderProps) {
   return (
     <header
       className={`
@@ -18,8 +22,12 @@ export function Header() {
       <h1 className="text-2xl">Onde Ir?</h1>
 
       <nav className="flex items-center gap-2 text-sm md:gap-4 md:text-base">
-        <NavButton href="/auth/signin" title="Entrar" />
-        <NavButton href="/auth/signup" title="Cadastrar" />
+        {!signedIn && (
+          <>
+            <NavButton href="/auth/signin" title="Entrar" />
+            <NavButton href="/auth/signup" title="Cadastrar" />
+          </>
+        )}
         <ToggleThemeButton />
       </nav>
     </header>

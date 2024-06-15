@@ -2,6 +2,10 @@ import { Button } from '@nextui-org/react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { createUserDataSource } from '@/data/user';
+import { auth } from '@/models/authentication';
+import { user } from '@/models/user';
+import { Header } from '@/src/components/Header';
 import { constants } from '@/src/utils/constants';
 
 async function signOut() {
@@ -12,17 +16,37 @@ async function signOut() {
   return redirect('/auth/signin');
 }
 
-export default function Page() {
-  // TODO: validate accessToken integrity
+function checkAccessToken() {
+  const accessToken = cookies().get(constants.accessTokenKey)?.value;
+  const payload = auth.verifyAccessToken({
+    accessToken,
+  });
+
+  if (!payload) {
+    return redirect('/auth/signin');
+  }
+
+  return payload;
+}
+
+export default async function Page() {
+  const payload = checkAccessToken();
+
+  const userDataSource = createUserDataSource();
+  const { data } = await user.findById(userDataSource, {
+    id: payload.sub,
+  });
 
   return (
-    <div>
+    <main>
+      <Header signedIn={!!data} />
+
       <h1>Dashboard</h1>
-      <p>Essa é a página do dashboard</p>
+      <p>Bem vindo, {data?.name}</p>
 
       <form action={signOut}>
         <Button type="submit">Sair</Button>
       </form>
-    </div>
+    </main>
   );
 }

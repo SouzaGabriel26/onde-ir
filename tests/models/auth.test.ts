@@ -322,5 +322,20 @@ describe('> models/authentication', () => {
 
       expect(result.data?.accessToken.split('.').length).toBe(3);
     });
+    test('Providing email without following the pattern', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.signIn(authDataSource, {
+        email: 'gabrielmail.com',
+        password: '123456',
+      });
+
+      expect(result).toStrictEqual({
+        error: {
+          message: 'O e-mail precisa ser válido',
+          fields: ['email'],
+        },
+        data: null,
+      });
+    });
   });
 });

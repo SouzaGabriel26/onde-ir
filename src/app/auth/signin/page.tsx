@@ -14,12 +14,6 @@ import { constants } from '@/src/utils/constants';
 import { form } from '@/src/utils/form';
 import { SignInProps } from '@/types';
 
-type Props = {
-  searchParams: {
-    userName?: string;
-  };
-};
-
 let signInResponse: SignInResponse;
 
 async function signInAction(formData: FormData) {
@@ -43,6 +37,12 @@ async function signInAction(formData: FormData) {
 
   return redirect('/dashboard');
 }
+
+type Props = {
+  searchParams: {
+    userName?: string;
+  };
+};
 
 export default function Page({ searchParams }: Props) {
   const { userName } = searchParams;

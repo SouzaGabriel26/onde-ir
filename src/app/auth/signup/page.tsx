@@ -24,7 +24,9 @@ async function signUpAction(formData: FormData) {
   signUpResponse = await auth.signUp(authDataSource, sanitizedData);
 
   if (signUpResponse.data) {
-    redirect(`/auth/signin?userName=${signUpResponse.data.userName}`);
+    const { userName } = signUpResponse.data;
+
+    redirect(`/auth/signin?userName=${userName}`);
   }
 
   return revalidatePath('/auth/signup');
