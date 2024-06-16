@@ -69,4 +69,5 @@ function getPool() {
 async function endAllPools() {
   const endAllPoolsPromises = pools.map((pool) => pool.end());
   await Promise.all(endAllPoolsPromises);
+  pools.length = 0;
 }

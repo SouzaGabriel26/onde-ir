@@ -16,7 +16,7 @@ type FindByIdInput = {
 const findByIdSchema = z.object({
   id: z
     .string({
-      required_error: 'A proprietade "id" é obrigatória',
+      required_error: 'A propriedade "id" é obrigatória',
       invalid_type_error: 'A propriedade "id" deve ser uma string',
     })
     .uuid({
