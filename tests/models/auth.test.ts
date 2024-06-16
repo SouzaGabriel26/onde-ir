@@ -322,6 +322,7 @@ describe('> models/authentication', () => {
 
       expect(result.data?.accessToken.split('.').length).toBe(3);
     });
+
     test('Providing email without following the pattern', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await auth.signIn(authDataSource, {

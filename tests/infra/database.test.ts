@@ -1,4 +1,9 @@
-import { database } from '../../infra/database';
+import { database } from '@/infra/database';
+import { orchestrator } from '@/tests/orchestrator';
+
+beforeAll(async () => {
+  await orchestrator.resetDatabase();
+});
 
 afterAll(async () => {
   await database.endAllPools();
