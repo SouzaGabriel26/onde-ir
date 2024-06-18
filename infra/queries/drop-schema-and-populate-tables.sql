@@ -18,12 +18,11 @@ CREATE TABLE users (
 );
 
 CREATE TABLE reset_password_tokens (
+  id UUID DEFAULT uuid_generate_v4() CONSTRAINT reset_password_tokens_pkey PRIMARY KEY,
   user_id UUID NOT NULL REFERENCES users(id),
   reset_token VARCHAR(255) NOT NULL,
   used BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  CONSTRAINT reset_password_tokens_pkey PRIMARY KEY (user_id, reset_token)
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (

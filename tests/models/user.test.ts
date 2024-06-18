@@ -163,17 +163,7 @@ describe('> models/user', () => {
 async function getUserIdFromDatabase() {
   const client = database.getClient();
 
-  try {
-    console.log('> Running query to get user ID');
-    const query = await client.query(sql`SELECT id FROM users LIMIT 1`);
-    console.log('> Query result:', query);
+  const query = await client.query(sql`SELECT id FROM users LIMIT 1`);
 
-    if (!query?.rows || query.rows.length === 0) {
-      throw new Error('No users found in the database');
-    }
-
-    return query.rows[0].id;
-  } finally {
-    console.log('> terminou');
-  }
+  return query?.rows[0].id;
 }

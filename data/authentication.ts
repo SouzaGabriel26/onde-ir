@@ -13,6 +13,7 @@ export function createAuthenticationDataSource() {
     signUp,
     findUserByEmail,
     findUserByUserName,
+    createResetPassword,
   });
 
   type Output = {
@@ -74,5 +75,24 @@ export function createAuthenticationDataSource() {
       `,
       values: [email, name, password, userName],
     });
+  }
+
+  type ResetPasswordInput = {
+    userId: string;
+    resetPasswordToken: string;
+  };
+
+  async function createResetPassword(input: ResetPasswordInput) {
+    const query = {
+      text: sql`
+        INSERT INTO reset_password_tokens
+          (user_id, reset_token)
+        VALUES
+          ($1, $2)
+      `,
+      values: [input.userId, input.resetPasswordToken],
+    };
+
+    await authenticationPool.query(query);
   }
 }

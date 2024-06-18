@@ -1,6 +1,7 @@
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { database } from '@/infra/database';
 import { auth } from '@/models/authentication';
+import { sql } from '@/src/utils/syntax-highlighting';
 import { orchestrator } from '@/tests/orchestrator';
 import { SignInProps, SignUpProps } from '@/types';
 
@@ -337,6 +338,104 @@ describe('> models/authentication', () => {
         },
         data: null,
       });
+    });
+  });
+
+  describe('Invoking "forgetPassword" method', () => {
+    test('Providing invalid "email" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.forgetPassword(authDataSource, {
+        email: 'Gabriel a',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'O e-mail precisa ser válido',
+          fields: ['email'],
+        },
+      });
+    });
+
+    test('Providing an empty object', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.forgetPassword(authDataSource, {} as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'O e-mail é obrigatório',
+          fields: ['email'],
+        },
+      });
+    });
+
+    test('Providing a non existent "email', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.forgetPassword(authDataSource, {
+        email: 'teste@mail.com',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Este e-mail não está cadastrado',
+          fields: ['email'],
+        },
+      });
+    });
+
+    test('Providing an existent "email"', async () => {
+      const existentEmail = 'gabriel@email.com';
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.forgetPassword(authDataSource, {
+        email: existentEmail,
+      });
+
+      expect(result).toStrictEqual({
+        error: null,
+        data: {
+          forgetPasswordToken: expect.any(String),
+          userId: expect.any(String),
+        },
+      });
+
+      expect(result.data?.forgetPasswordToken.split('.').length).toBe(3);
+
+      const client = database.getClient();
+      const resetTokenSaved = await client.query({
+        text: sql`
+          SELECT
+            *
+          FROM
+            reset_password_tokens
+          WHERE user_id = $1
+        `,
+        values: [result.data?.userId],
+      });
+
+      expect(resetTokenSaved?.rows.length).toBe(1);
+    });
+
+    test('Verifying if the token is valid', async () => {
+      const existentEmail = 'gabriel@email.com';
+
+      const authDataSource = createAuthenticationDataSource();
+      const { data } = await auth.forgetPassword(authDataSource, {
+        email: existentEmail,
+      });
+
+      expect(data).toStrictEqual({
+        forgetPasswordToken: expect.any(String),
+        userId: expect.any(String),
+      });
+
+      const payload = auth.verifyResetPasswordToken({
+        resetPasswordToken: data!.forgetPasswordToken,
+      });
+
+      expect(Object.keys(payload!)).toStrictEqual(['sub', 'iat', 'exp']);
     });
   });
 });
