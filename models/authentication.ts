@@ -27,6 +27,8 @@ export const auth = Object.freeze({
   signIn,
   signUp,
   verifyAccessToken,
+  forgetPassword,
+  verifyResetPasswordToken,
 });
 
 const signUpSchema = z.object({
@@ -181,6 +183,7 @@ async function signIn(
 
   const { accessToken } = generateAccessToken({
     id: user.id,
+    secretKey: env.jwt_secret,
   });
 
   return operationResult.success({
@@ -188,23 +191,11 @@ async function signIn(
   });
 }
 
-type TokenPayload = {
-  id: string;
+type Payload = {
+  sub: string;
+  iat: number;
+  exp: number;
 };
-
-function generateAccessToken({ id }: TokenPayload) {
-  const accessToken = jwt.sign(
-    {
-      sub: id,
-    },
-    env.jwt_secret,
-    {
-      expiresIn: '1d',
-    },
-  );
-
-  return { accessToken };
-}
 
 type VerifyAccessTokenProps = {
   accessToken?: string;
@@ -214,12 +205,6 @@ function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
   if (!accessToken) return null;
 
   try {
-    type Payload = {
-      sub: string;
-      iat: number;
-      exp: number;
-    };
-
     const payload = jwt.verify(accessToken, env.jwt_secret);
 
     return payload as Payload;
@@ -227,4 +212,93 @@ function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
     cookies().delete(constants.accessTokenKey);
     return null;
   }
+}
+
+type ForgetPasswordInput = {
+  email: string;
+};
+
+const forgetPasswordSchema = signUpSchema.pick({ email: true });
+
+async function forgetPassword(
+  authDataSource: AuthenticationDataSource,
+  { email }: ForgetPasswordInput,
+) {
+  const validatedInput = forgetPasswordSchema.safeParse({
+    email,
+  });
+
+  if (!validatedInput.success) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: validatedInput.error.issues[0].message,
+      fields: ['email'],
+    });
+  }
+
+  const userFoundByEmail = await authDataSource.findUserByEmail({ email });
+
+  if (!userFoundByEmail) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Este e-mail não está cadastrado',
+      fields: ['email'],
+    });
+  }
+
+  const { accessToken: forgetPasswordToken } = generateAccessToken({
+    id: userFoundByEmail.id,
+    secretKey: env.reset_password_jwt_secret,
+    expiresIn: '5min',
+  });
+
+  await authDataSource.createResetPassword({
+    userId: userFoundByEmail.id,
+    resetPasswordToken: forgetPasswordToken,
+  });
+
+  // TODO: send email with userId or token.
+  // Sending only userId i can search for the token in database
+  // when user click on the link in the email
+  return operationResult.success({
+    forgetPasswordToken,
+    userId: userFoundByEmail.id,
+  });
+}
+
+type VerifyResetPasswordTokenInput = {
+  resetPasswordToken: string;
+};
+
+function verifyResetPasswordToken({
+  resetPasswordToken,
+}: VerifyResetPasswordTokenInput) {
+  try {
+    const payload = jwt.verify(
+      resetPasswordToken,
+      env.reset_password_jwt_secret,
+    );
+
+    return payload as Payload;
+  } catch {
+    return null;
+  }
+}
+
+type TokenProps = {
+  id: string;
+  secretKey: string;
+  expiresIn?: string;
+};
+
+function generateAccessToken({ id, secretKey, expiresIn }: TokenProps) {
+  const accessToken = jwt.sign(
+    {
+      sub: id,
+    },
+    secretKey,
+    {
+      expiresIn: expiresIn ?? '1d',
+    },
+  );
+
+  return { accessToken };
 }
