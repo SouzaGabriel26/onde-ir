@@ -23,12 +23,52 @@ type SuccessAuthSignUpResponse = {
 export type AvailableSignUpFields = keyof SignUpProps;
 export type AvailableSignInFields = keyof SignInProps;
 
+type Payload = {
+  sub: string;
+  iat: number;
+  exp: number;
+};
+
+export type SignUpResponse =
+  | Failure<FailureAuthResponse>
+  | Success<SuccessAuthSignUpResponse>;
+
+export type SignInResponse =
+  | Failure<FailureAuthResponse>
+  | Success<{
+      accessToken: string;
+    }>;
+
+type VerifyAccessTokenProps = {
+  accessToken?: string;
+};
+
+type ForgetPasswordInput = {
+  email: string;
+};
+
+type VerifyResetPasswordTokenInput = {
+  resetPasswordToken: string;
+};
+
+type TokenProps = {
+  id: string;
+  secretKey: string;
+  expiresIn?: string;
+};
+
+type ResetPasswordInput = VerifyResetPasswordTokenInput & {
+  password: string;
+  confirmPassword: string;
+};
+
 export const auth = Object.freeze({
   signIn,
   signUp,
   verifyAccessToken,
   forgetPassword,
   verifyResetPasswordToken,
+  resetPassword,
 });
 
 const signUpSchema = z.object({
@@ -66,11 +106,6 @@ const signUpSchema = z.object({
       message: 'A confirmação de senha precisa ter no mínimo 6 caracteres',
     }),
 });
-
-export type SignUpResponse =
-  | Failure<FailureAuthResponse>
-  | Success<SuccessAuthSignUpResponse>;
-
 async function signUp(
   authDataSource: AuthenticationDataSource,
   input: SignUpProps,
@@ -141,13 +176,6 @@ const signInSchema = z.object({
     required_error: 'A senha é obrigatória',
   }),
 });
-
-export type SignInResponse =
-  | Failure<FailureAuthResponse>
-  | Success<{
-      accessToken: string;
-    }>;
-
 async function signIn(
   authDataSource: AuthenticationDataSource,
   input: SignInProps,
@@ -181,7 +209,7 @@ async function signIn(
     });
   }
 
-  const { accessToken } = generateAccessToken({
+  const accessToken = generateAccessToken({
     id: user.id,
     secretKey: env.jwt_secret,
   });
@@ -190,16 +218,6 @@ async function signIn(
     accessToken,
   });
 }
-
-type Payload = {
-  sub: string;
-  iat: number;
-  exp: number;
-};
-
-type VerifyAccessTokenProps = {
-  accessToken?: string;
-};
 
 function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
   if (!accessToken) return null;
@@ -214,12 +232,7 @@ function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
   }
 }
 
-type ForgetPasswordInput = {
-  email: string;
-};
-
 const forgetPasswordSchema = signUpSchema.pick({ email: true });
-
 async function forgetPassword(
   authDataSource: AuthenticationDataSource,
   { email }: ForgetPasswordInput,
@@ -227,7 +240,6 @@ async function forgetPassword(
   const validatedInput = forgetPasswordSchema.safeParse({
     email,
   });
-
   if (!validatedInput.success) {
     return operationResult.failure<FailureAuthResponse>({
       message: validatedInput.error.issues[0].message,
@@ -236,7 +248,6 @@ async function forgetPassword(
   }
 
   const userFoundByEmail = await authDataSource.findUserByEmail({ email });
-
   if (!userFoundByEmail) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'Este e-mail não está cadastrado',
@@ -244,13 +255,13 @@ async function forgetPassword(
     });
   }
 
-  const { accessToken: forgetPasswordToken } = generateAccessToken({
+  const forgetPasswordToken = generateAccessToken({
     id: userFoundByEmail.id,
     secretKey: env.reset_password_jwt_secret,
     expiresIn: '5min',
   });
 
-  await authDataSource.createResetPassword({
+  await authDataSource.createResetPasswordToken({
     userId: userFoundByEmail.id,
     resetPasswordToken: forgetPasswordToken,
   });
@@ -263,10 +274,6 @@ async function forgetPassword(
     userId: userFoundByEmail.id,
   });
 }
-
-type VerifyResetPasswordTokenInput = {
-  resetPasswordToken: string;
-};
 
 function verifyResetPasswordToken({
   resetPasswordToken,
@@ -283,11 +290,64 @@ function verifyResetPasswordToken({
   }
 }
 
-type TokenProps = {
-  id: string;
-  secretKey: string;
-  expiresIn?: string;
-};
+const resetPasswordSchema = signUpSchema.pick({
+  password: true,
+  confirmPassword: true,
+});
+async function resetPassword(
+  authDataSource: AuthenticationDataSource,
+  input: ResetPasswordInput,
+) {
+  if (!input.resetPasswordToken) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Token é obrigatório',
+      fields: [],
+    });
+  }
+
+  const insecureInput = {
+    password: input.password,
+    confirmPassword: input.confirmPassword,
+  };
+
+  const { data, error } = resetPasswordSchema.safeParse(insecureInput);
+  if (error) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: error.issues[0].message,
+      fields: ['password', 'confirmPassword'],
+    });
+  }
+
+  const { password, confirmPassword } = data;
+
+  if (password !== confirmPassword) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'As senhas precisam ser iguais',
+      fields: ['password', 'confirmPassword'],
+    });
+  }
+
+  const tokenPayload = verifyResetPasswordToken({
+    resetPasswordToken: input.resetPasswordToken,
+  });
+
+  if (!tokenPayload) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Token inválido',
+      fields: [],
+    });
+  }
+
+  const SALT = 12;
+  const hashedPassword = bcrypt.hashSync(password, SALT);
+
+  await authDataSource.resetPassword({
+    password: hashedPassword,
+    userId: tokenPayload.sub,
+  });
+
+  return operationResult.success({});
+}
 
 function generateAccessToken({ id, secretKey, expiresIn }: TokenProps) {
   const accessToken = jwt.sign(
@@ -300,5 +360,5 @@ function generateAccessToken({ id, secretKey, expiresIn }: TokenProps) {
     },
   );
 
-  return { accessToken };
+  return accessToken;
 }

@@ -13,7 +13,8 @@ export function createAuthenticationDataSource() {
     signUp,
     findUserByEmail,
     findUserByUserName,
-    createResetPassword,
+    createResetPasswordToken,
+    resetPassword,
   });
 
   type Output = {
@@ -77,12 +78,12 @@ export function createAuthenticationDataSource() {
     });
   }
 
-  type ResetPasswordInput = {
+  type ResetPasswordTokenInput = {
     userId: string;
     resetPasswordToken: string;
   };
 
-  async function createResetPassword(input: ResetPasswordInput) {
+  async function createResetPasswordToken(input: ResetPasswordTokenInput) {
     const query = {
       text: sql`
         INSERT INTO reset_password_tokens
@@ -90,9 +91,26 @@ export function createAuthenticationDataSource() {
         VALUES
           ($1, $2)
       `,
-      values: [input.userId, input.resetPasswordToken],
+      values: [input.userId],
     };
 
     await authenticationPool.query(query);
+  }
+
+  type ResetPasswordInput = Pick<SignUpProps, 'password'> & {
+    userId: string;
+  };
+
+  async function resetPassword(input: ResetPasswordInput) {
+    const { password } = input;
+
+    await authenticationPool.query({
+      text: sql`
+        UPDATE users
+        SET password = $1
+        WHERE id = $2
+      `,
+      values: [password, input.userId],
+    });
   }
 }
