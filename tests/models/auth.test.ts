@@ -1,7 +1,6 @@
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { database } from '@/infra/database';
 import { auth } from '@/models/authentication';
-import { sql } from '@/src/utils/syntax-highlighting';
 import { orchestrator } from '@/tests/orchestrator';
 import { SignInProps, SignUpProps } from '@/types';
 
@@ -400,22 +399,6 @@ describe('> models/authentication', () => {
           userId: expect.any(String),
         },
       });
-
-      expect(result.data?.forgetPasswordToken.split('.').length).toBe(3);
-
-      const client = database.getClient();
-      const resetTokenSaved = await client.query({
-        text: sql`
-          SELECT
-            *
-          FROM
-            reset_password_tokens
-          WHERE user_id = $1
-        `,
-        values: [result.data?.userId],
-      });
-
-      expect(resetTokenSaved?.rows.length).toBe(1);
     });
 
     test('Verifying if the token is valid', async () => {
@@ -436,6 +419,149 @@ describe('> models/authentication', () => {
       });
 
       expect(Object.keys(payload!)).toStrictEqual(['sub', 'iat', 'exp']);
+    });
+  });
+
+  describe('Invoking "resetPassword" method after calling "forgetPassword"', () => {
+    test('Providing an empty object', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.resetPassword(authDataSource, {} as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Token é obrigatório',
+          fields: [],
+        },
+      });
+    });
+
+    test('Providing invalid "token" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.resetPassword(authDataSource, {
+        password: '123456',
+        confirmPassword: '123456',
+        resetPasswordToken: 'invalid_token',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Token inválido',
+          fields: [],
+        },
+      });
+    });
+
+    test('Without providing "password" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+
+      const input = {
+        confirmPassword: '123456',
+        resetPasswordToken: 'token',
+      };
+
+      const result = await auth.resetPassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A senha é obrigatória',
+          fields: ['password', 'confirmPassword'],
+        },
+      });
+    });
+
+    test('Without providing "confirmPassword" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+
+      const input = {
+        password: '123456',
+        resetPasswordToken: 'token',
+      };
+
+      const result = await auth.resetPassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A confirmação de senha é obrigatória',
+          fields: ['password', 'confirmPassword'],
+        },
+      });
+    });
+
+    test('Providing "password" with less than 3 characters', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.resetPassword(authDataSource, {
+        resetPasswordToken: 'token',
+        password: '12',
+        confirmPassword: '12',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A senha precisa ter no mínimo 6 caracteres',
+          fields: ['password', 'confirmPassword'],
+        },
+      });
+    });
+
+    test('Providing "password" different from "confirmPassword"', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const { data } = await auth.forgetPassword(authDataSource, {
+        email: 'gabriel@email.com',
+      });
+
+      const result = await auth.resetPassword(authDataSource, {
+        password: '123456',
+        confirmPassword: '111222333',
+        resetPasswordToken: data!.forgetPasswordToken,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'As senhas precisam ser iguais',
+          fields: ['password', 'confirmPassword'],
+        },
+      });
+    });
+
+    test('Providing valid parameters and trying to signin with the new password', async () => {
+      const authDataSource = createAuthenticationDataSource();
+
+      const userEmail = 'gabriel@email.com';
+
+      const { data } = await auth.forgetPassword(authDataSource, {
+        email: userEmail,
+      });
+
+      const input = {
+        password: 'gabriel123',
+        confirmPassword: 'gabriel123',
+        resetPasswordToken: data!.forgetPasswordToken,
+      };
+
+      const result = await auth.resetPassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const signInResult = await auth.signIn(authDataSource, {
+        email: userEmail,
+        password: input.password,
+      });
+
+      expect(signInResult).toStrictEqual({
+        error: null,
+        data: {
+          accessToken: expect.any(String),
+        },
+      });
     });
   });
 });
