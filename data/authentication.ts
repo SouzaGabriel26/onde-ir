@@ -91,7 +91,7 @@ export function createAuthenticationDataSource() {
         VALUES
           ($1, $2)
       `,
-      values: [input.userId],
+      values: [input.userId, input.resetPasswordToken],
     };
 
     await authenticationPool.query(query);

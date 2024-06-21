@@ -510,14 +510,11 @@ describe('> models/authentication', () => {
 
     test('Providing "password" different from "confirmPassword"', async () => {
       const authDataSource = createAuthenticationDataSource();
-      const { data } = await auth.forgetPassword(authDataSource, {
-        email: 'gabriel@email.com',
-      });
 
       const result = await auth.resetPassword(authDataSource, {
         password: '123456',
         confirmPassword: '111222333',
-        resetPasswordToken: data!.forgetPasswordToken,
+        resetPasswordToken: 'token',
       });
 
       expect(result).toStrictEqual({
