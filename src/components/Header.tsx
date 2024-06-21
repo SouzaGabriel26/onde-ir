@@ -14,8 +14,10 @@ export function Header({ signedIn = false }: HeaderProps) {
         items-center
         justify-between
         border-b
+        bg-[#eeeeee]
         px-4
         dark:border-zinc-700
+        dark:bg-zinc-800
         md:px-10
       `}
     >

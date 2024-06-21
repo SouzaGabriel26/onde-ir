@@ -14,19 +14,19 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-    },
-    animation: {
-      'crescent-line': 'crescent-line 0.3s ease-in-out',
-    },
-    keyframes: {
-      'crescent-line': {
-        '0%': {
-          transform: 'translateX(-100%)',
-          opacity: '0',
-        },
-        '100%': {
-          transform: 'translateX(0%)',
-          opacity: '100',
+      animation: {
+        'crescent-line': 'crescent-line 0.3s ease-in-out',
+      },
+      keyframes: {
+        'crescent-line': {
+          '0%': {
+            transform: 'translateX(-100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateX(0%)',
+            opacity: '100',
+          },
         },
       },
     },

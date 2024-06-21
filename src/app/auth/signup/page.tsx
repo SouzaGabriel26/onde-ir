@@ -44,7 +44,7 @@ export default function Page() {
   }
 
   return (
-    <div className="w-80 space-y-4">
+    <div className="space-y-4 md:w-80">
       <h1 className="text-2xl">Cadastre-se</h1>
       <p>
         Já possui uma conta?{' '}

@@ -57,7 +57,7 @@ export default function Page({ searchParams }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 md:w-80">
       {userName && <p>Faça login para o usuário {userName}</p>}
       <h1 className="text-2xl">Entrar</h1>
       <p>
