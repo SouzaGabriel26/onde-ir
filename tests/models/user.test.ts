@@ -1,12 +1,10 @@
 import { createUserDataSource } from '@/data/user';
 import { database } from '@/infra/database';
 import { user } from '@/models/user';
-import { sleep } from '@/src/utils/sleep';
 import { sql } from '@/src/utils/syntax-highlighting';
 import { orchestrator } from '@/tests/orchestrator';
 
 beforeAll(async () => {
-  await sleep(3000);
   await orchestrator.resetDatabase();
 });
 
