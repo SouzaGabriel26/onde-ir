@@ -29,6 +29,7 @@ const findByIdSchema = z.object({
           'id',
           'email',
           'name',
+          'password',
           'userName',
           'userRole',
           'createdAt',

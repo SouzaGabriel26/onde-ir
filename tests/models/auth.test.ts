@@ -561,4 +561,316 @@ describe('> models/authentication', () => {
       });
     });
   });
+
+  describe('Invoking "changePassword" method', () => {
+    test('Providing invalid format "userId" property', async () => {
+      const input = {
+        userId: 'invalid_id',
+        actualPassword: '123123',
+        newPassword: '123456',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+
+      const result = await auth.changePassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'O id do usuário precisa ser um UUID',
+          fields: ['userId'],
+        },
+      });
+    });
+
+    test('Without providing "userId" property', async () => {
+      const input = {
+        actualPassword: '123123',
+        newPassword: '123456',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'O id do usuário é obrigatório',
+          fields: ['userId'],
+        },
+      });
+    });
+
+    test('Providing a non-existent "userId" property', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        newPassword: '123456',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Usuário não encontrado',
+          fields: [],
+        },
+      });
+    });
+
+    test('Without providing "actualPassword" property', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        newPassword: '123456',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A senha atual é obrigatória',
+          fields: ['actualPassword'],
+        },
+      });
+    });
+
+    test('Providing an invalid "actualPassword" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+
+      const userInput = {
+        name: 'Test user',
+        email: 'testuser@mail.com',
+        password: 'test_user',
+        confirmPassword: 'test_user',
+        userName: 'testuser',
+      };
+
+      await auth.signUp(authDataSource, userInput);
+
+      const createdUser = await authDataSource.findUserByEmail({
+        email: userInput.email,
+      });
+
+      const result = await auth.changePassword(authDataSource, {
+        actualPassword: 'invalid_password',
+        newPassword: '123456',
+        confirmNewPassword: '123456',
+        userId: createdUser!.id,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Senha atual inválida',
+          fields: ['actualPassword'],
+        },
+      });
+    });
+
+    test('Without providing "newPassword" property', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A nova senha é obrigatória',
+          fields: ['newPassword'],
+        },
+      });
+    });
+
+    test('Providing "newPassword" with less than 6 characters', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        newPassword: '123',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A nova senha precisa ter no mínimo 6 caracteres',
+          fields: ['newPassword'],
+        },
+      });
+    });
+
+    test('Without providing "confirmNewPassword" property', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        newPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input as any);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'A confirmação da nova senha é obrigatória',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Providing "confirmNewPassword" with less than 6 characters', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        newPassword: '123456',
+        confirmNewPassword: '123',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message:
+            'A confirmação da nova senha precisa ter no mínimo 6 caracteres',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Providing "newPassword" different from "confirmNewPassword"', async () => {
+      const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
+
+      const input = {
+        userId: fakeUserId,
+        actualPassword: '123123',
+        newPassword: '1234567',
+        confirmNewPassword: '123456',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.changePassword(authDataSource, input);
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'As novas senhas precisam ser iguais',
+          fields: ['newPassword', 'confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Trying to signin with the old password after changing it', async () => {
+      const authDataSource = createAuthenticationDataSource();
+
+      const userInput = {
+        name: 'Testing 02',
+        email: 'testing-02@email.com',
+        password: 'password123',
+        confirmPassword: 'password123',
+        userName: 'testing_02',
+      };
+      await auth.signUp(authDataSource, userInput);
+
+      const createdUser = await authDataSource.findUserByEmail({
+        email: userInput.email,
+      });
+
+      const result = await auth.changePassword(authDataSource, {
+        userId: createdUser!.id,
+        actualPassword: userInput.password,
+        confirmNewPassword: 'newPassword123',
+        newPassword: 'newPassword123',
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const signInWithOldPassword = await auth.signIn(authDataSource, {
+        email: userInput.email,
+        password: userInput.password,
+      });
+
+      expect(signInWithOldPassword).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Credenciais inválidas',
+          fields: ['email', 'password'],
+        },
+      });
+    });
+
+    test('Trying to signin with the new password after changing it', async () => {
+      const input = {
+        name: 'Gabriel',
+        email: 'teste1@mail.com',
+        password: '123456',
+        confirmPassword: '123456',
+        userName: 'gabriel2608',
+      };
+
+      const authDataSource = createAuthenticationDataSource();
+      await auth.signUp(authDataSource, input);
+
+      const createdUser = await authDataSource.findUserByEmail({
+        email: input.email,
+      });
+
+      const newPassword = 'newPassword';
+
+      const result = await auth.changePassword(authDataSource, {
+        userId: createdUser!.id,
+        actualPassword: input.password,
+        newPassword: newPassword,
+        confirmNewPassword: newPassword,
+      });
+
+      expect(result).toStrictEqual({
+        error: null,
+        data: {},
+      });
+
+      const signInWithNewPassword = await auth.signIn(authDataSource, {
+        email: input.email,
+        password: newPassword,
+      });
+
+      expect(signInWithNewPassword).toStrictEqual({
+        error: null,
+        data: {
+          accessToken: expect.any(String),
+        },
+      });
+    });
+  });
 });
