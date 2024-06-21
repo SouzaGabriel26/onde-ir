@@ -46,6 +46,7 @@ export function createUserDataSource() {
       id: foundUser.id,
       email: foundUser.email,
       name: foundUser.name,
+      password: foundUser.password,
       userName: foundUser.user_name,
       userRole: foundUser.user_role,
       createdAt: foundUser.created_at,
@@ -59,6 +60,7 @@ export function createUserDataSource() {
         id: 'id',
         email: 'email',
         name: 'name',
+        password: 'password',
         userName: 'user_name',
         userRole: 'user_role',
         createdAt: 'created_at',
@@ -74,7 +76,11 @@ export function createUserDataSource() {
       }
 
       if (columns.length === 0) {
-        columns.push(...Object.values(columnsMap));
+        columns.push(
+          ...Object.values(columnsMap).filter(
+            (column) => column !== 'password',
+          ),
+        );
       }
 
       query.text = query.text.replace('$selectedFields', columns.join(','));

@@ -157,6 +157,24 @@ describe('> models/user', () => {
         },
       });
     });
+
+    test('Providing "select" with only "password" property', async () => {
+      const userDataSource = createUserDataSource();
+
+      const userIdFromDatabase = await getUserIdFromDatabase();
+
+      const foundUser = await user.findById(userDataSource, {
+        id: userIdFromDatabase,
+        select: ['password'],
+      });
+
+      expect(foundUser).toStrictEqual({
+        error: null,
+        data: {
+          password: expect.any(String),
+        },
+      });
+    });
   });
 });
 

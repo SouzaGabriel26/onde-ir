@@ -4,14 +4,17 @@ import { cookies } from 'next/headers';
 import z from 'zod';
 
 import { AuthenticationDataSource } from '@/data/authentication';
+import { createUserDataSource } from '@/data/user';
 import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 import { SignInProps, SignUpProps } from '@/types';
 
-type FailureAuthResponse = {
+type AvailableFields = AvailableSignUpFields | AvailableSignInFields;
+
+type FailureAuthResponse<T = unknown> = {
   message: string;
-  fields: Array<AvailableSignUpFields | AvailableSignInFields>;
+  fields: Array<AvailableFields | keyof T>;
 };
 
 type SuccessAuthSignUpResponse = {
@@ -62,6 +65,13 @@ type ResetPasswordInput = VerifyResetPasswordTokenInput & {
   confirmPassword: string;
 };
 
+type ChangePasswordInput = {
+  userId: string;
+  actualPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
+
 export const auth = Object.freeze({
   signIn,
   signUp,
@@ -69,6 +79,7 @@ export const auth = Object.freeze({
   forgetPassword,
   verifyResetPasswordToken,
   resetPassword,
+  changePassword,
 });
 
 const signUpSchema = z.object({
@@ -273,6 +284,97 @@ async function forgetPassword(
     forgetPasswordToken,
     userId: userFoundByEmail.id,
   });
+}
+
+const changePasswordSchema = z.object({
+  userId: z
+    .string({
+      required_error: 'O id do usuário é obrigatório',
+    })
+    .uuid({
+      message: 'O id do usuário precisa ser um UUID',
+    }),
+  actualPassword: z.string({
+    required_error: 'A senha atual é obrigatória',
+  }),
+  newPassword: z
+    .string({
+      required_error: 'A nova senha é obrigatória',
+    })
+    .min(6, {
+      message: 'A nova senha precisa ter no mínimo 6 caracteres',
+    }),
+  confirmNewPassword: z
+    .string({
+      required_error: 'A confirmação da nova senha é obrigatória',
+    })
+    .min(6, {
+      message: 'A confirmação da nova senha precisa ter no mínimo 6 caracteres',
+    }),
+});
+async function changePassword(
+  authDataSource: AuthenticationDataSource,
+  input: ChangePasswordInput,
+) {
+  const insecureInput = {
+    userId: input.userId,
+    actualPassword: input.actualPassword,
+    newPassword: input.newPassword,
+    confirmNewPassword: input.confirmNewPassword,
+  };
+
+  const { data: secureInput, error } =
+    changePasswordSchema.safeParse(insecureInput);
+
+  if (error) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: error.issues[0].message,
+      fields: error.errors[0].path as AvailableSignUpFields[],
+    });
+  }
+
+  const { userId, actualPassword, newPassword, confirmNewPassword } =
+    secureInput;
+
+  const areNewPasswordsEqual = newPassword === confirmNewPassword;
+  if (!areNewPasswordsEqual) {
+    return operationResult.failure<FailureAuthResponse<ChangePasswordInput>>({
+      message: 'As novas senhas precisam ser iguais',
+      fields: ['newPassword', 'confirmNewPassword'],
+    });
+  }
+
+  const userDataSource = createUserDataSource();
+  const user = await userDataSource.findById({
+    id: userId,
+    select: ['password'],
+  });
+
+  if (!user) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: 'Usuário não encontrado',
+      fields: [],
+    });
+  }
+
+  const isPasswordValid = bcrypt.compareSync(actualPassword, user.password!);
+  if (!isPasswordValid) {
+    return operationResult.failure<FailureAuthResponse<ChangePasswordInput>>({
+      message: 'Senha atual inválida',
+      fields: ['actualPassword'],
+    });
+  }
+
+  const SALT = 12;
+
+  const hashedPassword = bcrypt.hashSync(newPassword, SALT);
+
+  await authDataSource.resetPassword({
+    password: hashedPassword,
+    userId,
+  });
+
+  return operationResult.success({});
 }
 
 function verifyResetPasswordToken({
