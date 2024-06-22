@@ -10,4 +10,5 @@ export const env = Object.freeze({
   default_db: process.env.DEFAULT_POSTGRES_DB!,
   jwt_secret: process.env.JWT_SECRET_KEY!,
   reset_password_jwt_secret: process.env.RESET_PASSWORD_JWT_SECRET_KEY!,
+  resend_api_key: process.env.RESEND_API_KEY!,
 });
