@@ -22,12 +22,14 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.0",
+    "@react-email/components": "^0.0.19",
     "framer-motion": "^11.2.6",
     "jsonwebtoken": "^9.0.2",
     "next": "14.2.3",
     "pg": "^8.11.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "resend": "^3.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",

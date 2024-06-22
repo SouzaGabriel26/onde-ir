@@ -5,6 +5,8 @@ import z from 'zod';
 
 import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
+import { emailService } from '@/models/email';
+import { Welcome } from '@/src/components/email-templates/Welcome';
 import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
@@ -171,6 +173,16 @@ async function signUp(
     password: hashedPassword,
     userName,
   });
+
+  if (process.env.NODE_ENV !== 'test') {
+    await emailService.sendWelcomeMessage({
+      from: 'Onde Ir <onboarding@resend.dev>',
+      to: email,
+      content: Welcome({
+        userFirstname: name,
+      }),
+    });
+  }
 
   return operationResult.success({ email, name, userName });
 }
