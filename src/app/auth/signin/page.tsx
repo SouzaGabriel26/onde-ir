@@ -3,11 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
-import {
-  auth,
-  AvailableSignInFields,
-  SignInResponse,
-} from '@/models/authentication';
+import { auth, SignInResponse } from '@/models/authentication';
 import { Input } from '@/src/components/Input';
 import { SubmitButton } from '@/src/components/SubmitButton';
 import { constants } from '@/src/utils/constants';
@@ -47,22 +43,16 @@ type Props = {
 export default function Page({ searchParams }: Props) {
   const { userName } = searchParams;
 
-  function setInputError(inputName: AvailableSignInFields) {
-    if (!signInResponse?.error) return '';
-
-    const { fields, message } = signInResponse.error;
-    const inputHasError = fields.includes(inputName);
-
-    return inputHasError ? message : '';
-  }
-
   return (
     <div className="space-y-4 md:w-80">
       {userName && <p>Faça login para o usuário {userName}</p>}
       <h1 className="text-2xl">Entrar</h1>
-      <p>
+      <p className="text-gray-400">
         Não possui uma conta?{' '}
-        <Link href="/auth/signup" className="underline">
+        <Link
+          href="/auth/signup"
+          className="underline transition-colors hover:text-white"
+        >
           Cadastre-se
         </Link>
       </p>
@@ -73,7 +63,7 @@ export default function Page({ searchParams }: Props) {
           name="email"
           label="Email*"
           required
-          error={setInputError('email')}
+          error={auth.setInputError('email', signInResponse)}
         />
         <Input
           id="password"
@@ -81,10 +71,20 @@ export default function Page({ searchParams }: Props) {
           label="Senha*"
           type="password"
           required
-          error={setInputError('password')}
+          error={auth.setInputError('password', signInResponse)}
         />
         <SubmitButton>Entrar</SubmitButton>
       </form>
+
+      <p className="text-center text-sm text-gray-400">
+        Esqueceu sua senha?{' '}
+        <Link
+          href="/auth/forget-password"
+          className="underline transition-colors hover:text-white"
+        >
+          clique aqui
+        </Link>
+      </p>
     </div>
   );
 }

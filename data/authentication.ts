@@ -19,6 +19,7 @@ export function createAuthenticationDataSource() {
 
   type Output = {
     id: string;
+    name: string;
     password: string;
   };
 
@@ -31,6 +32,7 @@ export function createAuthenticationDataSource() {
       text: sql`
         SELECT
           id,
+          name,
           password
         FROM
           users
