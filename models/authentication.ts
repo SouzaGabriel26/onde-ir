@@ -6,15 +6,16 @@ import z from 'zod';
 import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
 import { emailService } from '@/models/email';
+import { ForgetPasswordEmail } from '@/src/components/email-templates/ForgetPassword';
 import { Welcome } from '@/src/components/email-templates/Welcome';
 import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 import { SignInProps, SignUpProps } from '@/types';
 
-type AvailableFields = AvailableSignUpFields | AvailableSignInFields;
+export type AvailableFields = AvailableSignUpFields | AvailableSignInFields;
 
-type FailureAuthResponse<T = unknown> = {
+export type FailureAuthResponse<T = unknown> = {
   message: string;
   fields: Array<AvailableFields | keyof T>;
 };
@@ -48,9 +49,11 @@ type VerifyAccessTokenProps = {
   accessToken?: string;
 };
 
-type ForgetPasswordInput = {
+export type ForgetPasswordInput = {
   email: string;
 };
+
+export type ForgetPasswordOutput = Awaited<ReturnType<typeof forgetPassword>>;
 
 type VerifyResetPasswordTokenInput = {
   resetPasswordToken: string;
@@ -62,7 +65,7 @@ type TokenProps = {
   expiresIn?: string;
 };
 
-type ResetPasswordInput = VerifyResetPasswordTokenInput & {
+export type ResetPasswordInput = VerifyResetPasswordTokenInput & {
   password: string;
   confirmPassword: string;
 };
@@ -82,6 +85,7 @@ export const auth = Object.freeze({
   verifyResetPasswordToken,
   resetPassword,
   changePassword,
+  setInputError,
 });
 
 const signUpSchema = z.object({
@@ -284,14 +288,17 @@ async function forgetPassword(
     expiresIn: '5min',
   });
 
-  await authDataSource.createResetPasswordToken({
-    userId: userFoundByEmail.id,
-    resetPasswordToken: forgetPasswordToken,
-  });
+  if (process.env.NODE_ENV !== 'test') {
+    await emailService.sendResetPasswordEmail({
+      from: 'Onde Ir <onboarding@resend.dev>',
+      to: email,
+      content: ForgetPasswordEmail({
+        userFirstname: userFoundByEmail.name,
+        token: forgetPasswordToken,
+      }),
+    });
+  }
 
-  // TODO: send email with userId or token.
-  // Sending only userId i can search for the token in database
-  // when user click on the link in the email
   return operationResult.success({
     forgetPasswordToken,
     userId: userFoundByEmail.id,
@@ -475,4 +482,16 @@ function generateAccessToken({ id, secretKey, expiresIn }: TokenProps) {
   );
 
   return accessToken;
+}
+
+function setInputError(
+  inputName: AvailableFields,
+  responseMessage: Success<unknown> | Failure<FailureAuthResponse>,
+) {
+  if (!responseMessage?.error) return '';
+
+  const { message, fields } = responseMessage.error;
+  const inputHasError = fields.includes(inputName);
+
+  return inputHasError ? message : '';
 }

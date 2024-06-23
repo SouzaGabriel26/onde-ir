@@ -3,11 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
-import {
-  auth,
-  AvailableSignUpFields,
-  SignUpResponse,
-} from '@/models/authentication';
+import { auth, SignUpResponse } from '@/models/authentication';
 import { Input } from '@/src/components/Input';
 import { SubmitButton } from '@/src/components/SubmitButton';
 import { form } from '@/src/utils/form';
@@ -33,22 +29,15 @@ async function signUpAction(formData: FormData) {
 }
 
 export default function Page() {
-  function setInputError(inputName: AvailableSignUpFields) {
-    if (!signUpResponse?.error) return '';
-
-    const { message, fields } = signUpResponse.error;
-
-    const inputHasError = fields.includes(inputName);
-
-    return inputHasError ? message : '';
-  }
-
   return (
     <div className="space-y-4 md:w-80">
       <h1 className="text-2xl">Cadastre-se</h1>
-      <p>
+      <p className="text-gray-400">
         Já possui uma conta?{' '}
-        <Link href="/auth/signin" className="underline">
+        <Link
+          href="/auth/signin"
+          className="underline transition-colors hover:text-white"
+        >
           Fazer login
         </Link>
       </p>
@@ -60,14 +49,14 @@ export default function Page() {
           label="Nome*"
           name="name"
           autoComplete="off"
-          error={setInputError('name')}
+          error={auth.setInputError('name', signUpResponse)}
         />
         <Input
           required
           id="email"
           label="Email*"
           name="email"
-          error={setInputError('email')}
+          error={auth.setInputError('email', signUpResponse)}
         />
         <Input
           required
@@ -75,7 +64,7 @@ export default function Page() {
           label="Username*"
           name="userName"
           autoComplete="off"
-          error={setInputError('userName')}
+          error={auth.setInputError('userName', signUpResponse)}
         />
         <Input
           required
@@ -84,7 +73,7 @@ export default function Page() {
           type="password"
           name="password"
           autoComplete="off"
-          error={setInputError('password')}
+          error={auth.setInputError('password', signUpResponse)}
         />
         <Input
           required
@@ -93,7 +82,7 @@ export default function Page() {
           type="password"
           name="confirmPassword"
           autoComplete="off"
-          error={setInputError('confirmPassword')}
+          error={auth.setInputError('confirmPassword', signUpResponse)}
         />
         <SubmitButton>Cadastrar</SubmitButton>
       </form>
