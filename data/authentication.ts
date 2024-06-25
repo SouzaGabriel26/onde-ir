@@ -15,6 +15,8 @@ export function createAuthenticationDataSource() {
     findUserByUserName,
     createResetPasswordToken,
     resetPassword,
+    findResetPasswordToken,
+    deleteResetPasswordToken,
   });
 
   type Output = {
@@ -80,23 +82,76 @@ export function createAuthenticationDataSource() {
     });
   }
 
-  type ResetPasswordTokenInput = {
+  type CreateResetPasswordTokenInput = {
     userId: string;
     resetPasswordToken: string;
   };
 
-  async function createResetPasswordToken(input: ResetPasswordTokenInput) {
+  async function createResetPasswordToken(
+    input: CreateResetPasswordTokenInput,
+  ) {
     const query = {
       text: sql`
         INSERT INTO reset_password_tokens
           (user_id, reset_token)
         VALUES
           ($1, $2)
+        RETURNING
+          id
       `,
       values: [input.userId, input.resetPasswordToken],
     };
 
-    await authenticationPool.query(query);
+    const result = await authenticationPool.query(query);
+    return {
+      resetPasswordTokenId: String(result?.rows[0].id),
+    };
+  }
+
+  type FindResetPasswordTokenInput = {
+    where: {
+      id: string;
+    };
+  };
+
+  async function findResetPasswordToken({
+    where,
+  }: FindResetPasswordTokenInput) {
+    const result = await authenticationPool.query({
+      text: sql`
+        SELECT
+          id,
+          user_id,
+          reset_token,
+          used,
+          created_at
+        FROM
+          reset_password_tokens
+        WHERE
+          id = $1
+      `,
+      values: [where.id],
+    });
+
+    return (
+      (result?.rows[0] as {
+        id: string;
+        user_id: string;
+        reset_token: string;
+        used: boolean;
+        created_at: Date;
+      }) ?? null
+    );
+  }
+
+  async function deleteResetPasswordToken({ id }: { id: string }) {
+    await authenticationPool.query({
+      text: sql`
+        DELETE FROM reset_password_tokens
+        WHERE id = $1
+      `,
+      values: [id],
+    });
   }
 
   type ResetPasswordInput = Pick<SignUpProps, 'password'> & {

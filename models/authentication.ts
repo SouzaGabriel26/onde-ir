@@ -65,7 +65,8 @@ type TokenProps = {
   expiresIn?: string;
 };
 
-export type ResetPasswordInput = VerifyResetPasswordTokenInput & {
+export type ResetPasswordInput = {
+  resetPasswordTokenId: string;
   password: string;
   confirmPassword: string;
 };
@@ -288,20 +289,25 @@ async function forgetPassword(
     expiresIn: '5min',
   });
 
+  const { resetPasswordTokenId } =
+    await authDataSource.createResetPasswordToken({
+      userId: userFoundByEmail.id,
+      resetPasswordToken: forgetPasswordToken,
+    });
+
   if (process.env.NODE_ENV !== 'test') {
     await emailService.sendResetPasswordEmail({
       from: 'Onde Ir <onboarding@resend.dev>',
       to: email,
       content: ForgetPasswordEmail({
         userFirstname: userFoundByEmail.name,
-        token: forgetPasswordToken,
+        resetPasswordTokenId,
       }),
     });
   }
 
   return operationResult.success({
-    forgetPasswordToken,
-    userId: userFoundByEmail.id,
+    resetPasswordTokenId,
   });
 }
 
@@ -415,13 +421,25 @@ const resetPasswordSchema = signUpSchema.pick({
   password: true,
   confirmPassword: true,
 });
+
+const resetPasswordTokenSchema = z.object({
+  resetPasswordTokenId: z
+    .string({
+      required_error: 'A propriedade "resetPasswordTokenId" é obrigatória.',
+    })
+    .uuid({
+      message: 'O "resetPasswordTokenId" precisa ser um UUID.',
+    }),
+});
+
 async function resetPassword(
   authDataSource: AuthenticationDataSource,
   input: ResetPasswordInput,
 ) {
-  if (!input.resetPasswordToken) {
+  const tokenIdValidation = resetPasswordTokenSchema.safeParse(input);
+  if (tokenIdValidation.error) {
     return operationResult.failure<FailureAuthResponse>({
-      message: 'Token é obrigatório',
+      message: tokenIdValidation.error.issues[0].message,
       fields: [],
     });
   }
@@ -448,8 +466,23 @@ async function resetPassword(
     });
   }
 
+  const resetTokenFoundFromId = await authDataSource.findResetPasswordToken({
+    where: {
+      id: input.resetPasswordTokenId,
+    },
+  });
+
+  if (!resetTokenFoundFromId) {
+    return operationResult.failure<FailureAuthResponse>({
+      message: '"resetPasswordTokenId" inválido.',
+      fields: [],
+    });
+  }
+
+  const { reset_token } = resetTokenFoundFromId;
+
   const tokenPayload = verifyResetPasswordToken({
-    resetPasswordToken: input.resetPasswordToken,
+    resetPasswordToken: reset_token,
   });
 
   if (!tokenPayload) {
@@ -465,6 +498,10 @@ async function resetPassword(
   await authDataSource.resetPassword({
     password: hashedPassword,
     userId: tokenPayload.sub,
+  });
+
+  await authDataSource.deleteResetPasswordToken({
+    id: input.resetPasswordTokenId,
   });
 
   return operationResult.success({});
