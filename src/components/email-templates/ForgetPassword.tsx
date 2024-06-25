@@ -12,16 +12,16 @@ import {
 
 interface ForgetPasswordEmailProps {
   userFirstname?: string;
-  token?: string;
+  resetPasswordTokenId?: string;
 }
 
 const baseUrl = 'http://localhost:3000';
 
 export const ForgetPasswordEmail = ({
   userFirstname,
-  token,
+  resetPasswordTokenId,
 }: ForgetPasswordEmailProps) => {
-  const resetPasswordLink = `${baseUrl}/auth/reset-password?token=${token}`;
+  const resetPasswordLink = `${baseUrl}/auth/reset-password?tokenId=${resetPasswordTokenId}`;
 
   return (
     <Html>

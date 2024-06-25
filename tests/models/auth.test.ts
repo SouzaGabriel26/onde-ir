@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { database } from '@/infra/database';
 import { auth } from '@/models/authentication';
@@ -395,34 +397,15 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         error: null,
         data: {
-          forgetPasswordToken: expect.any(String),
-          userId: expect.any(String),
+          resetPasswordTokenId: expect.any(String),
         },
       });
-    });
-
-    test('Verifying if the token is valid', async () => {
-      const existentEmail = 'gabriel@email.com';
-
-      const authDataSource = createAuthenticationDataSource();
-      const { data } = await auth.forgetPassword(authDataSource, {
-        email: existentEmail,
-      });
-
-      expect(data).toStrictEqual({
-        forgetPasswordToken: expect.any(String),
-        userId: expect.any(String),
-      });
-
-      const payload = auth.verifyResetPasswordToken({
-        resetPasswordToken: data!.forgetPasswordToken,
-      });
-
-      expect(Object.keys(payload!)).toStrictEqual(['sub', 'iat', 'exp']);
     });
   });
 
   describe('Invoking "resetPassword" method after calling "forgetPassword"', () => {
+    const uuid = randomUUID();
+
     test('Providing an empty object', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await auth.resetPassword(authDataSource, {} as any);
@@ -430,24 +413,24 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'Token é obrigatório',
+          message: 'A propriedade "resetPasswordTokenId" é obrigatória.',
           fields: [],
         },
       });
     });
 
-    test('Providing invalid "token" property', async () => {
+    test('Providing invalid "resetPasswordTokenId" property', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await auth.resetPassword(authDataSource, {
         password: '123456',
         confirmPassword: '123456',
-        resetPasswordToken: 'invalid_token',
+        resetPasswordTokenId: 'invalid_token_id',
       });
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'Token inválido',
+          message: 'O "resetPasswordTokenId" precisa ser um UUID.',
           fields: [],
         },
       });
@@ -458,7 +441,7 @@ describe('> models/authentication', () => {
 
       const input = {
         confirmPassword: '123456',
-        resetPasswordToken: 'token',
+        resetPasswordTokenId: uuid,
       };
 
       const result = await auth.resetPassword(authDataSource, input as any);
@@ -477,7 +460,7 @@ describe('> models/authentication', () => {
 
       const input = {
         password: '123456',
-        resetPasswordToken: 'token',
+        resetPasswordTokenId: uuid,
       };
 
       const result = await auth.resetPassword(authDataSource, input as any);
@@ -494,7 +477,7 @@ describe('> models/authentication', () => {
     test('Providing "password" with less than 3 characters', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await auth.resetPassword(authDataSource, {
-        resetPasswordToken: 'token',
+        resetPasswordTokenId: uuid,
         password: '12',
         confirmPassword: '12',
       });
@@ -514,7 +497,7 @@ describe('> models/authentication', () => {
       const result = await auth.resetPassword(authDataSource, {
         password: '123456',
         confirmPassword: '111222333',
-        resetPasswordToken: 'token',
+        resetPasswordTokenId: uuid,
       });
 
       expect(result).toStrictEqual({
@@ -527,10 +510,9 @@ describe('> models/authentication', () => {
     });
 
     test('Providing valid parameters and trying to signin with the new password', async () => {
-      const authDataSource = createAuthenticationDataSource();
-
       const userEmail = 'gabriel@email.com';
 
+      const authDataSource = createAuthenticationDataSource();
       const { data } = await auth.forgetPassword(authDataSource, {
         email: userEmail,
       });
@@ -538,7 +520,7 @@ describe('> models/authentication', () => {
       const input = {
         password: 'gabriel123',
         confirmPassword: 'gabriel123',
-        resetPasswordToken: data!.forgetPasswordToken,
+        resetPasswordTokenId: data!.resetPasswordTokenId,
       };
 
       const result = await auth.resetPassword(authDataSource, input);
@@ -559,6 +541,15 @@ describe('> models/authentication', () => {
           accessToken: expect.any(String),
         },
       });
+
+      const resetPasswordTokenAfterReset =
+        await authDataSource.findResetPasswordToken({
+          where: {
+            id: data!.resetPasswordTokenId,
+          },
+        });
+
+      expect(resetPasswordTokenAfterReset).toBeNull();
     });
   });
 
@@ -874,3 +865,11 @@ describe('> models/authentication', () => {
     });
   });
 });
+
+//TODO:
+// data/authentication.ts:
+
+// testar o método findResetPasswordToken
+
+// refatorar os métodos de fundUser para um só, podendo ser flexível quanto aos
+// inputs: id, email, userName
