@@ -7,7 +7,8 @@ describe('> models/validator', () => {
     expect(result).toStrictEqual({
       data: null,
       error: {
-        message: 'input must not be empty.',
+        message: 'O input não pode ser vazio.',
+        fields: [],
       },
     });
   });
@@ -42,6 +43,7 @@ describe('> models/validator', () => {
       data: null,
       error: {
         message: '"name" precisa ser uma string.',
+        fields: ['name'],
       },
     });
   });
@@ -60,6 +62,7 @@ describe('> models/validator', () => {
       data: null,
       error: {
         message: '"name" precisa ser uma string.',
+        fields: ['name'],
       },
     });
   });
@@ -78,6 +81,7 @@ describe('> models/validator', () => {
       data: null,
       error: {
         message: '"name" é obrigatório.',
+        fields: ['name'],
       },
     });
   });
@@ -115,6 +119,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"name" precisa ser uma string.',
+          fields: ['name'],
         },
       });
     });
@@ -133,6 +138,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"name" precisa ter no mínimo 3 caracteres.',
+          fields: ['name'],
         },
       });
     });
@@ -151,6 +157,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"name" precisa ser uma string.',
+          fields: ['name'],
         },
       });
     });
@@ -169,6 +176,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"name" precisa ter no mínimo 3 caracteres.',
+          fields: ['name'],
         },
       });
     });
@@ -209,6 +217,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"email" precisa ser uma string.',
+          fields: ['email'],
         },
       });
     });
@@ -227,6 +236,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"email" precisa ser um email válido.',
+          fields: ['email'],
         },
       });
     });
@@ -245,6 +255,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"email" precisa ser uma string.',
+          fields: ['email'],
         },
       });
     });
@@ -263,6 +274,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"email" precisa ser um email válido.',
+          fields: ['email'],
         },
       });
     });
@@ -323,6 +335,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"userName" precisa ser uma string.',
+          fields: ['userName'],
         },
       });
     });
@@ -341,6 +354,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"userName" não pode ter espaços.',
+          fields: ['userName'],
         },
       });
     });
@@ -359,6 +373,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"userName" precisa ser uma string.',
+          fields: ['userName'],
         },
       });
     });
@@ -377,6 +392,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"userName" não pode ter espaços.',
+          fields: ['userName'],
         },
       });
     });
@@ -437,6 +453,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"password" precisa ser uma string.',
+          fields: ['password'],
         },
       });
     });
@@ -455,6 +472,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"password" precisa ter no mínimo 6 caracteres.',
+          fields: ['password'],
         },
       });
     });
@@ -493,6 +511,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"password" precisa ser uma string.',
+          fields: ['password'],
         },
       });
     });
@@ -511,6 +530,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"password" precisa ter no mínimo 6 caracteres.',
+          fields: ['password'],
         },
       });
     });
@@ -551,6 +571,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"confirmPassword" precisa ser uma string.',
+          fields: ['confirmPassword'],
         },
       });
     });
@@ -569,6 +590,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirmPassword'],
         },
       });
     });
@@ -607,6 +629,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"confirmPassword" precisa ser uma string.',
+          fields: ['confirmPassword'],
         },
       });
     });
@@ -625,6 +648,7 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirmPassword'],
         },
       });
     });
