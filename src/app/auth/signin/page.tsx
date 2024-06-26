@@ -3,12 +3,11 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { auth, SignInResponse } from '@/models/authentication';
+import { auth, SignInProps, SignInResponse } from '@/models/authentication';
 import { Input } from '@/src/components/Input';
 import { SubmitButton } from '@/src/components/SubmitButton';
 import { constants } from '@/src/utils/constants';
 import { form } from '@/src/utils/form';
-import { SignInProps } from '@/types';
 
 let signInResponse: SignInResponse;
 

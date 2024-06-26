@@ -6,14 +6,17 @@ import z from 'zod';
 import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
 import { emailService } from '@/models/email';
+import { ValidationSchema, validator } from '@/models/validator';
 import { ForgetPasswordEmail } from '@/src/components/email-templates/ForgetPassword';
 import { Welcome } from '@/src/components/email-templates/Welcome';
 import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
-import { Failure, operationResult, Success } from '@/src/utils/operationResult';
-import { SignInProps, SignUpProps } from '@/types';
+import { Failure, Success, operationResult } from '@/src/utils/operationResult';
 
-export type AvailableFields = AvailableSignUpFields | AvailableSignInFields;
+type AvailableSignUpFields = keyof SignUpProps;
+type AvailableSignInFields = keyof SignInProps;
+
+type AvailableFields = AvailableSignUpFields | AvailableSignInFields;
 
 export type FailureAuthResponse<T = unknown> = {
   message: string;
@@ -25,9 +28,6 @@ type SuccessAuthSignUpResponse = {
   name: string;
   userName: string;
 };
-
-export type AvailableSignUpFields = keyof SignUpProps;
-export type AvailableSignInFields = keyof SignInProps;
 
 type Payload = {
   sub: string;
@@ -47,10 +47,6 @@ export type SignInResponse =
 
 type VerifyAccessTokenProps = {
   accessToken?: string;
-};
-
-export type ForgetPasswordInput = {
-  email: string;
 };
 
 export type ForgetPasswordOutput = Awaited<ReturnType<typeof forgetPassword>>;
@@ -89,41 +85,14 @@ export const auth = Object.freeze({
   setInputError,
 });
 
-const signUpSchema = z.object({
-  name: z
-    .string({
-      required_error: 'O nome é obrigatório',
-    })
-    .min(3, {
-      message: 'O nome precisa ter no mínimo 3 caracteres',
-    }),
-  email: z
-    .string({
-      required_error: 'O e-mail é obrigatório',
-    })
-    .email({
-      message: 'O e-mail precisa ser válido',
-    }),
-  userName: z
-    .string({
-      required_error: 'O nome de usuário é obrigatório',
-    })
-    .refine((s) => !s.includes(' '), 'O nome de usuário não pode ter espaços'),
-  password: z
-    .string({
-      required_error: 'A senha é obrigatória',
-    })
-    .min(6, {
-      message: 'A senha precisa ter no mínimo 6 caracteres',
-    }),
-  confirmPassword: z
-    .string({
-      required_error: 'A confirmação de senha é obrigatória',
-    })
-    .min(6, {
-      message: 'A confirmação de senha precisa ter no mínimo 6 caracteres',
-    }),
-});
+export type SignUpProps = {
+  email: ValidationSchema['email'];
+  name: ValidationSchema['name'];
+  userName: ValidationSchema['userName'];
+  password: ValidationSchema['password'];
+  confirmPassword: ValidationSchema['confirmPassword'];
+};
+
 async function signUp(
   authDataSource: AuthenticationDataSource,
   input: SignUpProps,
@@ -137,19 +106,32 @@ async function signUp(
     });
   }
 
-  const validatedInput = signUpSchema.safeParse(input);
+  const insecureInput = {
+    email: input.email,
+    name: input.name,
+    userName: input.userName,
+    password: input.password,
+    confirmPassword: input.confirmPassword,
+  };
 
-  if (!validatedInput.success) {
+  const { data: secureInput, error } = validator(insecureInput, {
+    name: 'required',
+    email: 'required',
+    userName: 'required',
+    password: 'required',
+    confirmPassword: 'required',
+  });
+
+  if (error) {
     return operationResult.failure<FailureAuthResponse>({
-      message: validatedInput.error.issues[0].message,
-      fields: validatedInput.error.errors[0].path as AvailableSignUpFields[],
+      message: error.message,
+      fields: error.fields as AvailableSignUpFields[],
     });
   }
 
-  const { email, name, password, userName } = validatedInput.data;
+  const { email, name, password, userName } = secureInput;
 
   const isEmailAlreadyInUse = await authDataSource.findUserByEmail({ email });
-
   if (isEmailAlreadyInUse) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'O e-mail já está em uso',
@@ -160,7 +142,6 @@ async function signUp(
   const isUserNameAlreadyInUse = await authDataSource.findUserByUserName({
     userName,
   });
-
   if (isUserNameAlreadyInUse) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'O nome de usuário já está em uso',
@@ -192,35 +173,35 @@ async function signUp(
   return operationResult.success({ email, name, userName });
 }
 
-const signInSchema = z.object({
-  email: z
-    .string({
-      required_error: 'O e-mail é obrigatório',
-    })
-    .email({
-      message: 'O e-mail precisa ser válido',
-    }),
-  password: z.string({
-    required_error: 'A senha é obrigatória',
-  }),
-});
+export type SignInProps = {
+  email: ValidationSchema['email'];
+  password: ValidationSchema['password'];
+};
+
 async function signIn(
   authDataSource: AuthenticationDataSource,
   input: SignInProps,
 ): Promise<SignInResponse> {
-  const validatedInput = signInSchema.safeParse(input);
+  const insecureInput = {
+    email: input.email,
+    password: input.password,
+  };
 
-  if (!validatedInput.success) {
+  const { data: secureInput, error } = validator(insecureInput, {
+    email: 'required',
+    password: 'required',
+  });
+
+  if (error) {
     return operationResult.failure<FailureAuthResponse>({
-      message: validatedInput.error.issues[0].message,
-      fields: validatedInput.error.errors[0].path as AvailableSignUpFields[],
+      message: error.message,
+      fields: error.fields as AvailableSignInFields[],
     });
   }
 
-  const { email, password } = validatedInput.data;
+  const { email, password } = secureInput;
 
   const user = await authDataSource.findUserByEmail({ email });
-
   if (!user) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'Credenciais inválidas',
@@ -229,7 +210,6 @@ async function signIn(
   }
 
   const isPasswordValid = bcrypt.compareSync(password, user.password);
-
   if (!isPasswordValid) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'Credenciais inválidas',
@@ -260,20 +240,31 @@ function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
   }
 }
 
-const forgetPasswordSchema = signUpSchema.pick({ email: true });
+export type ForgetPasswordInput = {
+  email: string;
+};
+
 async function forgetPassword(
   authDataSource: AuthenticationDataSource,
-  { email }: ForgetPasswordInput,
+  input: ForgetPasswordInput,
 ) {
-  const validatedInput = forgetPasswordSchema.safeParse({
-    email,
-  });
-  if (!validatedInput.success) {
+  const { data: secureInput, error } = validator(
+    {
+      email: input.email,
+    },
+    {
+      email: 'required',
+    },
+  );
+
+  if (error) {
     return operationResult.failure<FailureAuthResponse>({
-      message: validatedInput.error.issues[0].message,
-      fields: ['email'],
+      message: error.message,
+      fields: error.fields as AvailableFields[],
     });
   }
+
+  const { email } = secureInput;
 
   const userFoundByEmail = await authDataSource.findUserByEmail({ email });
   if (!userFoundByEmail) {
@@ -311,6 +302,7 @@ async function forgetPassword(
   });
 }
 
+// TODO: move to validator
 const changePasswordSchema = z.object({
   userId: z
     .string({
@@ -417,58 +409,41 @@ function verifyResetPasswordToken({
   }
 }
 
-const resetPasswordSchema = signUpSchema.pick({
-  password: true,
-  confirmPassword: true,
-});
-
-const resetPasswordTokenSchema = z.object({
-  resetPasswordTokenId: z
-    .string({
-      required_error: 'A propriedade "resetPasswordTokenId" é obrigatória.',
-    })
-    .uuid({
-      message: 'O "resetPasswordTokenId" precisa ser um UUID.',
-    }),
-});
-
 async function resetPassword(
   authDataSource: AuthenticationDataSource,
   input: ResetPasswordInput,
 ) {
-  const tokenIdValidation = resetPasswordTokenSchema.safeParse(input);
-  if (tokenIdValidation.error) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: tokenIdValidation.error.issues[0].message,
-      fields: [],
-    });
-  }
-
   const insecureInput = {
+    resetPasswordTokenId: input.resetPasswordTokenId,
     password: input.password,
     confirmPassword: input.confirmPassword,
   };
 
-  const { data, error } = resetPasswordSchema.safeParse(insecureInput);
+  const { data: secureInput, error } = validator(insecureInput, {
+    password: 'required',
+    confirmPassword: 'required',
+    resetPasswordTokenId: 'required',
+  });
+
   if (error) {
     return operationResult.failure<FailureAuthResponse>({
-      message: error.issues[0].message,
-      fields: ['password', 'confirmPassword'],
+      message: error.message,
+      fields: error.fields as AvailableFields[],
     });
   }
 
-  const { password, confirmPassword } = data;
+  const { password, confirmPassword, resetPasswordTokenId } = secureInput;
 
   if (password !== confirmPassword) {
     return operationResult.failure<FailureAuthResponse>({
-      message: 'As senhas precisam ser iguais',
+      message: 'As senhas precisam ser iguais.',
       fields: ['password', 'confirmPassword'],
     });
   }
 
   const resetTokenFoundFromId = await authDataSource.findResetPasswordToken({
     where: {
-      id: input.resetPasswordTokenId,
+      id: resetPasswordTokenId,
     },
   });
 

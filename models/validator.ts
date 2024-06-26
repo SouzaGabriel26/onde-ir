@@ -8,11 +8,17 @@ export function validator<T extends Partial<ValidationSchema>>(
 ) {
   if (Object.keys(payload).length === 0) {
     return operationResult.failure({
-      message: 'input must not be empty.',
+      message: 'O input não pode ser vazio.',
+      fields: [],
     });
   }
 
-  let message = '';
+  type ResponseMessage = {
+    message: string;
+    fields: string[];
+  } | null;
+
+  let responseMessage = {} as ResponseMessage;
   let output = {} as T;
 
   for (const [key, value] of Object.entries(payload)) {
@@ -33,23 +39,24 @@ export function validator<T extends Partial<ValidationSchema>>(
     });
 
     if (!success) {
-      message = error.errors[0].message;
+      responseMessage = {
+        message: error.errors[0].message,
+        fields: [String(error.errors[0].path[0])],
+      };
       break;
     }
 
     output[validationKey] = data[validationKey];
   }
 
-  if (message) {
-    return operationResult.failure({
-      message,
-    });
+  if (responseMessage?.message) {
+    return operationResult.failure<ResponseMessage>(responseMessage);
   }
 
   return operationResult.success(output);
 }
 
-type ValidationSchema = z.infer<typeof schema>;
+export type ValidationSchema = z.infer<typeof schema>;
 type ValidationKeysOptions = 'required' | 'optional';
 type ValidationSchemaKeys = keyof ValidationSchema;
 
@@ -59,6 +66,7 @@ const schema = z.object({
       required_error: '"name" é obrigatório.',
       invalid_type_error: '"name" precisa ser uma string.',
     })
+    .trim()
     .min(3, {
       message: '"name" precisa ter no mínimo 3 caracteres.',
     }),
@@ -91,5 +99,13 @@ const schema = z.object({
     })
     .min(6, {
       message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
+    }),
+  resetPasswordTokenId: z
+    .string({
+      required_error: '"resetPasswordTokenId" é obrigatório.',
+      invalid_type_error: '"resetPasswordTokenId" precisa ser uma string.',
+    })
+    .uuid({
+      message: '"resetPasswordTokenId" precisa ser um UUID válido.',
     }),
 });
