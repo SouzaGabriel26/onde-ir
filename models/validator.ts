@@ -66,6 +66,7 @@ const schema = z.object({
       required_error: '"name" é obrigatório.',
       invalid_type_error: '"name" precisa ser uma string.',
     })
+    .trim()
     .min(3, {
       message: '"name" precisa ter no mínimo 3 caracteres.',
     }),

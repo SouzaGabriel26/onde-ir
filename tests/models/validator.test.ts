@@ -180,6 +180,26 @@ describe('> models/validator', () => {
         },
       });
     });
+
+    test('Providing a untrimmed name', () => {
+      const untrimmedName = '  Gabriel  ';
+
+      const result = validator(
+        {
+          name: untrimmedName,
+        },
+        {
+          name: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          name: 'Gabriel',
+        },
+        error: null,
+      });
+    });
   });
 
   describe('Testing "email"', () => {
@@ -595,7 +615,7 @@ describe('> models/validator', () => {
       });
     });
 
-    test('Providing valid value to optional parameter', () => {
+    test('Providing valid value to required parameter', () => {
       const confirmPassword = 'confirmPassword';
 
       const result = validator(
@@ -603,7 +623,7 @@ describe('> models/validator', () => {
           confirmPassword,
         },
         {
-          confirmPassword: 'optional',
+          confirmPassword: 'required',
         },
       );
 
@@ -615,13 +635,13 @@ describe('> models/validator', () => {
       });
     });
 
-    test('Providing a invalid type to optional parameter', () => {
+    test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
           confirmPassword: 123 as any,
         },
         {
-          confirmPassword: 'optional',
+          confirmPassword: 'required',
         },
       );
 
@@ -634,13 +654,13 @@ describe('> models/validator', () => {
       });
     });
 
-    test('Providing a "confirmPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "confirmPassword" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
           confirmPassword: 'pass',
         },
         {
-          confirmPassword: 'optional',
+          confirmPassword: 'required',
         },
       );
 
@@ -649,6 +669,124 @@ describe('> models/validator', () => {
         error: {
           message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
           fields: ['confirmPassword'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "resetPasswordTokenId"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+
+      const result = validator(
+        {
+          resetPasswordTokenId,
+        },
+        {
+          resetPasswordTokenId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          resetPasswordTokenId,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing a invalid type to optional parameter (number)', () => {
+      const result = validator(
+        {
+          resetPasswordTokenId: 123 as any,
+        },
+        {
+          resetPasswordTokenId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"resetPasswordTokenId" precisa ser uma string.',
+          fields: ['resetPasswordTokenId'],
+        },
+      });
+    });
+
+    test('Providing a invalid type to optional parameter (not UUID)', () => {
+      const result = validator(
+        {
+          resetPasswordTokenId: '123' as any,
+        },
+        {
+          resetPasswordTokenId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
+          fields: ['resetPasswordTokenId'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+
+      const result = validator(
+        {
+          resetPasswordTokenId,
+        },
+        {
+          resetPasswordTokenId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          resetPasswordTokenId,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing a invalid type to required parameter (number)', () => {
+      const result = validator(
+        {
+          resetPasswordTokenId: 123 as any,
+        },
+        {
+          resetPasswordTokenId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"resetPasswordTokenId" precisa ser uma string.',
+          fields: ['resetPasswordTokenId'],
+        },
+      });
+    });
+
+    test('Providing a invalid type to required parameter (not UUID)', () => {
+      const result = validator(
+        {
+          resetPasswordTokenId: '123' as any,
+        },
+        {
+          resetPasswordTokenId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
+          fields: ['resetPasswordTokenId'],
         },
       });
     });
