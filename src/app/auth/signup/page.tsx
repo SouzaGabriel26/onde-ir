@@ -3,11 +3,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { auth, SignUpResponse } from '@/models/authentication';
+import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
 import { Input } from '@/src/components/Input';
 import { SubmitButton } from '@/src/components/SubmitButton';
 import { form } from '@/src/utils/form';
-import { SignUpProps } from '@/types';
 
 let signUpResponse: SignUpResponse;
 

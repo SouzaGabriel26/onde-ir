@@ -2,9 +2,8 @@ import { randomUUID } from 'node:crypto';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { database } from '@/infra/database';
-import { auth } from '@/models/authentication';
+import { SignInProps, SignUpProps, auth } from '@/models/authentication';
 import { orchestrator } from '@/tests/orchestrator';
-import { SignInProps, SignUpProps } from '@/types';
 
 beforeAll(async () => {
   await orchestrator.resetDatabase();
@@ -77,7 +76,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail precisa ser válido',
+          message: '"email" precisa ser um email válido.',
           fields: ['email'],
         },
       });
@@ -99,7 +98,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O nome precisa ter no mínimo 3 caracteres',
+          message: '"name" precisa ter no mínimo 3 caracteres.',
           fields: ['name'],
         },
       });
@@ -120,7 +119,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O nome de usuário não pode ter espaços',
+          message: '"userName" não pode ter espaços.',
           fields: ['userName'],
         },
       });
@@ -141,7 +140,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A senha precisa ter no mínimo 6 caracteres',
+          message: '"password" precisa ter no mínimo 6 caracteres.',
           fields: ['password'],
         },
       });
@@ -154,8 +153,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O nome é obrigatório',
-          fields: ['name'],
+          message: '"email" é obrigatório.',
+          fields: ['email'],
         },
       });
     });
@@ -175,7 +174,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail é obrigatório',
+          message: '"email" é obrigatório.',
           fields: ['email'],
         },
       });
@@ -235,7 +234,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail é obrigatório',
+          message: '"email" é obrigatório.',
           fields: ['email'],
         },
       });
@@ -251,7 +250,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail é obrigatório',
+          message: '"email" é obrigatório.',
           fields: ['email'],
         },
       });
@@ -267,7 +266,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A senha é obrigatória',
+          message: '"password" é obrigatório.',
           fields: ['password'],
         },
       });
@@ -334,7 +333,7 @@ describe('> models/authentication', () => {
 
       expect(result).toStrictEqual({
         error: {
-          message: 'O e-mail precisa ser válido',
+          message: '"email" precisa ser um email válido.',
           fields: ['email'],
         },
         data: null,
@@ -352,7 +351,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail precisa ser válido',
+          message: '"email" precisa ser um email válido.',
           fields: ['email'],
         },
       });
@@ -365,7 +364,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O e-mail é obrigatório',
+          message: '"email" é obrigatório.',
           fields: ['email'],
         },
       });
@@ -413,8 +412,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A propriedade "resetPasswordTokenId" é obrigatória.',
-          fields: [],
+          message: '"resetPasswordTokenId" é obrigatório.',
+          fields: ['resetPasswordTokenId'],
         },
       });
     });
@@ -430,8 +429,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O "resetPasswordTokenId" precisa ser um UUID.',
-          fields: [],
+          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
+          fields: ['resetPasswordTokenId'],
         },
       });
     });
@@ -449,8 +448,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A senha é obrigatória',
-          fields: ['password', 'confirmPassword'],
+          message: '"password" é obrigatório.',
+          fields: ['password'],
         },
       });
     });
@@ -468,8 +467,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A confirmação de senha é obrigatória',
-          fields: ['password', 'confirmPassword'],
+          message: '"confirmPassword" é obrigatório.',
+          fields: ['confirmPassword'],
         },
       });
     });
@@ -485,8 +484,8 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A senha precisa ter no mínimo 6 caracteres',
-          fields: ['password', 'confirmPassword'],
+          message: '"password" precisa ter no mínimo 6 caracteres.',
+          fields: ['password'],
         },
       });
     });
@@ -503,7 +502,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'As senhas precisam ser iguais',
+          message: 'As senhas precisam ser iguais.',
           fields: ['password', 'confirmPassword'],
         },
       });
