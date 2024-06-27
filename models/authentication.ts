@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import z from 'zod';
 
 import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
@@ -302,33 +301,6 @@ async function forgetPassword(
   });
 }
 
-// TODO: move to validator
-const changePasswordSchema = z.object({
-  userId: z
-    .string({
-      required_error: 'O id do usuário é obrigatório',
-    })
-    .uuid({
-      message: 'O id do usuário precisa ser um UUID',
-    }),
-  actualPassword: z.string({
-    required_error: 'A senha atual é obrigatória',
-  }),
-  newPassword: z
-    .string({
-      required_error: 'A nova senha é obrigatória',
-    })
-    .min(6, {
-      message: 'A nova senha precisa ter no mínimo 6 caracteres',
-    }),
-  confirmNewPassword: z
-    .string({
-      required_error: 'A confirmação da nova senha é obrigatória',
-    })
-    .min(6, {
-      message: 'A confirmação da nova senha precisa ter no mínimo 6 caracteres',
-    }),
-});
 async function changePassword(
   authDataSource: AuthenticationDataSource,
   input: ChangePasswordInput,
@@ -340,14 +312,15 @@ async function changePassword(
     confirmNewPassword: input.confirmNewPassword,
   };
 
-  const { data: secureInput, error } =
-    changePasswordSchema.safeParse(insecureInput);
+  const { data: secureInput, error } = validator(insecureInput, {
+    userId: 'required',
+    actualPassword: 'required',
+    newPassword: 'required',
+    confirmNewPassword: 'required',
+  });
 
   if (error) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: error.issues[0].message,
-      fields: error.errors[0].path as AvailableSignUpFields[],
-    });
+    return operationResult.failure(error);
   }
 
   const { userId, actualPassword, newPassword, confirmNewPassword } =

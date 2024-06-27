@@ -568,7 +568,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O id do usuário precisa ser um UUID',
+          message: '"userId" precisa ser um UUID válido.',
           fields: ['userId'],
         },
       });
@@ -587,7 +587,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'O id do usuário é obrigatório',
+          message: '"userId" é obrigatório.',
           fields: ['userId'],
         },
       });
@@ -630,7 +630,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A senha atual é obrigatória',
+          message: '"actualPassword" é obrigatório.',
           fields: ['actualPassword'],
         },
       });
@@ -684,7 +684,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A nova senha é obrigatória',
+          message: '"newPassword" é obrigatório.',
           fields: ['newPassword'],
         },
       });
@@ -706,7 +706,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A nova senha precisa ter no mínimo 6 caracteres',
+          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
           fields: ['newPassword'],
         },
       });
@@ -727,7 +727,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A confirmação da nova senha é obrigatória',
+          message: '"confirmNewPassword" é obrigatório.',
           fields: ['confirmNewPassword'],
         },
       });
@@ -749,8 +749,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message:
-            'A confirmação da nova senha precisa ter no mínimo 6 caracteres',
+          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
           fields: ['confirmNewPassword'],
         },
       });
