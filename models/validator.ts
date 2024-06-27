@@ -108,4 +108,31 @@ const schema = z.object({
     .uuid({
       message: '"resetPasswordTokenId" precisa ser um UUID válido.',
     }),
+  userId: z
+    .string({
+      required_error: '"userId" é obrigatório.',
+    })
+    .uuid({
+      message: '"userId" precisa ser um UUID válido.',
+    }),
+  actualPassword: z.string({
+    required_error: '"actualPassword" é obrigatório.',
+    invalid_type_error: '"actualPassword" precisa ser uma string.',
+  }),
+  newPassword: z
+    .string({
+      required_error: '"newPassword" é obrigatório.',
+      invalid_type_error: '"newPassword" precisa ser uma string.',
+    })
+    .min(6, {
+      message: '"newPassword" precisa ter no mínimo 6 caracteres.',
+    }),
+  confirmNewPassword: z
+    .string({
+      required_error: '"confirmNewPassword" é obrigatório.',
+      invalid_type_error: '"confirmNewPassword" precisa ser uma string.',
+    })
+    .min(6, {
+      message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
+    }),
 });
