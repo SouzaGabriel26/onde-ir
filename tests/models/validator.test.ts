@@ -791,4 +791,438 @@ describe('> models/validator', () => {
       });
     });
   });
+
+  describe('Testing "userId"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const userId = '00000000-0000-0000-0000-000000000000';
+
+      const result = validator(
+        {
+          userId,
+        },
+        {
+          userId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          userId,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to optional parameter', () => {
+      const result = validator(
+        {
+          userId: 123 as any,
+        },
+        {
+          userId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"userId" precisa ser uma string.',
+          fields: ['userId'],
+        },
+      });
+    });
+
+    test('Providing invalid type (not UUID) to optional parameter', () => {
+      const result = validator(
+        {
+          userId: '123' as any,
+        },
+        {
+          userId: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"userId" precisa ser um UUID válido.',
+          fields: ['userId'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const userId = '00000000-0000-0000-0000-000000000000';
+
+      const result = validator(
+        {
+          userId,
+        },
+        {
+          userId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          userId,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to required parameter', () => {
+      const result = validator(
+        {
+          userId: 123 as any,
+        },
+        {
+          userId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"userId" precisa ser uma string.',
+          fields: ['userId'],
+        },
+      });
+    });
+
+    test('Providing invalid type (not UUID) to required parameter', () => {
+      const result = validator(
+        {
+          userId: '123' as any,
+        },
+        {
+          userId: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"userId" precisa ser um UUID válido.',
+          fields: ['userId'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "actualPassword"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const actualPassword = 'password';
+
+      const result = validator(
+        {
+          actualPassword,
+        },
+        {
+          actualPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          actualPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to optional parameter', () => {
+      const result = validator(
+        {
+          actualPassword: 123 as any,
+        },
+        {
+          actualPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"actualPassword" precisa ser uma string.',
+          fields: ['actualPassword'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const actualPassword = 'password';
+
+      const result = validator(
+        {
+          actualPassword,
+        },
+        {
+          actualPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          actualPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to required parameter', () => {
+      const result = validator(
+        {
+          actualPassword: 123 as any,
+        },
+        {
+          actualPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"actualPassword" precisa ser uma string.',
+          fields: ['actualPassword'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "newPassword"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const newPassword = 'new_password';
+
+      const result = validator(
+        {
+          newPassword,
+        },
+        {
+          newPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          newPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to optional parameter', () => {
+      const result = validator(
+        {
+          newPassword: 123 as any,
+        },
+        {
+          newPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"newPassword" precisa ser uma string.',
+          fields: ['newPassword'],
+        },
+      });
+    });
+
+    test('Providing a "newPassword" with less than 6 characters to optional parameter', () => {
+      const result = validator(
+        {
+          newPassword: 'pass',
+        },
+        {
+          newPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['newPassword'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const newPassword = 'new_password';
+
+      const result = validator(
+        {
+          newPassword,
+        },
+        {
+          newPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          newPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to required parameter', () => {
+      const result = validator(
+        {
+          newPassword: 123 as any,
+        },
+        {
+          newPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"newPassword" precisa ser uma string.',
+          fields: ['newPassword'],
+        },
+      });
+    });
+
+    test('Providing a "newPassword" with less than 6 characters to required parameter', () => {
+      const result = validator(
+        {
+          newPassword: 'pass',
+        },
+        {
+          newPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['newPassword'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "confirmNewPassword"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const confirmNewPassword = 'new_password';
+
+      const result = validator(
+        {
+          confirmNewPassword,
+        },
+        {
+          confirmNewPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          confirmNewPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to optional parameter', () => {
+      const result = validator(
+        {
+          confirmNewPassword: 123 as any,
+        },
+        {
+          confirmNewPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"confirmNewPassword" precisa ser uma string.',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Providing a "confirmNewPassword" with less than 6 characters to optional parameter', () => {
+      const result = validator(
+        {
+          confirmNewPassword: 'pass',
+        },
+        {
+          confirmNewPassword: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const confirmNewPassword = 'new_password';
+
+      const result = validator(
+        {
+          confirmNewPassword,
+        },
+        {
+          confirmNewPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          confirmNewPassword,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid type (number) to required parameter', () => {
+      const result = validator(
+        {
+          confirmNewPassword: 123 as any,
+        },
+        {
+          confirmNewPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"confirmNewPassword" precisa ser uma string.',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+
+    test('Providing a "confirmNewPassword" with less than 6 characters to required parameter', () => {
+      const result = validator(
+        {
+          confirmNewPassword: 'pass',
+        },
+        {
+          confirmNewPassword: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirmNewPassword'],
+        },
+      });
+    });
+  });
 });
