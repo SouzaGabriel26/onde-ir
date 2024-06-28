@@ -111,6 +111,7 @@ const schema = z.object({
   userId: z
     .string({
       required_error: '"userId" é obrigatório.',
+      invalid_type_error: '"userId" precisa ser uma string.',
     })
     .uuid({
       message: '"userId" precisa ser um UUID válido.',
