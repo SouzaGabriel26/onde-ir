@@ -46,7 +46,7 @@ export function validator<T extends Partial<ValidationSchema>>(
       break;
     }
 
-    output[validationKey] = data[validationKey];
+    output = { ...output, ...data };
   }
 
   if (responseMessage?.message) {
@@ -136,4 +136,30 @@ const schema = z.object({
     .min(6, {
       message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
     }),
+  selectUserFields: z.array(
+    z
+      .string({
+        invalid_type_error:
+          '"selectUserFields" precisa ser um array de strings.',
+        required_error: '"selectUserFields" é obrigatório.',
+      })
+      .refine(
+        (field) =>
+          [
+            'id',
+            'email',
+            'name',
+            'password',
+            'userName',
+            'userRole',
+            'createdAt',
+            'updatedAt',
+          ].includes(field),
+        '"selectUserFields" precisa conter apenas propriedades válidas.',
+      ),
+    {
+      invalid_type_error: '"selectUserFields" precisa ser um array de strings.',
+      required_error: '"selectUserFields" é obrigatório.',
+    },
+  ),
 });
