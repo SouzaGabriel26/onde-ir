@@ -25,7 +25,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A propriedade "id" deve ser um UUID',
+          message: '"userId" precisa ser um UUID válido.',
+          fields: ['userId'],
         },
       });
     });
@@ -78,7 +79,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A propriedade "id" deve ser uma string',
+          message: '"userId" precisa ser uma string.',
+          fields: ['userId'],
         },
       });
     });
@@ -91,7 +93,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: 'A propriedade "id" é obrigatória',
+          message: '"userId" é obrigatório.',
+          fields: ['userId'],
         },
       });
     });
@@ -153,7 +156,8 @@ describe('> models/user', () => {
         data: null,
         error: {
           message:
-            'A propriedade "select" deve conter apenas propriedades válidas',
+            '"selectUserFields" precisa conter apenas propriedades válidas.',
+          fields: ['selectUserFields'],
         },
       });
     });

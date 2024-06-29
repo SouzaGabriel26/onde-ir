@@ -1225,4 +1225,155 @@ describe('> models/validator', () => {
       });
     });
   });
+
+  describe('Testing "selectUserFields"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: ['name', 'email', 'userName'],
+        },
+        {
+          selectUserFields: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          selectUserFields: ['name', 'email', 'userName'],
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to optional parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: undefined,
+        },
+        {
+          selectUserFields: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+    });
+
+    test('Providing a invalid property to optional parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+        },
+        {
+          selectUserFields: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message:
+            '"selectUserFields" precisa conter apenas propriedades válidas.',
+          fields: ['selectUserFields'],
+        },
+      });
+    });
+
+    test('Providing invalid type value to optional parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: 123 as any,
+        },
+        {
+          selectUserFields: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"selectUserFields" precisa ser um array de strings.',
+          fields: ['selectUserFields'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: ['name', 'email', 'userName'],
+        },
+        {
+          selectUserFields: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          selectUserFields: ['name', 'email', 'userName'],
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to required parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: undefined,
+        },
+        {
+          selectUserFields: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"selectUserFields" é obrigatório.',
+          fields: ['selectUserFields'],
+        },
+      });
+    });
+
+    test('Providing a invalid property to required parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+        },
+        {
+          selectUserFields: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message:
+            '"selectUserFields" precisa conter apenas propriedades válidas.',
+          fields: ['selectUserFields'],
+        },
+      });
+    });
+
+    test('Providing invalid type value to required parameter', () => {
+      const result = validator(
+        {
+          selectUserFields: 123 as any,
+        },
+        {
+          selectUserFields: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"selectUserFields" precisa ser um array de strings.',
+          fields: ['selectUserFields'],
+        },
+      });
+    });
+  });
 });
