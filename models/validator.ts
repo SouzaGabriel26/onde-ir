@@ -162,4 +162,12 @@ const schema = z.object({
       required_error: '"selectUserFields" é obrigatório.',
     },
   ),
+  stateId: z
+    .number({
+      required_error: '"stateId" é obrigatório.',
+      invalid_type_error: '"stateId" precisa ser um número.',
+    })
+    .min(1, {
+      message: '"stateId" precisa ser um número maior que 0.',
+    }),
 });
