@@ -170,4 +170,20 @@ const schema = z.object({
     .min(1, {
       message: '"stateId" precisa ser um número maior que 0.',
     }),
+  page: z
+    .number({
+      invalid_type_error: '"page" precisa ser um número.',
+      required_error: '"page" é obrigatório.',
+    })
+    .min(1, {
+      message: '"page" precisa ser um número maior que 0.',
+    }),
+  limit: z
+    .number({
+      invalid_type_error: '"limit" precisa ser um número.',
+      required_error: '"limit" é obrigatório.',
+    })
+    .min(1, {
+      message: '"limit" precisa ser um número maior que 0.',
+    }),
 });
