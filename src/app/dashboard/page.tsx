@@ -39,7 +39,7 @@ export default async function Page() {
 
   return (
     <main>
-      <Header signedIn={!!data} />
+      <Header userData={data} />
 
       <h1>Dashboard</h1>
       <p>Bem vindo, {data?.name}</p>
