@@ -9,11 +9,11 @@ type NavButtonProps = {
 
 export function NavButton({ href, title }: NavButtonProps) {
   return (
-    <Button className="group rounded-lg px-0">
-      <Link className="px-2 py-1" href={href}>
+    <Button className="group rounded-lg bg-[#DDE9F0] px-0">
+      <Link className="px-4" href={href}>
         {title}
       </Link>
-      <div className="hidden h-px animate-crescent-line bg-black group-hover:block dark:bg-white" />
+      <div className="hidden h-[2px] animate-crescent-line rounded bg-secondary group-hover:block" />
     </Button>
   );
 }

@@ -1,11 +1,13 @@
+import { User } from '@/types';
+
+import { Avatar } from './Avatar';
 import { NavButton } from './NavButton';
-import { ToggleThemeButton } from './ToggleThemeButton';
 
 type HeaderProps = {
-  signedIn?: boolean;
+  userData?: Partial<User> | null;
 };
 
-export function Header({ signedIn = false }: HeaderProps) {
+export function Header({ userData = null }: HeaderProps) {
   return (
     <header
       className={`
@@ -13,24 +15,21 @@ export function Header({ signedIn = false }: HeaderProps) {
         h-16
         items-center
         justify-between
-        border-b
-        bg-[#eeeeee]
         px-4
-        dark:border-zinc-700
-        dark:bg-zinc-800
-        md:px-10
+        shadow-sm
+        md:px-40
       `}
     >
-      <h1 className="text-2xl">Onde Ir?</h1>
+      <h1 className="text-2xl font-medium">Onde Ir?</h1>
 
       <nav className="flex items-center gap-2 text-sm md:gap-4 md:text-base">
-        {!signedIn && (
+        {!userData && (
           <>
             <NavButton href="/auth/signin" title="Entrar" />
-            <NavButton href="/auth/signup" title="Cadastrar" />
           </>
         )}
-        <ToggleThemeButton />
+
+        {userData && <Avatar name={userData.name!} />}
       </nav>
     </header>
   );

@@ -24,7 +24,7 @@ export function SubmitButton({ className, children }: SubmitButtonProps) {
           px-2
           py-1
           text-sm
-          text-[#333]
+          text-primary
           transition-opacity
           hover:opacity-75
           disabled:cursor-not-allowed
