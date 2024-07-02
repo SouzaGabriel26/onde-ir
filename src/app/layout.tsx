@@ -1,7 +1,6 @@
 import { NextUIProvider } from '@nextui-org/react';
 import type { Metadata } from 'next';
 
-import { ThemeProvider } from '@/src/contexts/ThemeProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -16,10 +15,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="h-full  dark:bg-zinc-950">
-        <ThemeProvider>
-          <NextUIProvider>{children}</NextUIProvider>
-        </ThemeProvider>
+      <body className="h-full text-primary">
+        <NextUIProvider>{children}</NextUIProvider>
       </body>
     </html>
   );
