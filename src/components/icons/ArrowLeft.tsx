@@ -8,9 +8,9 @@ export function ArrowLeft({ ...props }: ArrowLeftProps) {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      {...props}
     >
       <path
+        {...props}
         d="M4 12H20M4 12L8 8M4 12L8 16"
         stroke="#000000"
         strokeWidth="2"

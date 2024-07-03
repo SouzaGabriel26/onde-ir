@@ -40,16 +40,17 @@ export default function Page() {
             <h2
               className={`
                 w-fit
-                text-7xl
+                text-5xl
                 font-semibold
                 text-title
                 lg:min-w-[320px]
+                lg:text-7xl
               `}
             >
               Viva uma grande aventura
             </h2>
 
-            <p className="text-paragraph">
+            <p className="max-w-64 text-paragraph lg:max-w-full">
               Descubra locais incríveis para se visitar em cidades maravilhosas.
             </p>
 
@@ -60,12 +61,13 @@ export default function Page() {
                     max-w-fit
                     rounded-xl
                     bg-secondary
-                    px-14
-                    py-6
+                    py-3
                     font-semibold
                     text-white
                     transition-all
                     group-hover:bg-[#b83506]
+                    lg:px-14
+                    lg:py-6
                   `}
                 >
                   Descobrir todos lugares
