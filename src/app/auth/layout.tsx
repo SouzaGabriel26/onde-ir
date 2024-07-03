@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutProps) {
         href="/"
         className="absolute left-4 top-4 rounded-md border bg-white transition-opacity hover:opacity-70"
       >
-        <ArrowLeft className="stroke-primary" />
+        <ArrowLeft className="stroke-slate-900" />
       </Link>
     </div>
   );

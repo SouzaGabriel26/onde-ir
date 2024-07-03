@@ -1,4 +1,3 @@
-import { NextUIProvider } from '@nextui-org/react';
 import type { Metadata } from 'next';
 
 import './globals.css';
@@ -15,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="h-full text-primary">
-        <NextUIProvider>{children}</NextUIProvider>
-      </body>
+      <body className="h-full text-slate-800">{children}</body>
     </html>
   );
 }

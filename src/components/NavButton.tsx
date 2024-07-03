@@ -1,6 +1,7 @@
-import { Button } from '@nextui-org/react';
 import { Route } from 'next';
 import Link from 'next/link';
+
+import { Button } from '@/components/ui/Button';
 
 type NavButtonProps = {
   href: Route;
@@ -9,11 +10,10 @@ type NavButtonProps = {
 
 export function NavButton({ href, title }: NavButtonProps) {
   return (
-    <Button className="group rounded-lg bg-[#DDE9F0] px-0">
-      <Link className="px-4" href={href}>
+    <Button variant="default" size="sm">
+      <Link className="px-4 text-sm lg:text-base" href={href}>
         {title}
       </Link>
-      <div className="hidden h-[2px] animate-crescent-line rounded bg-secondary group-hover:block" />
     </Button>
   );
 }

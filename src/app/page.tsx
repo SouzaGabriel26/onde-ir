@@ -1,6 +1,6 @@
-import { Button } from '@nextui-org/react';
 import Link from 'next/link';
 
+import { Button } from '@/components/ui/Button';
 import { Header } from '@/src/components/Header';
 
 export default function Page() {
@@ -39,39 +39,25 @@ export default function Page() {
           >
             <h2
               className={`
+                text-title
                 w-fit
+                max-w-[320px]
                 text-5xl
                 font-semibold
-                text-title
                 lg:min-w-[320px]
                 lg:text-7xl
               `}
             >
-              Viva uma grande aventura
+              Viva uma grande experiência
             </h2>
 
-            <p className="max-w-64 text-paragraph lg:max-w-full">
+            <p className="text-paragraph max-w-64 lg:max-w-full">
               Descubra locais incríveis para se visitar em cidades maravilhosas.
             </p>
 
             <div>
-              <Link href="#" className="group">
-                <Button
-                  className={`
-                    max-w-fit
-                    rounded-xl
-                    bg-secondary
-                    py-3
-                    font-semibold
-                    text-white
-                    transition-all
-                    group-hover:bg-[#b83506]
-                    lg:px-14
-                    lg:py-6
-                  `}
-                >
-                  Descobrir todos lugares
-                </Button>
+              <Link href="#">
+                <Button size="lg">Descobrir todos lugares</Button>
               </Link>
             </div>
           </div>
