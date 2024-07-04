@@ -1,7 +1,15 @@
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/Sheet';
 import { User } from '@/types';
 
-import { Avatar } from './Avatar';
 import { NavButton } from './NavButton';
+import { UserAvatar } from './UserAvatar';
 
 type HeaderProps = {
   userData?: Partial<User> | null;
@@ -29,7 +37,22 @@ export function Header({ userData = null }: HeaderProps) {
           </>
         )}
 
-        {userData && <Avatar name={userData.name!} />}
+        {userData && (
+          <Sheet>
+            <SheetTrigger>
+              <UserAvatar
+                name="Gabriel"
+                imageUrl="https://github.com/souzagabriel26.png"
+              />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Perfil</SheetTitle>
+                <SheetDescription>Configurações da conta</SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        )}
       </nav>
     </header>
   );

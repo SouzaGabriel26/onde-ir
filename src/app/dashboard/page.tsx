@@ -1,7 +1,7 @@
-import { Button } from '@nextui-org/react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { Button } from '@/components/ui/Button';
 import { createUserDataSource } from '@/data/user';
 import { auth } from '@/models/authentication';
 import { user } from '@/models/user';

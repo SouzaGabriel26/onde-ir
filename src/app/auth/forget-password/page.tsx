@@ -1,7 +1,7 @@
-import { Button } from '@nextui-org/react';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+import { Button } from '@/components/ui/Button';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import {
   auth,
@@ -61,7 +61,7 @@ export default function Page() {
             Instruções enviadas para <strong>{successMessage.email}</strong>
           </p>
 
-          <Button className="rounded">
+          <Button>
             <Link className="hover:underline" href="/">
               Voltar para página principal
             </Link>

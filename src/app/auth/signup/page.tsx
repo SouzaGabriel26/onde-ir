@@ -35,7 +35,7 @@ export default function Page() {
         Já possui uma conta?{' '}
         <Link
           href="/auth/signin"
-          className="underline transition-colors hover:text-primary"
+          className="underline transition-colors hover:text-slate-900"
         >
           Fazer login
         </Link>
