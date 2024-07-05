@@ -10,7 +10,7 @@ type NavButtonProps = {
 
 export function NavButton({ href, title }: NavButtonProps) {
   return (
-    <Button variant="default" size="sm">
+    <Button asChild variant="default" size="sm">
       <Link className="px-4 text-sm lg:text-base" href={href}>
         {title}
       </Link>
