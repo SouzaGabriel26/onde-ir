@@ -1,17 +1,17 @@
 'use client';
 
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+
+import { Moon } from '@/components/icons/Moon';
+import { Sun } from '@/components/icons/Sun';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-
-import { Moon } from '@/src/components/icons/Moon';
-import { Sun } from '@/src/components/icons/Sun';
+} from '@/components/ui/DropdownMenu';
 import { constants } from '@/src/utils/constants';
 
 export function ThemeSwitcher() {
@@ -50,30 +50,15 @@ export function ThemeSwitcher() {
         <Moon className="hidden dark:block" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-28 rounded-md border bg-white shadow-md dark:bg-slate-900">
+      <DropdownMenuContent className="w-28 rounded-md border shadow-md">
         <DropdownMenuRadioGroup
           value={resolvedTheme}
           onValueChange={handleChangeTheme}
           className="p-2"
         >
-          <DropdownMenuRadioItem
-            className="cursor-pointer rounded-md p-1.5 px-2 outline-none focus:bg-muted"
-            value="light"
-          >
-            Light
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem
-            className="cursor-pointer rounded-md p-1.5 px-2 outline-none focus:bg-muted"
-            value="dark"
-          >
-            Dark
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem
-            className="cursor-pointer rounded-md p-1.5 px-2 outline-none focus:bg-muted"
-            value="system"
-          >
-            System
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

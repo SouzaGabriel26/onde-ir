@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
+import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/Button';
-import { Header } from '@/src/components/Header';
 
 export default function Page() {
   return (

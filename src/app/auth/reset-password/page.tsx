@@ -2,14 +2,14 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { Input } from '@/components/Input';
+import { SubmitButton } from '@/components/SubmitButton';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import {
   auth,
   FailureAuthResponse,
   ResetPasswordInput,
 } from '@/models/authentication';
-import { Input } from '@/src/components/Input';
-import { SubmitButton } from '@/src/components/SubmitButton';
 import { form } from '@/src/utils/form';
 import { Failure, Success } from '@/src/utils/operationResult';
 

@@ -2,10 +2,10 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { Input } from '@/components/Input';
+import { SubmitButton } from '@/components/SubmitButton';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignInProps, SignInResponse } from '@/models/authentication';
-import { Input } from '@/src/components/Input';
-import { SubmitButton } from '@/src/components/SubmitButton';
 import { constants } from '@/src/utils/constants';
 import { form } from '@/src/utils/form';
 

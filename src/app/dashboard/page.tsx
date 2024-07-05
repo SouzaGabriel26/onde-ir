@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/Button';
 import { createUserDataSource } from '@/data/user';
 import { auth } from '@/models/authentication';
 import { user } from '@/models/user';
-import { Header } from '@/src/components/Header';
 import { constants } from '@/src/utils/constants';
 
 async function signOut() {
