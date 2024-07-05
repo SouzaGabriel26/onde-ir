@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import {
   Sheet,
   SheetContent,
@@ -25,6 +26,7 @@ export function Header({ userData = null }: HeaderProps) {
         justify-between
         px-4
         shadow-sm
+        dark:shadow-white
         md:px-40
       `}
     >
@@ -36,6 +38,8 @@ export function Header({ userData = null }: HeaderProps) {
             <NavButton href="/auth/signin" title="Entrar" />
           </>
         )}
+
+        <ThemeSwitcher />
 
         {userData && (
           <Sheet>

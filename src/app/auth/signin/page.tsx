@@ -50,7 +50,7 @@ export default function Page({ searchParams }: Props) {
         Não possui uma conta?{' '}
         <Link
           href="/auth/signup"
-          className="underline transition-colors hover:text-slate-900"
+          className="underline transition-all hover:brightness-125"
         >
           Cadastre-se
         </Link>
@@ -79,7 +79,7 @@ export default function Page({ searchParams }: Props) {
         Esqueceu sua senha?{' '}
         <Link
           href="/auth/forget-password"
-          className="underline transition-colors hover:text-slate-900"
+          className="underline transition-colors hover:brightness-125"
         >
           clique aqui
         </Link>
