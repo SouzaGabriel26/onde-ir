@@ -20,22 +20,24 @@ describe('> models/place', () => {
         data: [
           {
             id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
+            name: 'Bar do Gerson',
             country: 'Brasil',
             state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
+            city: 'Vila Velha',
+            street: 'Av. Hugo Musso',
+            num_place: 505,
             complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
+            description:
+              'Bar muito conhecido por seu ambiente agradável e bebidas geladas',
             category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
+            latitude: -20.3274,
+            longitude: -40.2922,
+            approved: false,
+            approved_by: null,
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
           {
             id: expect.any(String),
@@ -56,26 +58,27 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
           {
             id: expect.any(String),
-            name: 'Bar do Gerson',
+            name: 'Churrascaria Espeto de Ouro',
             country: 'Brasil',
             state: 'ES',
-            city: 'Vila Velha',
-            street: 'Av. Hugo Musso',
-            num_place: 505,
+            city: 'Vitória',
+            street: 'Av. Nossa Senhora da Penha',
+            num_place: 1234,
             complement: null,
-            description:
-              'Bar muito conhecido por seu ambiente agradável e bebidas geladas',
+            description: 'Deliciosa churrascaria com variedade de comidas.',
             category_id: expect.any(String),
-            latitude: -20.3274,
-            longitude: -40.2922,
-            approved: false,
-            approved_by: null,
+            latitude: -20.3155,
+            longitude: -40.3128,
+            approved: true,
+            approved_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
           {
             id: expect.any(String),
@@ -95,6 +98,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
         ],
       });
@@ -167,25 +171,6 @@ describe('> models/place', () => {
         data: [
           {
             id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
-            complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-          },
-          {
-            id: expect.any(String),
             name: 'Café Bamboo',
             country: 'Brasil',
             state: 'ES',
@@ -203,6 +188,27 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
+          },
+          {
+            id: expect.any(String),
+            name: 'Churrascaria Espeto de Ouro',
+            country: 'Brasil',
+            state: 'ES',
+            city: 'Vitória',
+            street: 'Av. Nossa Senhora da Penha',
+            num_place: 1234,
+            complement: null,
+            description: 'Deliciosa churrascaria com variedade de comidas.',
+            category_id: expect.any(String),
+            latitude: -20.3155,
+            longitude: -40.3128,
+            approved: true,
+            approved_by: expect.any(String),
+            created_by: expect.any(String),
+            created_at: expect.anything(),
+            updated_at: expect.anything(),
+            images: expect.any(Array),
           },
         ],
       });
@@ -238,6 +244,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
           {
             id: expect.any(String),
@@ -257,6 +264,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
         ],
       });
@@ -291,6 +299,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
         ],
       });
@@ -299,60 +308,7 @@ describe('> models/place', () => {
     test('Providing "limit" property', async () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource, {
-        limit: 2,
-      });
-
-      expect(result).toStrictEqual({
-        error: null,
-        data: [
-          {
-            id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
-            complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-          },
-          {
-            id: expect.any(String),
-            name: 'Café Bamboo',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'R. do Lazer',
-            num_place: 404,
-            complement: 'Em frente a padaria',
-            description:
-              'Um café incrivel que oferece vários sabores inexplicáveis',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.2969,
-            approved: true,
-            approved_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-          },
-        ],
-      });
-    });
-
-    test('Providing "page" property with "limit"', async () => {
-      const placeDataSource = createPlaceDataSource();
-      const result = await place.findAll(placeDataSource, {
-        page: 2,
-        limit: 2,
+        limit: 1,
       });
 
       expect(result).toStrictEqual({
@@ -377,6 +333,41 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
+          },
+        ],
+      });
+    });
+
+    test('Providing "page" property with "limit"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.findAll(placeDataSource, {
+        page: 2,
+        limit: 2,
+      });
+
+      expect(result).toStrictEqual({
+        error: null,
+        data: [
+          {
+            id: expect.any(String),
+            name: 'Churrascaria Espeto de Ouro',
+            country: 'Brasil',
+            state: 'ES',
+            city: 'Vitória',
+            street: 'Av. Nossa Senhora da Penha',
+            num_place: 1234,
+            complement: null,
+            description: 'Deliciosa churrascaria com variedade de comidas.',
+            category_id: expect.any(String),
+            latitude: -20.3155,
+            longitude: -40.3128,
+            approved: true,
+            approved_by: expect.any(String),
+            created_by: expect.any(String),
+            created_at: expect.anything(),
+            updated_at: expect.anything(),
+            images: expect.any(Array),
           },
           {
             id: expect.any(String),
@@ -396,6 +387,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            images: expect.any(Array),
           },
         ],
       });
