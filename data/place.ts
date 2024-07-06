@@ -25,10 +25,17 @@ export function createPlaceDataSource() {
 
     const queryText = sql`
       SELECT
-        *
+        places.*,
+        ARRAY_AGG(place_images.url) AS images
       FROM
         places
+      LEFT JOIN
+        place_images ON place_images.place_id = places.id
       $whereClause
+      GROUP BY
+        places.id
+      ORDER BY
+        places.name
       LIMIT $1
       OFFSET $2
     `;
