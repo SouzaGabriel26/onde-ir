@@ -1,17 +1,17 @@
 export type Place = {
   id: string;
-  name: 'Churrascaria Espeto de Ouro';
-  country: 'Brasil';
-  state: 'ES';
-  city: 'Vitória';
-  street: 'Av. Nossa Senhora da Penha';
-  num_place: 1234;
+  name: string;
+  country: string;
+  state: string;
+  city: string;
+  street: string;
+  num_place: number;
   complement: null;
-  description: 'Deliciosa churrascaria com variedade de comidas.';
+  description: string;
   category_id: string;
-  latitude: -20.3155;
-  longitude: -40.3128;
-  approved: true;
+  latitude: number;
+  longitude: number;
+  approved: boolean;
   approved_by: string;
   created_by: string;
   created_at: Date;
