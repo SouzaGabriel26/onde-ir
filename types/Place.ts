@@ -16,4 +16,5 @@ export type Place = {
   created_by: string;
   created_at: Date;
   updated_at: Date;
+  images: Array<string>;
 };
