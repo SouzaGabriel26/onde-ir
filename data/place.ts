@@ -24,20 +24,46 @@ export function createPlaceDataSource() {
     const { limit, offset, where } = input;
 
     const queryText = sql`
+      WITH likes_count AS (
+        SELECT
+          place_id,
+          COUNT(*)::INTEGER as likes
+        FROM
+          place_likes
+        GROUP BY
+          place_id
+      ),
+      comments_count AS (
+        SELECT
+          place_id,
+          COUNT(*)::INTEGER AS comments
+        FROM
+          place_comments
+        GROUP BY
+          place_id
+      )
       SELECT
         places.*,
-        ARRAY_AGG(place_images.url) AS images
+        ARRAY_AGG(place_images.url) AS images,
+        COALESCE(likes_count.likes, 0) AS likes,
+        COALESCE(comments_count.comments, 0) AS comments
       FROM
         places
       LEFT JOIN
         place_images ON place_images.place_id = places.id
+      LEFT JOIN
+        likes_count ON likes_count.place_id = places.id
+      LEFT JOIN
+        comments_count ON comments_count.place_id = places.id
       $whereClause
       GROUP BY
-        places.id
+        places.id,
+        likes_count.likes,
+        comments_count.comments
       ORDER BY
         places.name
       LIMIT $1
-      OFFSET $2
+      OFFSET $2;
     `;
 
     type QueryObject = {
