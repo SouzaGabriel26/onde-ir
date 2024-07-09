@@ -16,8 +16,10 @@ async function signOut() {
   return redirect('/auth/signin');
 }
 
-function checkAccessToken() {
-  const accessToken = cookies().get(constants.accessTokenKey)?.value;
+export default async function Page() {
+  const cookieStore = cookies();
+
+  const accessToken = cookieStore.get(constants.accessTokenKey)?.value;
   const payload = auth.verifyAccessToken({
     accessToken,
   });
@@ -25,12 +27,6 @@ function checkAccessToken() {
   if (!payload) {
     return redirect('/auth/signin');
   }
-
-  return payload;
-}
-
-export default async function Page() {
-  const payload = checkAccessToken();
 
   const userDataSource = createUserDataSource();
   const { data } = await user.findById(userDataSource, {

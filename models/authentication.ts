@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 
 import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
 import { Welcome } from '@/components/email-templates/Welcome';
@@ -8,7 +7,6 @@ import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
 import { emailService } from '@/models/email';
 import { ValidationSchema, validator } from '@/models/validator';
-import { constants } from '@/src/utils/constants';
 import { env } from '@/src/utils/env';
 import { Failure, Success, operationResult } from '@/src/utils/operationResult';
 
@@ -234,7 +232,6 @@ function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
 
     return payload as Payload;
   } catch {
-    cookies().delete(constants.accessTokenKey);
     return null;
   }
 }
