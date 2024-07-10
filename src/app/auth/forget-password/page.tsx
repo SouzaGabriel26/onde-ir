@@ -1,9 +1,9 @@
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
-import { Input } from '@/components/Input';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import {
   auth,
@@ -47,7 +47,7 @@ export default function Page() {
       <form action={forgetPassword} className="flex flex-col space-y-3">
         <Input
           id="email"
-          label="Email*"
+          placeholder="Email*"
           name="email"
           required
           error={auth.setInputError('email', responseMessage)}

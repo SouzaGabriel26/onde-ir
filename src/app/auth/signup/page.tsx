@@ -2,8 +2,8 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Input } from '@/components/Input';
 import { SubmitButton } from '@/components/SubmitButton';
+import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
 import { form } from '@/src/utils/form';
@@ -45,7 +45,7 @@ export default function Page() {
         <Input
           required
           id="name"
-          label="Nome*"
+          placeholder="Nome*"
           name="name"
           autoComplete="off"
           error={auth.setInputError('name', signUpResponse)}
@@ -53,14 +53,14 @@ export default function Page() {
         <Input
           required
           id="email"
-          label="Email*"
+          placeholder="Email*"
           name="email"
           error={auth.setInputError('email', signUpResponse)}
         />
         <Input
           required
           id="userName"
-          label="Username*"
+          placeholder="Username*"
           name="userName"
           autoComplete="off"
           error={auth.setInputError('userName', signUpResponse)}
@@ -68,7 +68,7 @@ export default function Page() {
         <Input
           required
           id="password"
-          label="Senha*"
+          placeholder="Senha*"
           type="password"
           name="password"
           autoComplete="off"
@@ -77,7 +77,7 @@ export default function Page() {
         <Input
           required
           id="confirmPassword"
-          label="Confirmar Senha*"
+          placeholder="Confirmar Senha*"
           type="password"
           name="confirmPassword"
           autoComplete="off"
