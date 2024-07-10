@@ -15,7 +15,7 @@ import {
 import { constants } from '@/src/utils/constants';
 
 export function ThemeSwitcher() {
-  const { setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -58,7 +58,11 @@ export function ThemeSwitcher() {
         >
           <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
+          {systemTheme && (
+            <DropdownMenuRadioItem value={systemTheme}>
+              System
+            </DropdownMenuRadioItem>
+          )}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

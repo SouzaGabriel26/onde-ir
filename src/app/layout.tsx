@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 function getTheme() {
   const cookieStore = cookies();
   const themeFromCookie = cookieStore.get(constants.themeKey);
-  return themeFromCookie?.value ?? 'system';
+  return themeFromCookie?.value ?? 'dark';
 }
 
 export default function RootLayout({

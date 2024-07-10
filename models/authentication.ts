@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { jwtVerify, SignJWT } from 'jose';
 
 import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
 import { Welcome } from '@/components/email-templates/Welcome';
@@ -8,7 +8,7 @@ import { createUserDataSource } from '@/data/user';
 import { emailService } from '@/models/email';
 import { ValidationSchema, validator } from '@/models/validator';
 import { env } from '@/src/utils/env';
-import { Failure, Success, operationResult } from '@/src/utils/operationResult';
+import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 
 type AvailableSignUpFields = keyof SignUpProps;
 type AvailableSignInFields = keyof SignInProps;
@@ -42,15 +42,12 @@ export type SignInResponse =
       accessToken: string;
     }>;
 
-type VerifyAccessTokenProps = {
-  accessToken?: string;
+type VerifyTokenProps = {
+  token: string;
+  secret: string;
 };
 
 export type ForgetPasswordOutput = Awaited<ReturnType<typeof forgetPassword>>;
-
-type VerifyResetPasswordTokenInput = {
-  resetPasswordToken: string;
-};
 
 type TokenProps = {
   id: string;
@@ -74,9 +71,8 @@ type ChangePasswordInput = {
 export const auth = Object.freeze({
   signIn,
   signUp,
-  verifyAccessToken,
+  verifyToken,
   forgetPassword,
-  verifyResetPasswordToken,
   resetPassword,
   changePassword,
   setInputError,
@@ -147,7 +143,6 @@ async function signUp(
   }
 
   const SALT = 12;
-
   const hashedPassword = bcrypt.hashSync(password, SALT);
 
   await authDataSource.signUp({
@@ -214,7 +209,7 @@ async function signIn(
     });
   }
 
-  const accessToken = generateAccessToken({
+  const accessToken = await generateAccessToken({
     id: user.id,
     secretKey: env.jwt_secret,
   });
@@ -224,11 +219,12 @@ async function signIn(
   });
 }
 
-function verifyAccessToken({ accessToken }: VerifyAccessTokenProps) {
-  if (!accessToken) return null;
-
+async function verifyToken({ token, secret }: VerifyTokenProps) {
   try {
-    const payload = jwt.verify(accessToken, env.jwt_secret);
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret),
+    );
 
     return payload as Payload;
   } catch {
@@ -270,7 +266,7 @@ async function forgetPassword(
     });
   }
 
-  const forgetPasswordToken = generateAccessToken({
+  const forgetPasswordToken = await generateAccessToken({
     id: userFoundByEmail.id,
     secretKey: env.reset_password_jwt_secret,
     expiresIn: '5min',
@@ -364,21 +360,6 @@ async function changePassword(
   return operationResult.success({});
 }
 
-function verifyResetPasswordToken({
-  resetPasswordToken,
-}: VerifyResetPasswordTokenInput) {
-  try {
-    const payload = jwt.verify(
-      resetPasswordToken,
-      env.reset_password_jwt_secret,
-    );
-
-    return payload as Payload;
-  } catch {
-    return null;
-  }
-}
-
 async function resetPassword(
   authDataSource: AuthenticationDataSource,
   input: ResetPasswordInput,
@@ -426,8 +407,9 @@ async function resetPassword(
 
   const { reset_token } = resetTokenFoundFromId;
 
-  const tokenPayload = verifyResetPasswordToken({
-    resetPasswordToken: reset_token,
+  const tokenPayload = await verifyToken({
+    token: reset_token,
+    secret: env.reset_password_jwt_secret,
   });
 
   if (!tokenPayload) {
@@ -452,18 +434,21 @@ async function resetPassword(
   return operationResult.success({});
 }
 
-function generateAccessToken({ id, secretKey, expiresIn }: TokenProps) {
-  const accessToken = jwt.sign(
-    {
-      sub: id,
-    },
-    secretKey,
-    {
-      expiresIn: expiresIn ?? '1d',
-    },
-  );
+async function generateAccessToken({
+  id,
+  secretKey,
+  expiresIn = '1 day',
+}: TokenProps) {
+  const token = await new SignJWT({ sub: id })
+    .setProtectedHeader({
+      alg: 'HS256',
+      typ: 'JWT',
+    })
+    .setExpirationTime(expiresIn)
+    .setIssuedAt()
+    .sign(new TextEncoder().encode(secretKey));
 
-  return accessToken;
+  return token;
 }
 
 function setInputError(
