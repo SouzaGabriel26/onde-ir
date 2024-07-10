@@ -2,8 +2,8 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Input } from '@/components/Input';
 import { SubmitButton } from '@/components/SubmitButton';
+import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import {
   auth,
@@ -79,7 +79,7 @@ export default function Page({ searchParams }: Props) {
           id="password"
           type="password"
           name="password"
-          label="Digite uma nova senha"
+          placeholder="Digite uma nova senha"
           error={auth.setInputError('password', responseMessage)}
         />
         <Input
@@ -87,7 +87,7 @@ export default function Page({ searchParams }: Props) {
           id="confirmPassword"
           type="password"
           name="confirmPassword"
-          label="Confirmação de senha"
+          placeholder="Confirmação de senha"
           error={auth.setInputError('confirmPassword', responseMessage)}
         />
         <input type="hidden" value={tokenId} name="resetPasswordTokenId" />

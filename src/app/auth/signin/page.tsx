@@ -2,8 +2,8 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Input } from '@/components/Input';
 import { SubmitButton } from '@/components/SubmitButton';
+import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignInProps, SignInResponse } from '@/models/authentication';
 import { constants } from '@/src/utils/constants';
@@ -58,16 +58,16 @@ export default function Page({ searchParams }: Props) {
 
       <form action={signInAction} className="flex flex-col gap-2">
         <Input
+          placeholder="Email*"
           id="email"
           name="email"
-          label="Email*"
           required
           error={auth.setInputError('email', signInResponse)}
         />
         <Input
+          placeholder="Senha*"
           id="password"
           name="password"
-          label="Senha*"
           type="password"
           required
           error={auth.setInputError('password', signInResponse)}
