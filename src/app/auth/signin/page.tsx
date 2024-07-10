@@ -62,6 +62,7 @@ export default function Page({ searchParams }: Props) {
           id="email"
           name="email"
           required
+          autoComplete="email"
           error={auth.setInputError('email', signInResponse)}
         />
         <Input
@@ -70,6 +71,7 @@ export default function Page({ searchParams }: Props) {
           name="password"
           type="password"
           required
+          autoComplete="current-password"
           error={auth.setInputError('password', signInResponse)}
         />
         <SubmitButton>Entrar</SubmitButton>

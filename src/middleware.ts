@@ -1,20 +1,26 @@
-import jwt from 'jsonwebtoken';
+import { jwtVerify } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { constants } from './utils/constants';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get(constants.accessTokenKey)?.value;
   const { pathname } = request.nextUrl;
 
+  const response = NextResponse.next();
+
   if (accessToken) {
     try {
-      const payload = jwt.verify(accessToken, process.env.JWT_SECRET_KEY!);
+      const { payload } = await jwtVerify(
+        accessToken,
+        new TextEncoder().encode(process.env.JWT_SECRET_KEY!),
+      );
 
-      return payload;
+      if (payload.sub) {
+        response.headers.set('x-user-id', payload.sub);
+      }
     } catch {
-      request.cookies.delete(constants.accessTokenKey);
-      return NextResponse.next();
+      response.cookies.delete(constants.accessTokenKey);
     }
   }
 
@@ -29,7 +35,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
