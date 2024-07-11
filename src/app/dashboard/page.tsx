@@ -27,15 +27,17 @@ export default async function Page() {
   });
 
   return (
-    <main>
+    <main className="flex h-screen flex-col">
       <Header userData={data} />
 
-      <h1>Dashboard</h1>
-      <p>Bem vindo, {data?.name}</p>
+      <div className="mt-20 lg:mt-10">
+        <h1>Dashboard</h1>
+        <p>Bem vindo, {data?.name}</p>
 
-      <form action={signOut}>
-        <Button type="submit">Sair</Button>
-      </form>
+        <form action={signOut}>
+          <Button type="submit">Sair</Button>
+        </form>
+      </div>
     </main>
   );
 }

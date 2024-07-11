@@ -20,11 +20,16 @@ export function Header({ userData = null }: HeaderProps) {
   return (
     <header
       className={`
+        fixed
+        z-50
         flex
         h-16
+        w-full
         items-center
         justify-between
+        bg-background
         px-4
+        py-6
         shadow-sm
         dark:shadow-white
         md:px-40
