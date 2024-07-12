@@ -26,7 +26,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={theme} style={{ colorScheme: theme }}>
-      <body className="h-full text-slate-800 dark:text-white">
+      <body className="h-screen text-slate-800 dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
