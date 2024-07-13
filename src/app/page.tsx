@@ -61,28 +61,28 @@ export default async function Page() {
       >
         <section
           className={`
-              flex
-              max-w-[450px]
-              flex-col
-              items-center
-              justify-center
-              space-y-10
-              text-center
-              lg:block
-              lg:max-w-[350px]
-              lg:text-start
-            `}
+            flex
+            max-w-[450px]
+            flex-col
+            items-center
+            justify-center
+            space-y-10
+            text-center
+            lg:block
+            lg:max-w-[350px]
+            lg:text-start
+          `}
         >
           <h2
             className={`
-                w-fit
-                max-w-[320px]
-                text-5xl
-                font-semibold
-                text-primary
-                lg:min-w-[320px]
-                lg:text-7xl
-              `}
+              w-fit
+              max-w-[320px]
+              text-5xl
+              font-semibold
+              text-primary
+              lg:min-w-[320px]
+              lg:text-7xl
+            `}
           >
             Viva uma grande experiência
           </h2>
@@ -105,6 +105,7 @@ export default async function Page() {
 
               return (
                 <ImageCard
+                  className="animate-fade-in"
                   key={`${index}-${place.name}`}
                   title={place.name}
                   description={description}
@@ -121,6 +122,7 @@ export default async function Page() {
 
               return (
                 <ImageCard
+                  className="animate-fade-in"
                   key={`${index}-${place.name}`}
                   title={place.name}
                   description={description}

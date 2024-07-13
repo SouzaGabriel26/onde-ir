@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { constants } from '@/src/utils/constants';
 
+import { Skeleton } from './ui/Skeleton';
+
 export function ThemeSwitcher() {
   const { setTheme, resolvedTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -22,7 +24,7 @@ export function ThemeSwitcher() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) return <Skeleton className="h-9 w-9" />;
 
   function handleChangeTheme(theme: string) {
     setTheme(theme);
