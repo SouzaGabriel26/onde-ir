@@ -1,10 +1,16 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { ReactNode } from 'react';
 
+import { Header } from '@/components/Header';
 import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 
-export default async function Page() {
+type Props = {
+  children: ReactNode;
+};
+
+export default async function Layout({ children }: Props) {
   const userId = headers().get('x-user-id');
   if (!userId) {
     return redirect('/auth/signin');
@@ -16,9 +22,10 @@ export default async function Page() {
   });
 
   return (
-    <div className="mt-20 lg:mt-10">
-      <h1>Dashboard</h1>
-      <p>Bem vindo, {data?.name}</p>
-    </div>
+    <main className="flex h-screen flex-col">
+      <Header userData={data} />
+
+      {children}
+    </main>
   );
 }

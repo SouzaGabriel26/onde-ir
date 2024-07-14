@@ -1,3 +1,6 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import {
   Sheet,
@@ -7,16 +10,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/Sheet';
+import { constants } from '@/src/utils/constants';
 import { User } from '@/types';
 
 import { NavButton } from './NavButton';
+import { Button } from './ui/Button';
 import { UserAvatar } from './UserAvatar';
 
 type HeaderProps = {
   userData?: Partial<User> | null;
 };
 
-export function Header({ userData = null }: HeaderProps) {
+async function signOut() {
+  'use server';
+
+  cookies().delete(constants.accessTokenKey);
+
+  return redirect('/auth/signin');
+}
+
+export function Header({ userData }: HeaderProps) {
   return (
     <header
       className={`
@@ -49,6 +62,7 @@ export function Header({ userData = null }: HeaderProps) {
         {userData && (
           <Sheet>
             <SheetTrigger>
+              {/* TODO: search dynamically */}
               <UserAvatar
                 name="Gabriel"
                 imageUrl="https://github.com/souzagabriel26.png"
@@ -59,6 +73,12 @@ export function Header({ userData = null }: HeaderProps) {
                 <SheetTitle>Perfil</SheetTitle>
                 <SheetDescription>Configurações da conta</SheetDescription>
               </SheetHeader>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <form action={signOut}>
+                  <Button type="submit">Sair</Button>
+                </form>
+              </div>
             </SheetContent>
           </Sheet>
         )}
