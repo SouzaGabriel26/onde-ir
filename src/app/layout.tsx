@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { Toaster } from '@/components/ui/Sonner';
 
 import { constants } from '../utils/constants';
+
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -34,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey={constants.themeKey}
         >
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>
