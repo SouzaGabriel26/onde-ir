@@ -1,6 +1,6 @@
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
@@ -8,6 +8,7 @@ import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignInProps, SignInResponse } from '@/models/authentication';
 import { constants } from '@/src/utils/constants';
 import { form } from '@/src/utils/form';
+import { operationResult } from '@/src/utils/operationResult';
 
 let signInResponse: SignInResponse;
 
@@ -28,9 +29,18 @@ async function signInAction(formData: FormData) {
       expires: new Date(Date.now() + sevenDaysInMilliseconds),
       httpOnly: true,
     });
+
+    return operationResult.success({
+      message: 'Login efetuado com sucesso!',
+      redirectLink: '/dashboard',
+    });
   }
 
-  return redirect('/dashboard');
+  revalidatePath('/auth/signin');
+
+  return operationResult.failure({
+    message: signInResponse.error.message,
+  });
 }
 
 type Props = {
@@ -74,7 +84,7 @@ export default function Page({ searchParams }: Props) {
           autoComplete="current-password"
           error={auth.setInputError('password', signInResponse)}
         />
-        <SubmitButton>Entrar</SubmitButton>
+        <SubmitButton action={signInAction}>Entrar</SubmitButton>
       </form>
 
       <p className="text-center text-sm text-gray-400">
