@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Failure, Success } from '@/src/utils/operationResult';
 
 type ActionResponse = Promise<
-  Success<{ message: string; redirectLink: string }> | Failure<unknown>
+  Success<{ message: string; redirectLink?: string }> | Failure
 >;
 
 type SubmitButtonProps = {
@@ -39,7 +39,7 @@ export function SubmitButton({
 
     if (data) {
       toast.success(data.message);
-      redirect(data.redirectLink);
+      data.redirectLink && redirect(data.redirectLink);
     } else {
       toast.error(error.message);
     }
