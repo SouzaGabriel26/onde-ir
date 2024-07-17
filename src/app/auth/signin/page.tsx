@@ -66,7 +66,7 @@ export default function Page({ searchParams }: Props) {
         </Link>
       </p>
 
-      <form action={signInAction} className="flex flex-col gap-2">
+      <form className="flex flex-col gap-2">
         <Input
           placeholder="Email*"
           id="email"

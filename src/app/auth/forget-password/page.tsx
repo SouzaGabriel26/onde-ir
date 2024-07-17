@@ -55,7 +55,7 @@ export default function Page() {
         Digite seu email para enviarmos as instruções de recuperação de senha
       </h2>
 
-      <form action={forgetPassword} className="flex flex-col space-y-3">
+      <form className="flex flex-col space-y-3">
         <Input
           id="email"
           placeholder="Email*"

@@ -48,7 +48,7 @@ export default function Page() {
         </Link>
       </p>
 
-      <form action={signUpAction} className="flex flex-col gap-3">
+      <form className="flex flex-col gap-3">
         <Input
           required
           id="name"

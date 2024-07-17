@@ -75,11 +75,7 @@ export default function Page({ searchParams }: Props) {
     <div className="space-y-4 md:w-80">
       <h1>Atualização de senha</h1>
 
-      <form
-        key={Date.toString()}
-        action={resetPasswordAction}
-        className="flex flex-col space-y-3"
-      >
+      <form key={Date.toString()} className="flex flex-col space-y-3">
         <Input
           required
           id="password"
