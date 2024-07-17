@@ -1,6 +1,5 @@
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
@@ -11,7 +10,7 @@ import {
   ResetPasswordInput,
 } from '@/models/authentication';
 import { form } from '@/src/utils/form';
-import { Failure, Success } from '@/src/utils/operationResult';
+import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 
 let responseMessage: Success<{}> | Failure<FailureAuthResponse>;
 
@@ -24,10 +23,17 @@ async function resetPasswordAction(formData: FormData) {
   responseMessage = await auth.resetPassword(authDataSource, data);
 
   if (responseMessage.error) {
-    return revalidatePath('/auth/reset-password');
+    revalidatePath('/auth/reset-password');
+
+    return operationResult.failure({
+      message: responseMessage.error.message,
+    });
   }
 
-  return redirect('/auth/signin');
+  return operationResult.success({
+    message: 'Senha atualizada com sucesso',
+    redirectLink: '/auth/signin',
+  });
 }
 
 type Props = {
@@ -46,7 +52,7 @@ export default function Page({ searchParams }: Props) {
 
   const errorMessage =
     hasAuthenticationErrorMessage &&
-    responseMessage.error?.message.replace('resetPasswordTokenId', 'tokenId');
+    responseMessage.error?.message.replace('resetPasswordTokenId', 'Acesso');
 
   if (!result) {
     return (
@@ -69,11 +75,7 @@ export default function Page({ searchParams }: Props) {
     <div className="space-y-4 md:w-80">
       <h1>Atualização de senha</h1>
 
-      <form
-        key={Date.toString()}
-        action={resetPasswordAction}
-        className="flex flex-col space-y-3"
-      >
+      <form key={Date.toString()} className="flex flex-col space-y-3">
         <Input
           required
           id="password"
@@ -91,7 +93,7 @@ export default function Page({ searchParams }: Props) {
           error={auth.setInputError('confirmPassword', responseMessage)}
         />
         <input type="hidden" value={tokenId} name="resetPasswordTokenId" />
-        <SubmitButton>Enviar</SubmitButton>
+        <SubmitButton action={resetPasswordAction}>Enviar</SubmitButton>
       </form>
 
       {errorMessage && (

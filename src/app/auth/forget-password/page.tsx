@@ -11,6 +11,7 @@ import {
   ForgetPasswordOutput,
 } from '@/models/authentication';
 import { form } from '@/src/utils/form';
+import { operationResult } from '@/src/utils/operationResult';
 
 let responseMessage: ForgetPasswordOutput;
 let successMessage: {
@@ -29,9 +30,19 @@ async function forgetPassword(formData: FormData) {
 
   if (responseMessage.data) {
     successMessage = { email };
+
+    revalidatePath('/auth/forget-password');
+
+    return operationResult.success({
+      message: 'Email enviado com sucesso',
+    });
   }
 
-  return revalidatePath('/auth/forget-password');
+  revalidatePath('/auth/forget-password');
+
+  return operationResult.failure({
+    message: responseMessage.error.message,
+  });
 }
 
 export default function Page() {
@@ -44,7 +55,7 @@ export default function Page() {
         Digite seu email para enviarmos as instruções de recuperação de senha
       </h2>
 
-      <form action={forgetPassword} className="flex flex-col space-y-3">
+      <form className="flex flex-col space-y-3">
         <Input
           id="email"
           placeholder="Email*"
@@ -52,7 +63,7 @@ export default function Page() {
           required
           error={auth.setInputError('email', responseMessage)}
         />
-        <SubmitButton className="">Enviar</SubmitButton>
+        <SubmitButton action={forgetPassword}>Enviar</SubmitButton>
       </form>
 
       {successMessage && (
