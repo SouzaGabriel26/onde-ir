@@ -15,7 +15,7 @@ type ActionResponse = Promise<
 type SubmitButtonProps = {
   children: React.ReactNode;
   className?: string;
-  action?: (formData: FormData) => ActionResponse;
+  action: (formData: FormData) => ActionResponse;
 };
 
 export function SubmitButton({
@@ -27,7 +27,7 @@ export function SubmitButton({
 
   const [state, formAction] = useFormState(
     async (_prev: unknown, formData: FormData) => {
-      return await action?.(formData);
+      return await action(formData);
     },
     null,
   );
