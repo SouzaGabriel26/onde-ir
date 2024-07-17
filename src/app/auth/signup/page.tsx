@@ -1,12 +1,12 @@
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
 import { form } from '@/src/utils/form';
+import { operationResult } from '@/src/utils/operationResult';
 
 let signUpResponse: SignUpResponse;
 
@@ -21,10 +21,17 @@ async function signUpAction(formData: FormData) {
   if (signUpResponse.data) {
     const { userName } = signUpResponse.data;
 
-    redirect(`/auth/signin?userName=${userName}`);
+    return operationResult.success({
+      message: 'Usuário cadastrado com sucesso!',
+      redirectLink: `/auth/signin?userName=${userName}`,
+    });
   }
 
-  return revalidatePath('/auth/signup');
+  revalidatePath('/auth/signup');
+
+  return operationResult.failure({
+    message: signUpResponse.error.message,
+  });
 }
 
 export default function Page() {
@@ -83,7 +90,7 @@ export default function Page() {
           autoComplete="off"
           error={auth.setInputError('confirmPassword', signUpResponse)}
         />
-        <SubmitButton>Cadastrar</SubmitButton>
+        <SubmitButton action={signUpAction}>Cadastrar</SubmitButton>
       </form>
     </div>
   );
