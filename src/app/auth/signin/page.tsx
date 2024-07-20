@@ -56,13 +56,22 @@ export default function Page({ searchParams }: Props) {
     <div className="space-y-4 md:w-80">
       {userName && <p>Faça login para o usuário {userName}</p>}
       <h1 className="text-2xl">Entrar</h1>
-      <p className="text-gray-400">
+      <p className="text-center text-gray-400">
         Não possui uma conta?{' '}
         <Link
           href="/auth/signup"
           className="underline transition-all hover:brightness-125"
         >
           Cadastre-se
+        </Link>
+        <br />
+        Ou
+        <br />
+        <Link
+          href="/dashboard"
+          className="underline transition-all hover:brightness-125"
+        >
+          Entre sem logar
         </Link>
       </p>
 

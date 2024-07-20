@@ -1,24 +1,20 @@
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 
 export default async function Page() {
   const userId = headers().get('x-user-id');
-  if (!userId) {
-    return redirect('/auth/signin');
-  }
 
   const userDataSource = createUserDataSource();
   const { data } = await user.findById(userDataSource, {
-    id: userId,
+    id: userId ?? '',
   });
 
   return (
-    <div className="mt-20 lg:mt-10">
+    <div>
       <h1>Dashboard</h1>
-      <p>Bem vindo, {data?.name}</p>
+      <p>Bem vindo {data?.name}</p>
     </div>
   );
 }
