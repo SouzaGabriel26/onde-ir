@@ -164,7 +164,9 @@ export function createAuthenticationDataSource() {
     await authenticationPool.query({
       text: sql`
         UPDATE users
-        SET password = $1
+        SET
+          password = $1,
+          updated_at = NOW() AT TIME ZONE 'UTC'
         WHERE id = $2
       `,
       values: [password, input.userId],
