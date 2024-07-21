@@ -396,6 +396,7 @@ describe('> models/authentication', () => {
       expect(result).toStrictEqual({
         error: null,
         data: {
+          name: 'Gabriel',
           resetPasswordTokenId: expect.any(String),
         },
       });

@@ -1,10 +1,12 @@
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+import { Welcome } from '@/components/email-templates/Welcome';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
+import { emailService } from '@/models/email';
 import { form } from '@/src/utils/form';
 import { operationResult } from '@/src/utils/operationResult';
 
@@ -19,7 +21,15 @@ async function signUpAction(formData: FormData) {
   signUpResponse = await auth.signUp(authDataSource, sanitizedData);
 
   if (signUpResponse.data) {
-    const { userName } = signUpResponse.data;
+    const { userName, email, name } = signUpResponse.data;
+
+    await emailService.sendWelcomeMessage({
+      from: 'Onde Ir <onboarding@resend.dev>',
+      to: email,
+      content: Welcome({
+        userFirstname: name,
+      }),
+    });
 
     return operationResult.success({
       message: 'Usuário cadastrado com sucesso!',

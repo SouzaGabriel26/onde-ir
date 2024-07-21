@@ -1,11 +1,8 @@
 import bcrypt from 'bcrypt';
 import { jwtVerify, SignJWT } from 'jose';
 
-import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
-import { Welcome } from '@/components/email-templates/Welcome';
 import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
-import { emailService } from '@/models/email';
 import { ValidationSchema, validator } from '@/models/validator';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
@@ -152,16 +149,6 @@ async function signUp(
     userName,
   });
 
-  if (process.env.NODE_ENV !== 'test') {
-    await emailService.sendWelcomeMessage({
-      from: 'Onde Ir <onboarding@resend.dev>',
-      to: email,
-      content: Welcome({
-        userFirstname: name,
-      }),
-    });
-  }
-
   return operationResult.success({ email, name, userName });
 }
 
@@ -278,19 +265,9 @@ async function forgetPassword(
       resetPasswordToken: forgetPasswordToken,
     });
 
-  if (process.env.NODE_ENV !== 'test') {
-    await emailService.sendResetPasswordEmail({
-      from: 'Onde Ir <onboarding@resend.dev>',
-      to: email,
-      content: ForgetPasswordEmail({
-        userFirstname: userFoundByEmail.name,
-        resetPasswordTokenId,
-      }),
-    });
-  }
-
   return operationResult.success({
     resetPasswordTokenId,
+    name: userFoundByEmail.name,
   });
 }
 
