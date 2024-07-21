@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -10,6 +11,7 @@ import {
   ForgetPasswordInput,
   ForgetPasswordOutput,
 } from '@/models/authentication';
+import { emailService } from '@/models/email';
 import { form } from '@/src/utils/form';
 import { operationResult } from '@/src/utils/operationResult';
 
@@ -30,6 +32,16 @@ async function forgetPassword(formData: FormData) {
 
   if (responseMessage.data) {
     successMessage = { email };
+    const { resetPasswordTokenId, name } = responseMessage.data;
+
+    await emailService.sendResetPasswordEmail({
+      from: 'Onde Ir <onboarding@resend.dev>',
+      to: email,
+      content: ForgetPasswordEmail({
+        userFirstname: name,
+        resetPasswordTokenId,
+      }),
+    });
 
     revalidatePath('/auth/forget-password');
 
