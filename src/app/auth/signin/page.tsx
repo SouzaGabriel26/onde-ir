@@ -1,14 +1,14 @@
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignInProps, SignInResponse } from '@/models/authentication';
 import { constants } from '@/src/utils/constants';
+import { feedbackMessage } from '@/src/utils/feedbackMessage';
 import { form } from '@/src/utils/form';
-import { operationResult } from '@/src/utils/operationResult';
 
 let signInResponse: SignInResponse;
 
@@ -30,16 +30,17 @@ async function signInAction(formData: FormData) {
       httpOnly: true,
     });
 
-    return operationResult.success({
-      message: 'Login efetuado com sucesso!',
-      redirectLink: '/dashboard',
+    feedbackMessage.setFeedbackMessage({
+      type: 'success',
+      content: 'Login efetuado com sucesso!',
     });
+
+    redirect('/dashboard');
   }
 
-  revalidatePath('/auth/signin');
-
-  return operationResult.failure({
-    message: signInResponse.error.message,
+  feedbackMessage.setFeedbackMessage({
+    type: 'error',
+    content: signInResponse.error.message,
   });
 }
 
@@ -75,7 +76,7 @@ export default function Page({ searchParams }: Props) {
         </Link>
       </p>
 
-      <form className="flex flex-col gap-2">
+      <form action={signInAction} className="flex flex-col gap-2">
         <Input
           placeholder="Email*"
           id="email"
@@ -93,7 +94,7 @@ export default function Page({ searchParams }: Props) {
           autoComplete="current-password"
           error={auth.setInputError('password', signInResponse)}
         />
-        <SubmitButton action={signInAction}>Entrar</SubmitButton>
+        <SubmitButton>Entrar</SubmitButton>
       </form>
 
       <p className="text-center text-sm text-gray-400">

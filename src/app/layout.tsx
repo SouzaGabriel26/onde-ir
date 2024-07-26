@@ -5,7 +5,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/Sonner';
 
 import { constants } from '../utils/constants';
-
+import { feedbackMessage } from '../utils/feedbackMessage';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -26,6 +26,8 @@ export default function RootLayout({
 }>) {
   const theme = getTheme();
 
+  const message = feedbackMessage.getFeedbackMessage();
+
   return (
     <html lang="en" className={theme} style={{ colorScheme: theme }}>
       <body className="h-screen text-slate-800 dark:text-white">
@@ -36,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey={constants.themeKey}
         >
-          <Toaster />
+          <Toaster message={message} />
           {children}
         </ThemeProvider>
       </body>

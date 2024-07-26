@@ -1,12 +1,26 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { Toaster as Sonner } from 'sonner';
+import { useEffect } from 'react';
+import { Toaster as Sonner, toast } from 'sonner';
 
-type ToasterProps = React.ComponentProps<typeof Sonner>;
+import { FeedbackMessage } from '@/src/utils/feedbackMessage';
 
-const Toaster = ({ ...props }: ToasterProps) => {
+type ToasterProps = React.ComponentProps<typeof Sonner> & {
+  message?: FeedbackMessage | null;
+};
+
+const Toaster = ({ message, ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme();
+
+  useEffect(() => {
+    if (!!message) {
+      toast[message.type](message.content, {
+        className:
+          message.type === 'error' ? '!text-red-500' : '!text-green-500',
+      });
+    }
+  }, [message]);
 
   return (
     <Sonner

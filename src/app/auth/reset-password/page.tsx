@@ -1,5 +1,5 @@
-import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
@@ -9,8 +9,9 @@ import {
   FailureAuthResponse,
   ResetPasswordInput,
 } from '@/models/authentication';
+import { feedbackMessage } from '@/src/utils/feedbackMessage';
 import { form } from '@/src/utils/form';
-import { Failure, operationResult, Success } from '@/src/utils/operationResult';
+import { Failure, Success } from '@/src/utils/operationResult';
 
 let responseMessage: Success<{}> | Failure<FailureAuthResponse>;
 
@@ -23,17 +24,19 @@ async function resetPasswordAction(formData: FormData) {
   responseMessage = await auth.resetPassword(authDataSource, data);
 
   if (responseMessage.error) {
-    revalidatePath('/auth/reset-password');
-
-    return operationResult.failure({
-      message: responseMessage.error.message,
+    feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: responseMessage.error.message,
     });
+
+    return;
   }
 
-  return operationResult.success({
-    message: 'Senha atualizada com sucesso',
-    redirectLink: '/auth/signin',
+  feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Senha atualizada com sucesso',
   });
+  redirect('/auth/signin');
 }
 
 type Props = {
@@ -75,7 +78,11 @@ export default function Page({ searchParams }: Props) {
     <div className="space-y-4 md:w-80">
       <h1>Atualização de senha</h1>
 
-      <form key={Date.toString()} className="flex flex-col space-y-3">
+      <form
+        action={resetPasswordAction}
+        key={Date.toString()}
+        className="flex flex-col space-y-3"
+      >
         <Input
           required
           id="password"
@@ -93,7 +100,7 @@ export default function Page({ searchParams }: Props) {
           error={auth.setInputError('confirmPassword', responseMessage)}
         />
         <input type="hidden" value={tokenId} name="resetPasswordTokenId" />
-        <SubmitButton action={resetPasswordAction}>Enviar</SubmitButton>
+        <SubmitButton>Enviar</SubmitButton>
       </form>
 
       {errorMessage && (
