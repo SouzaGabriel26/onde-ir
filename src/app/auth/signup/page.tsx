@@ -1,5 +1,5 @@
-import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { Welcome } from '@/components/email-templates/Welcome';
 import { SubmitButton } from '@/components/SubmitButton';
@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/Input';
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
 import { emailService } from '@/models/email';
+import { feedbackMessage } from '@/src/utils/feedbackMessage';
 import { form } from '@/src/utils/form';
-import { operationResult } from '@/src/utils/operationResult';
 
 let signUpResponse: SignUpResponse;
 
@@ -31,16 +31,17 @@ async function signUpAction(formData: FormData) {
       }),
     });
 
-    return operationResult.success({
-      message: 'Usuário cadastrado com sucesso!',
-      redirectLink: `/auth/signin?userName=${userName}`,
+    feedbackMessage.setFeedbackMessage({
+      type: 'success',
+      content: 'Usuário cadastrado com sucesso!',
     });
+
+    redirect(`/auth/signin?userName=${userName}`);
   }
 
-  revalidatePath('/auth/signup');
-
-  return operationResult.failure({
-    message: signUpResponse.error.message,
+  feedbackMessage.setFeedbackMessage({
+    type: 'error',
+    content: signUpResponse.error.message,
   });
 }
 
@@ -58,7 +59,7 @@ export default function Page() {
         </Link>
       </p>
 
-      <form className="flex flex-col gap-3">
+      <form className="flex flex-col gap-3" action={signUpAction}>
         <Input
           required
           id="name"
@@ -100,7 +101,7 @@ export default function Page() {
           autoComplete="off"
           error={auth.setInputError('confirmPassword', signUpResponse)}
         />
-        <SubmitButton action={signUpAction}>Cadastrar</SubmitButton>
+        <SubmitButton>Cadastrar</SubmitButton>
       </form>
     </div>
   );
