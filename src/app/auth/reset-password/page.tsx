@@ -1,43 +1,10 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
-import { createAuthenticationDataSource } from '@/data/authentication';
-import {
-  auth,
-  FailureAuthResponse,
-  ResetPasswordInput,
-} from '@/models/authentication';
-import { feedbackMessage } from '@/src/utils/feedbackMessage';
-import { form } from '@/src/utils/form';
-import { Failure, Success } from '@/src/utils/operationResult';
+import { auth } from '@/models/authentication';
 
-let responseMessage: Success<{}> | Failure<FailureAuthResponse>;
-
-async function resetPasswordAction(formData: FormData) {
-  'use server';
-
-  const data = form.sanitizeData<ResetPasswordInput>(formData);
-
-  const authDataSource = createAuthenticationDataSource();
-  responseMessage = await auth.resetPassword(authDataSource, data);
-
-  if (responseMessage.error) {
-    feedbackMessage.setFeedbackMessage({
-      type: 'error',
-      content: responseMessage.error.message,
-    });
-
-    return;
-  }
-
-  feedbackMessage.setFeedbackMessage({
-    type: 'success',
-    content: 'Senha atualizada com sucesso',
-  });
-  redirect('/auth/signin');
-}
+import { store } from './store';
 
 type Props = {
   searchParams: {
@@ -46,18 +13,14 @@ type Props = {
 };
 
 export default function Page({ searchParams }: Props) {
+  const { responseMessage } = store.getResponseMessage();
+
   const { tokenId } = searchParams;
 
-  const result = true;
-
-  const hasAuthenticationErrorMessage =
+  const hasAuthenticationError =
     !responseMessage?.data && responseMessage?.error?.fields.length === 0;
 
-  const errorMessage =
-    hasAuthenticationErrorMessage &&
-    responseMessage.error?.message.replace('resetPasswordTokenId', 'Acesso');
-
-  if (!result) {
+  if (hasAuthenticationError) {
     return (
       <div>
         <h1>
@@ -79,7 +42,7 @@ export default function Page({ searchParams }: Props) {
       <h1>Atualização de senha</h1>
 
       <form
-        action={resetPasswordAction}
+        action={store.resetPasswordAction}
         key={Date.toString()}
         className="flex flex-col space-y-3"
       >
@@ -103,8 +66,10 @@ export default function Page({ searchParams }: Props) {
         <SubmitButton>Enviar</SubmitButton>
       </form>
 
-      {errorMessage && (
-        <p className="text-center text-red-400">{errorMessage}</p>
+      {hasAuthenticationError && (
+        <p className="text-center text-red-400">
+          {responseMessage.error?.message}
+        </p>
       )}
     </div>
   );

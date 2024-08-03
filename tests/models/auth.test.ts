@@ -551,6 +551,23 @@ describe('> models/authentication', () => {
 
       expect(resetPasswordTokenAfterReset).toBeNull();
     });
+
+    test('Providing invalid "resetPasswordTokenId" property', async () => {
+      const authDataSource = createAuthenticationDataSource();
+      const result = await auth.resetPassword(authDataSource, {
+        password: '123456',
+        confirmPassword: '123456',
+        resetPasswordTokenId: uuid,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Token inválido.',
+          fields: [],
+        },
+      });
+    });
   });
 
   describe('Invoking "changePassword" method', () => {

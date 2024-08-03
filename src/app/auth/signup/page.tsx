@@ -1,51 +1,14 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
-import { Welcome } from '@/components/email-templates/Welcome';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
-import { createAuthenticationDataSource } from '@/data/authentication';
-import { auth, SignUpProps, SignUpResponse } from '@/models/authentication';
-import { emailService } from '@/models/email';
-import { feedbackMessage } from '@/src/utils/feedbackMessage';
-import { form } from '@/src/utils/form';
+import { auth } from '@/models/authentication';
 
-let signUpResponse: SignUpResponse;
-
-async function signUpAction(formData: FormData) {
-  'use server';
-
-  const sanitizedData = form.sanitizeData<SignUpProps>(formData);
-
-  const authDataSource = createAuthenticationDataSource();
-  signUpResponse = await auth.signUp(authDataSource, sanitizedData);
-
-  if (signUpResponse.data) {
-    const { userName, email, name } = signUpResponse.data;
-
-    await emailService.sendWelcomeMessage({
-      from: 'Onde Ir <onboarding@resend.dev>',
-      to: email,
-      content: Welcome({
-        userFirstname: name,
-      }),
-    });
-
-    feedbackMessage.setFeedbackMessage({
-      type: 'success',
-      content: 'Usuário cadastrado com sucesso!',
-    });
-
-    redirect(`/auth/signin?userName=${userName}`);
-  }
-
-  feedbackMessage.setFeedbackMessage({
-    type: 'error',
-    content: signUpResponse.error.message,
-  });
-}
+import { store } from './store';
 
 export default function Page() {
+  const { signUpResponse } = store.getSignUpResponse();
+
   return (
     <div className="space-y-4 md:w-80">
       <h1 className="text-2xl">Cadastre-se</h1>
@@ -59,7 +22,7 @@ export default function Page() {
         </Link>
       </p>
 
-      <form className="flex flex-col gap-3" action={signUpAction}>
+      <form className="flex flex-col gap-3" action={store.signUpAction}>
         <Input
           required
           id="name"

@@ -377,7 +377,7 @@ async function resetPassword(
 
   if (!resetTokenFoundFromId) {
     return operationResult.failure<FailureAuthResponse>({
-      message: '"resetPasswordTokenId" inválido.',
+      message: 'Token inválido.',
       fields: [],
     });
   }
