@@ -21,7 +21,9 @@ export default async function Layout({ children }: Props) {
     <main className="flex h-screen flex-col">
       <Header userData={data} />
 
-      <div className="mt-16 px-4 py-10 lg:mt-10 lg:px-40">{children}</div>
+      <div className="mt-16 h-full px-4 py-10 lg:mt-10 lg:px-40">
+        {children}
+      </div>
     </main>
   );
 }
