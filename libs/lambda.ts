@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { env } from '@/src/utils/env';
+
 type GetPresignedURLResponse = {
   presigned_url: string;
   file_url: string;
@@ -7,7 +9,7 @@ type GetPresignedURLResponse = {
 
 export async function getPresignedURL(file: File) {
   const { data } = await axios.post<GetPresignedURLResponse>(
-    'https://lzwutjof63keyxj3hvdnqsx2hm0qfmpu.lambda-url.us-east-1.on.aws/',
+    env.lambda_function_url,
     {
       fileName: file.name,
     },
