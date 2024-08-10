@@ -28,6 +28,7 @@ export async function uploadFileToS3(presignedUrl: string, file: File) {
         (progressEvent.loaded * 100) / progressEvent.total!,
       );
 
+      //TODO: Show progress bar
       console.log(`${percentCompleted}%`);
     },
   });

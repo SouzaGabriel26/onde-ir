@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from '@/components/ui/Button';
-import { getPresignedURL, uploadFileToS3 } from '@/libs/lambda';
+import { getPresignedURL, uploadFileToS3 } from '@/data/services/lambda';
 import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg'];
