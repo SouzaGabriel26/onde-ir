@@ -58,14 +58,15 @@ export function ImageUpload() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex h-full flex-col items-center gap-4">
       <Dropzone onDrop={onDrop} />
       <FilesPreview files={files} onDeleteFile={handleDeleteFile} />
 
       <Button
-        disabled={isLoading || !files.length || hasSomeInvalidFileType}
+        className="self-start"
         type="button"
         onClick={handleUpload}
+        disabled={isLoading || !files.length || hasSomeInvalidFileType}
       >
         {isLoading && <Loader2Icon className="mr-2 animate-spin" />}
         Upload
@@ -85,12 +86,13 @@ export function Dropzone({ onDrop }: DropzoneProps) {
       {...getRootProps()}
       className={sanitizeClassName(
         ` h-56
-          w-[500px]
+          w-[250px]
           cursor-pointer
           rounded-md
           border
           p-2
           hover:bg-primary-foreground
+          md:w-[500px]
         `,
         isDragActive && 'bg-primary-foreground',
       )}
@@ -100,7 +102,7 @@ export function Dropzone({ onDrop }: DropzoneProps) {
       <div className="flex h-full flex-col items-center justify-center">
         <PackageOpenIcon className="mb-2 size-12" />
         <h2>Solte suas fotos aqui</h2>
-        <p className="text-zinc-500">
+        <p className="text-center text-sm text-zinc-500">
           São permitidos apenas arquivos png e jpeg
         </p>
       </div>
@@ -117,7 +119,7 @@ function FilesPreview({ files, onDeleteFile }: FilesPreviewProps) {
   return (
     <div className="space-y-2">
       <span className="text-xl">Arquivos selecionados: {files.length}</span>
-      <div className="max-h-80 space-y-2 overflow-y-auto p-2">
+      <div className="max-h-80 space-y-2 overflow-y-auto rounded-md p-2">
         {files.map((file) => (
           <FileItem key={file.name} file={file} onDelete={onDeleteFile} />
         ))}
@@ -142,7 +144,7 @@ function FileItem({ file, onDelete }: FileItemProps) {
           `
           flex
           w-full
-          max-w-[500px]
+          max-w-[250px]
           items-center
           justify-between
           rounded-md
@@ -150,11 +152,12 @@ function FileItem({ file, onDelete }: FileItemProps) {
           bg-secondary
           p-1
           px-4
+          md:max-w-[500px]
         `,
           isFileTypeWrong && 'border-destructive',
         )}
       >
-        <span className="max-w-[390px] overflow-x-hidden text-nowrap">
+        <span className="max-w-[160px] overflow-x-hidden text-ellipsis text-nowrap md:max-w-[390px]">
           {file.name}
         </span>
 
