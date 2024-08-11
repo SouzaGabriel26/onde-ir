@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
@@ -48,7 +49,9 @@ export function Header({ userData }: HeaderProps) {
         md:px-40
       `}
     >
-      <h1 className="text-2xl font-medium">Onde Ir?</h1>
+      <Link href="/" className="text-2xl font-medium">
+        Onde Ir?
+      </Link>
 
       <nav className="flex items-center gap-2 text-sm md:gap-4 md:text-base">
         {!userData && (

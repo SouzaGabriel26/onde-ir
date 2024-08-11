@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
 
 config();
-
 export const env = Object.freeze({
   db_user: process.env.DEFAULT_POSTGRES_USER!,
   db_password: process.env.DEFAULT_POSTGRES_PASSWORD!,
@@ -11,4 +10,5 @@ export const env = Object.freeze({
   jwt_secret: process.env.JWT_SECRET_KEY!,
   reset_password_jwt_secret: process.env.RESET_PASSWORD_JWT_SECRET_KEY!,
   resend_api_key: process.env.RESEND_API_KEY!,
+  lambda_function_url: process.env.NEXT_PUBLIC_LAMBDA_FUNCTION_URL!,
 });

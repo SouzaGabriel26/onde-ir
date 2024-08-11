@@ -9,17 +9,23 @@ import { store } from './store';
 type Props = {
   searchParams: {
     userName?: string;
+    redirect_reason?: string;
   };
 };
 
 export default function Page({ searchParams }: Props) {
   const { signInResponse } = store.getSignInResponse();
 
-  const { userName } = searchParams;
+  const { userName, redirect_reason } = searchParams;
 
   return (
     <div className="space-y-4 md:w-80">
       {userName && <p>Faça login para o usuário {userName}</p>}
+      {redirect_reason === 'not-authenticated' && (
+        <p className="text-center">
+          Faça login para conseguir utilizar os recursos completos
+        </p>
+      )}
       <h1 className="text-2xl">Entrar</h1>
       <p className="text-center text-gray-400">
         Não possui uma conta?{' '}

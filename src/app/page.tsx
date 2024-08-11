@@ -92,7 +92,7 @@ export default async function Page() {
           </p>
 
           <div>
-            <Link href="#">
+            <Link href="/dashboard">
               <Button size="lg">Descobrir todos lugares</Button>
             </Link>
           </div>
