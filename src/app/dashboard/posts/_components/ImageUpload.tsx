@@ -63,16 +63,13 @@ export function ImageUpload() {
         ),
       );
 
-      responses.forEach((response, index) => {
-        const fileName = uploads[index].file.name;
+      if (responses.some((response) => response.status === 'rejected')) {
+        toast.error('Algo deu errado ao enviar os arquivos.');
+        return;
+      }
 
-        if (response.status === 'rejected') {
-          toast.error(`Erro ao enviar o arquivo ${fileName}`);
-        } else {
-          toast.success(`Arquivo ${fileName} enviado com sucesso!`);
-          //save url.file_url in database
-        }
-      });
+      toast.success('Arquivos enviados com sucesso!');
+      // save url.file_url (uploadsObject) in database
     } catch {
       console.error('Erro ao recuperar as URLs de upload.');
       toast.error('Erro ao recuperar as URLs de upload.');
