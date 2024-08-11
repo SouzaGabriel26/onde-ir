@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from '@/components/ui/Button';
-import { getPresignedURL, uploadFileToS3 } from '@/data/services/lambda';
+import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
 import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg'];
@@ -58,7 +58,7 @@ export function ImageUpload() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <Dropzone onDrop={onDrop} />
       <FilesPreview files={files} onDeleteFile={handleDeleteFile} />
 
@@ -70,7 +70,7 @@ export function ImageUpload() {
         {isLoading && <Loader2Icon className="mr-2 animate-spin" />}
         Upload
       </Button>
-    </>
+    </div>
   );
 }
 

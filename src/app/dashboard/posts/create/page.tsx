@@ -1,5 +1,9 @@
-import { PostsForm } from '../_components/PostsForm';
+import { ImageUpload } from '../_components/ImageUpload';
 
 export default function Page() {
-  return <PostsForm />;
+  return (
+    <form>
+      <ImageUpload />
+    </form>
+  );
 }

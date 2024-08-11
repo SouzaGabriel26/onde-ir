@@ -11,7 +11,6 @@ export async function handler(event) {
     return response(400, { message: '"fileName" é obrigatório.' });
   }
 
-
   // if (!process.env.CDN_TO_S3) {
   //   return response(400, { message: 'Invalid "CDN" environment variable.'  })
   // }
