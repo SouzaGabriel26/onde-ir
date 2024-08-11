@@ -6,49 +6,71 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/Button';
+import { Progress } from '@/components/ui/Progress';
 import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
 import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg'];
 
+type Upload = {
+  file: File;
+  progress: number;
+};
+
 export function ImageUpload() {
   const [isLoading, setIsLoading] = useState(false);
-  const [files, setFiles] = useState<Array<File>>([]);
+  const [uploads, setUploads] = useState<Array<Upload>>([]);
 
   const hasSomeInvalidFileType = useMemo(() => {
-    return files.some((file) => !ALLOWED_FILE_TYPES.includes(file.type));
-  }, [files]);
+    return uploads.some(
+      (upload) => !ALLOWED_FILE_TYPES.includes(upload.file.type),
+    );
+  }, [uploads]);
 
   const onDrop = useCallback((acceptedFiles: Array<File>) => {
-    setFiles(acceptedFiles);
+    setUploads(acceptedFiles.map((file) => ({ file, progress: 0 })));
   }, []);
 
-  function handleDeleteFile(name: string) {
-    setFiles((prevFiles) => prevFiles.filter((file) => file.name !== name));
+  function handleDeleteUpload(name: string) {
+    setUploads((prevState) =>
+      prevState.filter((upload) => upload.file.name !== name),
+    );
   }
 
   async function handleUpload() {
     try {
       setIsLoading(true);
 
-      const urls = await Promise.all(
-        files.map(async (file) => ({
+      const uploadsObject = await Promise.all(
+        uploads.map(async ({ file }) => ({
           url: await getPresignedURL(file),
           file,
         })),
       );
 
       const responses = await Promise.allSettled(
-        urls.map(({ url, file }) => uploadFileToS3(url.presigned_url, file)),
+        uploadsObject.map(({ url, file }, index) =>
+          uploadFileToS3(url.presigned_url, file, (progress) => {
+            setUploads((prevState) => {
+              const newUploads = [...prevState];
+              const currentUpload = newUploads[index];
+
+              currentUpload.progress = progress;
+
+              return newUploads;
+            });
+          }),
+        ),
       );
 
       responses.forEach((response, index) => {
-        const fileName = files[index].name;
+        const fileName = uploads[index].file.name;
 
         if (response.status === 'rejected') {
           toast.error(`Erro ao enviar o arquivo ${fileName}`);
         } else {
           toast.success(`Arquivo ${fileName} enviado com sucesso!`);
+          //save url.file_url in database
         }
       });
     } catch {
@@ -62,16 +84,16 @@ export function ImageUpload() {
   return (
     <div className="flex h-full flex-col items-center gap-4">
       <Dropzone onDrop={onDrop} />
-      <FilesPreview files={files} onDeleteFile={handleDeleteFile} />
+      <FilesPreview uploads={uploads} onDeleteUpload={handleDeleteUpload} />
 
       <Button
-        className="self-start"
+        className="w-full"
         type="button"
         onClick={handleUpload}
-        disabled={isLoading || !files.length || hasSomeInvalidFileType}
+        disabled={isLoading || !uploads.length || hasSomeInvalidFileType}
       >
         {isLoading && <Loader2Icon className="mr-2 animate-spin" />}
-        Upload
+        Enviar
       </Button>
     </div>
   );
@@ -113,17 +135,22 @@ export function Dropzone({ onDrop }: DropzoneProps) {
 }
 
 type FilesPreviewProps = {
-  files: Array<File>;
-  onDeleteFile: (name: string) => void;
+  uploads: Array<Upload>;
+  onDeleteUpload: (name: string) => void;
 };
 
-function FilesPreview({ files, onDeleteFile }: FilesPreviewProps) {
+function FilesPreview({ uploads, onDeleteUpload }: FilesPreviewProps) {
   return (
     <div className="space-y-2">
-      <span className="text-xl">Arquivos selecionados: {files.length}</span>
+      <span className="text-xl">Arquivos selecionados: {uploads.length}</span>
       <div className="max-h-80 space-y-2 overflow-y-auto rounded-md p-2">
-        {files.map((file) => (
-          <FileItem key={file.name} file={file} onDelete={onDeleteFile} />
+        {uploads.map(({ file, progress }) => (
+          <FileItem
+            key={file.name}
+            file={file}
+            progress={progress}
+            onDelete={onDeleteUpload}
+          />
         ))}
       </div>
     </div>
@@ -132,10 +159,11 @@ function FilesPreview({ files, onDeleteFile }: FilesPreviewProps) {
 
 type FileItemProps = {
   file: File;
+  progress: number;
   onDelete: (name: string) => void;
 };
 
-function FileItem({ file, onDelete }: FileItemProps) {
+function FileItem({ file, progress, onDelete }: FileItemProps) {
   const isFileTypeWrong = !ALLOWED_FILE_TYPES.includes(file.type);
 
   return (
@@ -144,33 +172,34 @@ function FileItem({ file, onDelete }: FileItemProps) {
         title={file.name}
         className={sanitizeClassName(
           `
-          flex
-          w-full
-          max-w-[250px]
-          items-center
-          justify-between
-          gap-2
-          rounded-md
-          border
-          bg-secondary
-          p-1
-          px-4
-          md:max-w-[500px]
-        `,
+            w-full
+            max-w-[250px]
+            space-y-2
+            rounded-md
+            border
+            bg-secondary
+            p-1
+            px-4
+            md:max-w-[500px]
+          `,
           isFileTypeWrong && 'border-destructive',
         )}
       >
-        <span className="max-w-[160px] overflow-x-hidden text-ellipsis text-nowrap md:max-w-[390px]">
-          {file.name}
-        </span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="max-w-[160px] overflow-x-hidden text-ellipsis text-nowrap md:max-w-[390px]">
+            {file.name}
+          </span>
 
-        <Button
-          onClick={() => onDelete(file.name)}
-          className="bg-red-600 px-3 transition-all hover:bg-red-700"
-          title="Deletar"
-        >
-          <Trash2Icon className="size-4 stroke-primary" />
-        </Button>
+          <Button
+            onClick={() => onDelete(file.name)}
+            className="bg-red-600 px-3 transition-all hover:bg-red-700"
+            title="Deletar"
+          >
+            <Trash2Icon className="size-4 stroke-primary" />
+          </Button>
+        </div>
+
+        <Progress value={progress} />
       </div>
 
       {isFileTypeWrong && (
