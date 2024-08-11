@@ -3,6 +3,7 @@
 import { Loader2Icon, PackageOpenIcon, Trash2Icon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/Button';
 import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
@@ -45,13 +46,14 @@ export function ImageUpload() {
         const fileName = files[index].name;
 
         if (response.status === 'rejected') {
-          console.error(`O upload do arquivo ${fileName} falhou.`);
+          toast.error(`Erro ao enviar o arquivo ${fileName}`);
         } else {
-          console.log(`Upload do arquivo ${fileName} com sucesso.`);
+          toast.success(`Arquivo ${fileName} enviado com sucesso!`);
         }
       });
     } catch {
-      console.log('Erro ao recuperar as URLs de upload.');
+      console.error('Erro ao recuperar as URLs de upload.');
+      toast.error('Erro ao recuperar as URLs de upload.');
     } finally {
       setIsLoading(false);
     }
@@ -147,6 +149,7 @@ function FileItem({ file, onDelete }: FileItemProps) {
           max-w-[250px]
           items-center
           justify-between
+          gap-2
           rounded-md
           border
           bg-secondary
