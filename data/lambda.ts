@@ -18,18 +18,19 @@ export async function getPresignedURL(file: File) {
   return data;
 }
 
-export async function uploadFileToS3(presignedUrl: string, file: File) {
+export async function uploadFileToS3(
+  presignedUrl: string,
+  file: File,
+  onProgress?: (progress: number) => void,
+) {
   await axios.put(presignedUrl, file, {
     headers: {
       'Content-Type': file.type,
     },
-    onUploadProgress(progressEvent) {
-      const percentCompleted = Math.round(
-        (progressEvent.loaded * 100) / progressEvent.total!,
-      );
+    onUploadProgress: ({ loaded, total }) => {
+      const percentage = Math.round((loaded * 100) / (total ?? 0));
 
-      //TODO: Show progress bar
-      console.log(`${percentCompleted}%`);
+      onProgress?.(percentage);
     },
   });
 }
