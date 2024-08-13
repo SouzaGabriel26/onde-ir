@@ -38,8 +38,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
           {
             id: expect.any(String),
@@ -61,8 +59,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 1,
-            likes: 2,
           },
           {
             id: expect.any(String),
@@ -83,8 +79,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 1,
-            likes: 1,
           },
           {
             id: expect.any(String),
@@ -105,8 +99,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
         ],
       });
@@ -197,8 +189,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 1,
-            likes: 2,
           },
           {
             id: expect.any(String),
@@ -219,8 +209,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 1,
-            likes: 1,
           },
         ],
       });
@@ -257,8 +245,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
           {
             id: expect.any(String),
@@ -279,8 +265,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
         ],
       });
@@ -316,8 +300,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
         ],
       });
@@ -352,8 +334,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
         ],
       });
@@ -388,8 +368,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 1,
-            likes: 1,
           },
           {
             id: expect.any(String),
@@ -410,8 +388,6 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
-            comments: 0,
-            likes: 0,
           },
         ],
       });
