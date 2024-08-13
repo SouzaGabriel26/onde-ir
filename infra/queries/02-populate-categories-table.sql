@@ -1,4 +1,7 @@
 INSERT INTO categories
-	(name)
+	(name, is_active)
 VALUES
-	('restaurantes');
+	('restaurantes', TRUE),
+  ('parques', FALSE),
+  ('museus', FALSE),
+  ('bares', FALSE);

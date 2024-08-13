@@ -27,7 +27,8 @@ CREATE TABLE reset_password_tokens (
 
 CREATE TABLE categories (
 	id UUID DEFAULT uuid_generate_v4() CONSTRAINT categories_pkey PRIMARY KEY,
-  name VARCHAR(50) UNIQUE NOT NULL
+  name VARCHAR(50) UNIQUE NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE places (
@@ -58,10 +59,11 @@ CREATE TABLE place_images (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
 );
 
-CREATE TABLE place_likes (
-  id UUID DEFAULT uuid_generate_v4() CONSTRAINT place_likes_pkey PRIMARY KEY,
+CREATE TABLE place_ratings (
+  id UUID DEFAULT uuid_generate_v4() CONSTRAINT place_ratings_pkey PRIMARY KEY,
   place_id UUID NOT NULL REFERENCES places(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
 
   UNIQUE (place_id, user_id)
 );
