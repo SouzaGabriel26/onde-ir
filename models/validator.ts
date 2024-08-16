@@ -177,6 +177,9 @@ const schema = z.object({
     })
     .min(1, {
       message: '"page" precisa ser um número maior que 0.',
+    })
+    .int({
+      message: '"page" precisa ser um número inteiro.',
     }),
   limit: z
     .number({
@@ -185,5 +188,110 @@ const schema = z.object({
     })
     .min(1, {
       message: '"limit" precisa ser um número maior que 0.',
+    })
+    .int({
+      message: '"limit" precisa ser um número inteiro.',
+    }),
+  state: z
+    .string({
+      invalid_type_error: '"state" precisa ser uma string.',
+      required_error: '"state" é obrigatório.',
+    })
+    .trim()
+    .min(2, {
+      message: '"state" precisa ter no mínimo 2 caracteres.',
+    }),
+  country: z
+    .string({
+      invalid_type_error: '"country" precisa ser uma string.',
+      required_error: '"country" é obrigatório.',
+    })
+    .trim()
+    .min(3, {
+      message: '"country" precisa ter no mínimo 3 caracteres.',
+    }),
+  city: z
+    .string({
+      invalid_type_error: '"city" precisa ser uma string.',
+      required_error: '"city" é obrigatório.',
+    })
+    .trim()
+    .min(2, {
+      message: '"city" precisa ter no mínimo 2 caracteres.',
+    }),
+  street: z
+    .string({
+      invalid_type_error: '"street" precisa ser uma string.',
+      required_error: '"street" é obrigatório.',
+    })
+    .trim()
+    .min(2, {
+      message: '"street" precisa ter no mínimo 2 caracteres.',
+    }),
+  num_place: z
+    .number({
+      invalid_type_error: '"num_place" precisa ser um número.',
+      required_error: '"num_place" é obrigatório.',
+    })
+    .min(1, {
+      message: '"num_place" precisa ser um número maior que 0.',
+    }),
+  complement: z
+    .string({
+      invalid_type_error: '"complement" precisa ser uma string.',
+      required_error: '"complement" é obrigatório.',
+    })
+    .trim()
+    .min(2, {
+      message: '"complement" precisa ter no mínimo 2 caracteres.',
+    }),
+  description: z
+    .string({
+      invalid_type_error: '"description" precisa ser uma string.',
+      required_error: '"description" é obrigatório.',
+    })
+    .trim()
+    .min(2, {
+      message: '"description" precisa ter no mínimo 2 caracteres.',
+    }),
+  category_id: z
+    .string({
+      invalid_type_error: '"category_id" precisa ser uma string.',
+      required_error: '"category_id" é obrigatório.',
+    })
+    .trim()
+    .uuid({
+      message: '"category_id" precisa ser um UUID válido.',
+    }),
+  latitude: z
+    .number({
+      invalid_type_error: '"latitude" precisa ser um número.',
+      required_error: '"latitude" é obrigatório.',
+    })
+    .min(-90, {
+      message: '"latitude" precisa ser um número maior ou igual a -90.',
+    })
+    .max(90, {
+      message: '"latitude" precisa ser um número menor ou igual a 90.',
+    }),
+  longitude: z
+    .number({
+      invalid_type_error: '"longitude" precisa ser um número.',
+      required_error: '"longitude" é obrigatório.',
+    })
+    .min(-180, {
+      message: '"longitude" precisa ser um número maior ou igual a -180.',
+    })
+    .max(180, {
+      message: '"longitude" precisa ser um número menor ou igual a 180.',
+    }),
+  created_by: z
+    .string({
+      invalid_type_error: '"created_by" precisa ser uma string.',
+      required_error: '"created_by" é obrigatório.',
+    })
+    .trim()
+    .uuid({
+      message: '"created_by" precisa ser um UUID válido.',
     }),
 });

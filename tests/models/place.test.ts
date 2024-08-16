@@ -1,6 +1,9 @@
+import crypto from 'node:crypto';
+
 import { createPlaceDataSource } from '@/data/place';
 import { database } from '@/infra/database';
 import { place } from '@/models/place';
+import { sql } from '@/src/utils/syntax-highlighting';
 
 import { orchestrator } from '../orchestrator';
 
@@ -393,4 +396,98 @@ describe('> models/place', () => {
       });
     });
   });
+
+  describe('Invoking "create" method', () => {
+    test('Providing valid input', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const createdBy = await getUserId();
+      const categories = await placeDataSource.findCategories();
+
+      const result = await place.create(placeDataSource, {
+        name: 'Bar do Zé',
+        category_id: categories[0].id,
+        city: 'Vila Velha',
+        country: 'Brasil',
+        created_by: createdBy,
+        state: 'ES',
+        street: 'Av. Hugo Musso',
+      });
+
+      expect(result).toStrictEqual({
+        data: {
+          place: {
+            id: expect.any(String),
+            name: 'Bar do Zé',
+          },
+        },
+        error: null,
+      });
+    });
+
+    test('Providing unexistent "category_id"', async () => {
+      const uuid = crypto.randomUUID();
+      const category_uuid = crypto.randomUUID();
+
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.create(placeDataSource, {
+        name: 'Bar do Zé',
+        category_id: category_uuid,
+        city: 'Vila Velha',
+        country: 'Brasil',
+        created_by: uuid,
+        state: 'ES',
+        street: 'Av. Hugo Musso',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'ID da categoria não encontrada.',
+          fields: ['category_id'],
+        },
+      });
+    });
+
+    test('Providing unexistent "created_by"', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const categories = await placeDataSource.findCategories();
+      const uuid = crypto.randomUUID();
+
+      const result = await place.create(placeDataSource, {
+        name: 'Bar do Zé',
+        category_id: categories[0].id,
+        city: 'Vila Velha',
+        country: 'Brasil',
+        created_by: uuid,
+        state: 'ES',
+        street: 'Av. Hugo Musso',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Usuário não encontrado.',
+          fields: ['created_by'],
+        },
+      });
+    });
+  });
 });
+
+async function getUserId() {
+  const client = database.getClient();
+
+  const query = {
+    text: sql`
+      SELECT id
+      FROM users
+      LIMIT 1;
+    `,
+  };
+
+  const queryResult = await client.query(query);
+
+  return queryResult?.rows[0].id;
+}
