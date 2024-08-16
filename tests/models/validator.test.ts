@@ -1525,4 +1525,770 @@ describe('> models/validator', () => {
       });
     });
   });
+
+  describe('Testing "page"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const result = validator(
+        {
+          page: 1,
+        },
+        {
+          page: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          page: 1,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to optional parameter', () => {
+      const result = validator(
+        {
+          page: undefined,
+        },
+        {
+          page: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+    });
+
+    test('Providing invalid type to optional parameter', () => {
+      const result = validator(
+        {
+          page: '1' as any,
+        },
+        {
+          page: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing negative value to optional parameter', () => {
+      const result = validator(
+        {
+          page: -1,
+        },
+        {
+          page: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número maior que 0.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing float value to optional parameter', () => {
+      const result = validator(
+        {
+          page: 1.5,
+        },
+        {
+          page: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número inteiro.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const result = validator(
+        {
+          page: 1,
+        },
+        {
+          page: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          page: 1,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to required parameter', () => {
+      const result = validator(
+        {
+          page: undefined,
+        },
+        {
+          page: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" é obrigatório.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing invalid type to required parameter', () => {
+      const result = validator(
+        {
+          page: '1' as any,
+        },
+        {
+          page: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing negative value to required parameter', () => {
+      const result = validator(
+        {
+          page: -1,
+        },
+        {
+          page: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número maior que 0.',
+          fields: ['page'],
+        },
+      });
+    });
+
+    test('Providing float value to required parameter', () => {
+      const result = validator(
+        {
+          page: 1.5,
+        },
+        {
+          page: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"page" precisa ser um número inteiro.',
+          fields: ['page'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "limit"', () => {
+    test('Providing valid value to optional parameter', () => {
+      const result = validator(
+        {
+          limit: 1,
+        },
+        {
+          limit: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          limit: 1,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to optional parameter', () => {
+      const result = validator(
+        {
+          limit: undefined,
+        },
+        {
+          limit: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+    });
+
+    test('Providing invalid type to optional parameter', () => {
+      const result = validator(
+        {
+          limit: '1' as any,
+        },
+        {
+          limit: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing negative value to optional parameter', () => {
+      const result = validator(
+        {
+          limit: -1,
+        },
+        {
+          limit: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número maior que 0.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing float value to optional parameter', () => {
+      const result = validator(
+        {
+          limit: 1.5,
+        },
+        {
+          limit: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número inteiro.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing valid value to required parameter', () => {
+      const result = validator(
+        {
+          limit: 1,
+        },
+        {
+          limit: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          limit: 1,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing undefined to required parameter', () => {
+      const result = validator(
+        {
+          limit: undefined,
+        },
+        {
+          limit: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" é obrigatório.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing invalid type to required parameter', () => {
+      const result = validator(
+        {
+          limit: '1' as any,
+        },
+        {
+          limit: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing negative value to required parameter', () => {
+      const result = validator(
+        {
+          limit: -1,
+        },
+        {
+          limit: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número maior que 0.',
+          fields: ['limit'],
+        },
+      });
+    });
+
+    test('Providing float value to required parameter', () => {
+      const result = validator(
+        {
+          limit: 1.5,
+        },
+        {
+          limit: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"limit" precisa ser um número inteiro.',
+          fields: ['limit'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "country"', () => {
+    test('Providing country with less than 3 characters to optional parameter', () => {
+      const result = validator(
+        {
+          country: 'BR',
+        },
+        {
+          country: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"country" precisa ter no mínimo 3 caracteres.',
+          fields: ['country'],
+        },
+      });
+    });
+
+    test('Providing country with less than 3 characters to optional parameter', () => {
+      const result = validator(
+        {
+          country: 'BR',
+        },
+        {
+          country: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"country" precisa ter no mínimo 3 caracteres.',
+          fields: ['country'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "city"', () => {
+    test('Providing city with less than 2 characters to optional parameter', () => {
+      const result = validator(
+        {
+          city: 'S',
+        },
+        {
+          city: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"city" precisa ter no mínimo 2 caracteres.',
+          fields: ['city'],
+        },
+      });
+    });
+
+    test('Providing city with less than 2 characters to required parameter', () => {
+      const result = validator(
+        {
+          city: 'S',
+        },
+        {
+          city: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"city" precisa ter no mínimo 2 caracteres.',
+          fields: ['city'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "street"', () => {
+    test('Providing street with less than 2 characters to optional parameter', () => {
+      const result = validator(
+        {
+          street: 'S',
+        },
+        {
+          street: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"street" precisa ter no mínimo 2 caracteres.',
+          fields: ['street'],
+        },
+      });
+    });
+
+    test('Providing street with less than 2 characters to required parameter', () => {
+      const result = validator(
+        {
+          street: 'S',
+        },
+        {
+          street: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"street" precisa ter no mínimo 2 caracteres.',
+          fields: ['street'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "num_place"', () => {
+    test('Providing num_place with less than 1 to optional parameter', () => {
+      const result = validator(
+        {
+          num_place: 0,
+        },
+        {
+          num_place: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"num_place" precisa ser um número maior que 0.',
+          fields: ['num_place'],
+        },
+      });
+    });
+
+    test('Providing num_place with less than 1 to required parameter', () => {
+      const result = validator(
+        {
+          num_place: 0,
+        },
+        {
+          num_place: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"num_place" precisa ser um número maior que 0.',
+          fields: ['num_place'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "complement" and "description"', () => {
+    test('Providing complement with less than 2 characters', () => {
+      const result = validator(
+        {
+          complement: 'S',
+        },
+        {
+          complement: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"complement" precisa ter no mínimo 2 caracteres.',
+          fields: ['complement'],
+        },
+      });
+    });
+
+    test('Providing description with less than 2 characters', () => {
+      const result = validator(
+        {
+          description: 'S',
+        },
+        {
+          description: 'optional',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"description" precisa ter no mínimo 2 caracteres.',
+          fields: ['description'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "category_id" and "created_by"', () => {
+    const uuid = crypto.randomUUID();
+
+    test('Providing valid uuid to category_id', () => {
+      const result = validator(
+        {
+          category_id: uuid,
+        },
+        {
+          category_id: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          category_id: uuid,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid uuid to category_id', () => {
+      const result = validator(
+        {
+          category_id: 'invalid',
+        },
+        {
+          category_id: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"category_id" precisa ser um UUID válido.',
+          fields: ['category_id'],
+        },
+      });
+    });
+
+    test('Providing valid uuid to created_by', () => {
+      const result = validator(
+        {
+          created_by: uuid,
+        },
+        {
+          created_by: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          created_by: uuid,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing invalid uuid to created_by', () => {
+      const result = validator(
+        {
+          created_by: 'invalid',
+        },
+        {
+          created_by: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"created_by" precisa ser um UUID válido.',
+          fields: ['created_by'],
+        },
+      });
+    });
+  });
+
+  describe('Testing "latitude" and "longitude"', () => {
+    test('Providing valid value to latitude ', () => {
+      const result = validator(
+        {
+          latitude: -23.55052,
+        },
+        {
+          latitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          latitude: -23.55052,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing value greater than 90 to latitude ', () => {
+      const result = validator(
+        {
+          latitude: 91,
+        },
+        {
+          latitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"latitude" precisa ser um número menor ou igual a 90.',
+          fields: ['latitude'],
+        },
+      });
+    });
+
+    test('Providing value less than -90 to latitude ', () => {
+      const result = validator(
+        {
+          latitude: -91,
+        },
+        {
+          latitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"latitude" precisa ser um número maior ou igual a -90.',
+          fields: ['latitude'],
+        },
+      });
+    });
+
+    test('Providing valid value to longitude ', () => {
+      const result = validator(
+        {
+          longitude: -23.55052,
+        },
+        {
+          longitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {
+          longitude: -23.55052,
+        },
+        error: null,
+      });
+    });
+
+    test('Providing value greater than 180 to longitude ', () => {
+      const result = validator(
+        {
+          longitude: 181,
+        },
+        {
+          longitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"longitude" precisa ser um número menor ou igual a 180.',
+          fields: ['longitude'],
+        },
+      });
+    });
+
+    test('Providing value less than -180 to longitude ', () => {
+      const result = validator(
+        {
+          longitude: -181,
+        },
+        {
+          longitude: 'required',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"longitude" precisa ser um número maior ou igual a -180.',
+          fields: ['longitude'],
+        },
+      });
+    });
+  });
 });
