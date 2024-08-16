@@ -1,10 +1,12 @@
 import { PlaceDataSource } from '@/data/place';
+import { createUserDataSource } from '@/data/user';
 import { operationResult } from '@/src/utils/operationResult';
 
 import { ValidationSchema, validator } from './validator';
 
 export const place = Object.freeze({
   findAll,
+  create,
 });
 
 type FindAllInput = {
@@ -46,4 +48,72 @@ async function findAll(
   });
 
   return operationResult.success(places);
+}
+
+export type CreatePlaceInput = {
+  name: string;
+  country: string;
+  state: string;
+  city: string;
+  street: string;
+  num_place?: number;
+  complement?: string;
+  description?: string;
+  category_id: string;
+  latitude?: number;
+  longitude?: number;
+  created_by: string;
+};
+
+async function create(
+  placeDataSource: PlaceDataSource,
+  props: CreatePlaceInput,
+) {
+  const { data: validatedInput, error } = validator(
+    { ...props },
+    {
+      name: 'required',
+      country: 'required',
+      state: 'required',
+      city: 'required',
+      street: 'required',
+      category_id: 'required',
+      created_by: 'required',
+      num_place: 'optional',
+      complement: 'optional',
+      description: 'optional',
+      latitude: 'optional',
+      longitude: 'optional',
+    },
+  );
+
+  if (error) return operationResult.failure(error);
+
+  const categories = await placeDataSource.findCategories();
+  const categoryExists = categories.some(
+    (c) => c.id === validatedInput.category_id,
+  );
+
+  if (!categoryExists) {
+    return operationResult.failure({
+      message: 'ID da categoria não encontrada.',
+      fields: ['category_id'],
+    });
+  }
+
+  const userDataSource = createUserDataSource();
+  const userExists = await userDataSource.checkById({
+    id: validatedInput.created_by,
+  });
+
+  if (!userExists) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['created_by'],
+    });
+  }
+
+  const result = await placeDataSource.create(validatedInput);
+
+  return operationResult.success({ place: result });
 }

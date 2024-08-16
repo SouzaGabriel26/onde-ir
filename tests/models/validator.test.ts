@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+
 import { validator } from '@/models/validator';
 
 describe('> models/validator', () => {

@@ -1,4 +1,5 @@
 import { database } from '@/infra/database';
+import { CreatePlaceInput } from '@/models/place';
 import { sql } from '@/src/utils/syntax-highlighting';
 
 export type PlaceDataSource = ReturnType<typeof createPlaceDataSource>;
@@ -8,6 +9,8 @@ export function createPlaceDataSource() {
 
   return Object.freeze({
     findAll,
+    create,
+    findCategories,
   });
 
   type FindAllInput = {
@@ -96,5 +99,84 @@ export function createPlaceDataSource() {
 
       query.text = query.text.replace('$whereClause', whereClauseText);
     }
+  }
+
+  async function create(input: CreatePlaceInput) {
+    const query = {
+      text: sql`
+        INSERT INTO places (
+          name,
+          country,
+          state,
+          city,
+          street,
+          num_place,
+          complement,
+          description,
+          category_id,
+          latitude,
+          longitude,
+          created_by
+        )
+        VALUES (
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          $6,
+          $7,
+          $8,
+          $9,
+          $10,
+          $11,
+          $12
+        )
+        RETURNING
+          id, name;
+      `,
+      values: [
+        input.name,
+        input.country,
+        input.state,
+        input.city,
+        input.street,
+        input.num_place,
+        input.complement,
+        input.description,
+        input.category_id,
+        input.latitude,
+        input.longitude,
+        input.created_by,
+      ],
+    };
+
+    const queryResult = await placePool.query(query);
+    type CreatePlaceOutput = {
+      id: string;
+      name: string;
+    };
+
+    return (queryResult?.rows[0] as CreatePlaceOutput) ?? {};
+  }
+
+  type Category = {
+    id: string;
+    name: string;
+    is_active: boolean;
+  };
+
+  async function findCategories() {
+    const query = {
+      text: sql`
+        SELECT
+          *
+        FROM
+          categories
+      `,
+    };
+
+    const queryResult = await placePool.query(query);
+    return queryResult?.rows as Category[];
   }
 }

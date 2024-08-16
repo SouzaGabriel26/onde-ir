@@ -9,6 +9,7 @@ export function createUserDataSource() {
 
   return Object.freeze({
     findById,
+    checkById,
   });
 
   type FindByIdInput = {
@@ -85,5 +86,30 @@ export function createUserDataSource() {
 
       query.text = query.text.replace('$selectedFields', columns.join(','));
     }
+  }
+
+  type CheckByIdInput = {
+    id: string;
+  };
+
+  async function checkById({ id }: CheckByIdInput) {
+    const queryText = sql`
+      SELECT
+        id
+      FROM
+        users
+      WHERE
+        id = $1
+      LIMIT 1
+    `;
+
+    const query = {
+      text: queryText,
+      values: [id],
+    };
+
+    const queryResult = await userPool.query(query);
+
+    return queryResult?.rows[0] ? true : false;
   }
 }
