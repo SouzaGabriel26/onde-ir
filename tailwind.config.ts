@@ -53,6 +53,12 @@ const config = {
           foreground: 'hsl(var(--card-foreground))',
         },
       },
+      width: {
+        popover: 'var(--radix-popover-trigger-width)',
+      },
+      maxHeight: {
+        popover: 'var(--radix-popover-content-available-height)',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
