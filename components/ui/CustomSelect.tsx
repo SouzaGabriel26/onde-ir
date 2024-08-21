@@ -82,14 +82,14 @@ export function CustomSelect({
             <span className="text-muted-foreground">{label}</span>
           )}
 
-          <ChevronDown className="size-4" />
+          <ChevronDown className="absolute right-4 size-4" />
           <input
-            readOnly
-            required={required}
-            tabIndex={-1}
-            className="pointer-events-none absolute w-full opacity-0"
             name={name}
+            tabIndex={-1}
+            required={required}
             value={selectedValue}
+            onChange={() => ({})} // remove warning & mantain required property
+            className="pointer-events-none opacity-0"
           />
         </Button>
       </PopoverTrigger>
