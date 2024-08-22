@@ -68,7 +68,9 @@ export function ImageUpload() {
         return;
       }
 
-      toast.success('Arquivos enviados com sucesso!');
+      toast.success('Arquivos enviados com sucesso!', {
+        className: '!text-green-500',
+      });
       // save url.file_url (uploadsObject) in database
     } catch {
       console.error('Erro ao recuperar as URLs de upload.');
@@ -84,7 +86,7 @@ export function ImageUpload() {
       <FilesPreview uploads={uploads} onDeleteUpload={handleDeleteUpload} />
 
       <Button
-        className="w-full"
+        className="self-end"
         type="button"
         onClick={handleUpload}
         disabled={isLoading || !uploads.length || hasSomeInvalidFileType}

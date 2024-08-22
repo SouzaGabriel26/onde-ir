@@ -19,6 +19,8 @@ type CustomSelectProps = Omit<JSX.IntrinsicElements['button'], 'name'> & {
   defaultOption?: Option['value'];
   name: JSX.IntrinsicElements['input']['name'];
   label: string;
+  actionOnSelect?: (value: string) => Promise<void>;
+  required?: boolean;
   searchable?: boolean;
 };
 
@@ -29,6 +31,8 @@ export function CustomSelect({
   defaultOption,
   label,
   searchable = false,
+  required = false,
+  actionOnSelect,
   ...props
 }: CustomSelectProps) {
   const [open, setOpen] = useState(false);
@@ -45,11 +49,16 @@ export function CustomSelect({
     );
   }, [options, searchTerm]);
 
-  const handleSelect = useCallback((value: string | number) => {
-    setSelectedValue((prevState) => (prevState === value ? '' : value));
-    setOpen(false);
-    setSearchTerm('');
-  }, []);
+  const handleSelect = useCallback(
+    (value: string | number) => {
+      setSelectedValue((prevState) => (prevState === value ? '' : value));
+      setOpen(false);
+      setSearchTerm('');
+
+      actionOnSelect?.(String(value));
+    },
+    [actionOnSelect],
+  );
 
   const title = selectedValue
     ? options.find((option) => option.value === selectedValue)?.label
@@ -62,7 +71,7 @@ export function CustomSelect({
           variant="ghost"
           title={title}
           className={sanitizeClassName(
-            'flex min-w-40 justify-between border',
+            'relative flex w-full min-w-40 justify-between border',
             className,
           )}
           {...props}
@@ -73,8 +82,15 @@ export function CustomSelect({
             <span className="text-muted-foreground">{label}</span>
           )}
 
-          <ChevronDown className="size-4" />
-          <input type="hidden" name={name} value={selectedValue} />
+          <ChevronDown className="absolute right-4 size-4" />
+          <input
+            name={name}
+            tabIndex={-1}
+            required={required}
+            value={selectedValue}
+            onChange={() => ({})} // remove warning & mantain required property
+            className="pointer-events-none opacity-0"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-h-popover w-popover space-y-2">
