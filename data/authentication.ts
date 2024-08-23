@@ -16,7 +16,7 @@ export function createAuthenticationDataSource() {
     createResetPasswordToken,
     resetPassword,
     findResetPasswordToken,
-    deleteResetPasswordToken,
+    invalidateResetPasswordToken,
   });
 
   type Output = {
@@ -133,21 +133,24 @@ export function createAuthenticationDataSource() {
       values: [where.id],
     });
 
-    return (
-      (result?.rows[0] as {
-        id: string;
-        user_id: string;
-        reset_token: string;
-        used: boolean;
-        created_at: Date;
-      }) ?? null
-    );
+    if (!result?.rows[0]) return null;
+
+    return result?.rows[0] as {
+      id: string;
+      user_id: string;
+      reset_token: string;
+      used: boolean;
+      created_at: Date;
+    };
   }
 
-  async function deleteResetPasswordToken({ id }: { id: string }) {
+  async function invalidateResetPasswordToken({ id }: { id: string }) {
     await authenticationPool.query({
       text: sql`
-        DELETE FROM reset_password_tokens
+        UPDATE reset_password_tokens
+        SET
+          used = TRUE,
+          updated_at = NOW() AT TIME ZONE 'UTC'
         WHERE id = $1
       `,
       values: [id],
