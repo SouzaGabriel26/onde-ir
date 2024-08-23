@@ -1,9 +1,12 @@
-import bcrypt from 'bcrypt';
 import { jwtVerify, SignJWT } from 'jose';
 
 import { AuthenticationDataSource } from '@/data/authentication';
-import { createUserDataSource } from '@/data/user';
-import { ValidationSchema, validator } from '@/models/validator';
+import { password } from '@/models/password';
+import {
+  ValidationSchema,
+  ValidationSchemaKeys,
+  validator,
+} from '@/models/validator';
 import { env } from '@/src/utils/env';
 import { Failure, operationResult, Success } from '@/src/utils/operationResult';
 
@@ -44,35 +47,18 @@ type VerifyTokenProps = {
   secret: string;
 };
 
-export type ForgetPasswordOutput = Awaited<ReturnType<typeof forgetPassword>>;
-
 type TokenProps = {
   id: string;
   secretKey: string;
   expiresIn?: string;
 };
 
-export type ResetPasswordInput = {
-  resetPasswordTokenId: string;
-  password: string;
-  confirmPassword: string;
-};
-
-type ChangePasswordInput = {
-  userId: string;
-  actualPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
-};
-
 export const auth = Object.freeze({
   signIn,
   signUp,
   verifyToken,
-  forgetPassword,
-  resetPassword,
-  changePassword,
   setInputError,
+  generateAccessToken,
 });
 
 export type SignUpProps = {
@@ -119,7 +105,7 @@ async function signUp(
     });
   }
 
-  const { email, name, password, userName } = secureInput;
+  const { email, name, password: userPassword, userName } = secureInput;
 
   const isEmailAlreadyInUse = await authDataSource.findUserByEmail({ email });
   if (isEmailAlreadyInUse) {
@@ -139,8 +125,7 @@ async function signUp(
     });
   }
 
-  const SALT = 12;
-  const hashedPassword = bcrypt.hashSync(password, SALT);
+  const hashedPassword = password.hash(userPassword);
 
   await authDataSource.signUp({
     email,
@@ -178,7 +163,7 @@ async function signIn(
     });
   }
 
-  const { email, password } = secureInput;
+  const { email, password: userPassword } = secureInput;
 
   const user = await authDataSource.findUserByEmail({ email });
   if (!user) {
@@ -188,7 +173,7 @@ async function signIn(
     });
   }
 
-  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  const isPasswordValid = password.compare(userPassword, user.password);
   if (!isPasswordValid) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'Credenciais inválidas',
@@ -206,211 +191,7 @@ async function signIn(
   });
 }
 
-async function verifyToken({ token, secret }: VerifyTokenProps) {
-  try {
-    const { payload } = await jwtVerify(
-      token,
-      new TextEncoder().encode(secret),
-    );
-
-    return payload as Payload;
-  } catch {
-    return null;
-  }
-}
-
-export type ForgetPasswordInput = {
-  email: string;
-};
-
-async function forgetPassword(
-  authDataSource: AuthenticationDataSource,
-  input: ForgetPasswordInput,
-) {
-  const { data: secureInput, error } = validator(
-    {
-      email: input.email,
-    },
-    {
-      email: 'required',
-    },
-  );
-
-  if (error) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: error.message,
-      fields: error.fields as AvailableFields[],
-    });
-  }
-
-  const { email } = secureInput;
-
-  const userFoundByEmail = await authDataSource.findUserByEmail({ email });
-  if (!userFoundByEmail) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: 'Este e-mail não está cadastrado',
-      fields: ['email'],
-    });
-  }
-
-  const forgetPasswordToken = await generateAccessToken({
-    id: userFoundByEmail.id,
-    secretKey: env.reset_password_jwt_secret,
-    expiresIn: '5min',
-  });
-
-  const { resetPasswordTokenId } =
-    await authDataSource.createResetPasswordToken({
-      userId: userFoundByEmail.id,
-      resetPasswordToken: forgetPasswordToken,
-    });
-
-  return operationResult.success({
-    resetPasswordTokenId,
-    name: userFoundByEmail.name,
-  });
-}
-
-async function changePassword(
-  authDataSource: AuthenticationDataSource,
-  input: ChangePasswordInput,
-) {
-  const insecureInput = {
-    userId: input.userId,
-    actualPassword: input.actualPassword,
-    newPassword: input.newPassword,
-    confirmNewPassword: input.confirmNewPassword,
-  };
-
-  const { data: secureInput, error } = validator(insecureInput, {
-    userId: 'required',
-    actualPassword: 'required',
-    newPassword: 'required',
-    confirmNewPassword: 'required',
-  });
-
-  if (error) {
-    return operationResult.failure(error);
-  }
-
-  const { userId, actualPassword, newPassword, confirmNewPassword } =
-    secureInput;
-
-  const areNewPasswordsEqual = newPassword === confirmNewPassword;
-  if (!areNewPasswordsEqual) {
-    return operationResult.failure<FailureAuthResponse<ChangePasswordInput>>({
-      message: 'As novas senhas precisam ser iguais',
-      fields: ['newPassword', 'confirmNewPassword'],
-    });
-  }
-
-  const userDataSource = createUserDataSource();
-  const user = await userDataSource.findById({
-    id: userId,
-    select: ['password'],
-  });
-
-  if (!user) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: 'Usuário não encontrado',
-      fields: [],
-    });
-  }
-
-  const isPasswordValid = bcrypt.compareSync(actualPassword, user.password!);
-  if (!isPasswordValid) {
-    return operationResult.failure<FailureAuthResponse<ChangePasswordInput>>({
-      message: 'Senha atual inválida',
-      fields: ['actualPassword'],
-    });
-  }
-
-  const SALT = 12;
-
-  const hashedPassword = bcrypt.hashSync(newPassword, SALT);
-
-  await authDataSource.resetPassword({
-    password: hashedPassword,
-    userId,
-  });
-
-  return operationResult.success({});
-}
-
-async function resetPassword(
-  authDataSource: AuthenticationDataSource,
-  input: ResetPasswordInput,
-) {
-  const insecureInput = {
-    resetPasswordTokenId: input.resetPasswordTokenId,
-    password: input.password,
-    confirmPassword: input.confirmPassword,
-  };
-
-  const { data: secureInput, error } = validator(insecureInput, {
-    password: 'required',
-    confirmPassword: 'required',
-    resetPasswordTokenId: 'required',
-  });
-
-  if (error) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: error.message,
-      fields: error.fields as AvailableFields[],
-    });
-  }
-
-  const { password, confirmPassword, resetPasswordTokenId } = secureInput;
-
-  if (password !== confirmPassword) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: 'As senhas precisam ser iguais.',
-      fields: ['password', 'confirmPassword'],
-    });
-  }
-
-  const resetTokenFoundFromId = await authDataSource.findResetPasswordToken({
-    where: {
-      id: resetPasswordTokenId,
-    },
-  });
-
-  if (!resetTokenFoundFromId) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: 'Token inválido.',
-      fields: [],
-    });
-  }
-
-  const { reset_token } = resetTokenFoundFromId;
-
-  const tokenPayload = await verifyToken({
-    token: reset_token,
-    secret: env.reset_password_jwt_secret,
-  });
-
-  if (!tokenPayload) {
-    return operationResult.failure<FailureAuthResponse>({
-      message: 'Token inválido',
-      fields: [],
-    });
-  }
-
-  const SALT = 12;
-  const hashedPassword = bcrypt.hashSync(password, SALT);
-
-  await authDataSource.resetPassword({
-    password: hashedPassword,
-    userId: tokenPayload.sub,
-  });
-
-  await authDataSource.deleteResetPasswordToken({
-    id: input.resetPasswordTokenId,
-  });
-
-  return operationResult.success({});
-}
-
+// TODO: move to `tokens` model
 async function generateAccessToken({
   id,
   secretKey,
@@ -428,9 +209,22 @@ async function generateAccessToken({
   return token;
 }
 
+async function verifyToken({ token, secret }: VerifyTokenProps) {
+  try {
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret),
+    );
+
+    return payload as Payload;
+  } catch {
+    return null;
+  }
+}
+
 function setInputError(
-  inputName: AvailableFields,
-  responseMessage: Success<unknown> | Failure<FailureAuthResponse>,
+  inputName: ValidationSchemaKeys,
+  responseMessage: Success<unknown> | Failure<{ fields: Array<string> }>,
 ) {
   if (!responseMessage?.error) return '';
 

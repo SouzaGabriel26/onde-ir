@@ -58,7 +58,7 @@ export function validator<T extends Partial<ValidationSchema>>(
 
 export type ValidationSchema = z.infer<typeof schema>;
 type ValidationKeysOptions = 'required' | 'optional';
-type ValidationSchemaKeys = keyof ValidationSchema;
+export type ValidationSchemaKeys = keyof ValidationSchema;
 
 const schema = z.object({
   name: z

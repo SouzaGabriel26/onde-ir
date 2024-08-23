@@ -52,7 +52,7 @@ export default function Page({ searchParams }: Props) {
           type="password"
           name="password"
           placeholder="Digite uma nova senha"
-          error={auth.setInputError('password', responseMessage)}
+          error={auth.setInputError('password', responseMessage as any)}
         />
         <Input
           required
@@ -60,7 +60,7 @@ export default function Page({ searchParams }: Props) {
           type="password"
           name="confirmPassword"
           placeholder="Confirmação de senha"
-          error={auth.setInputError('confirmPassword', responseMessage)}
+          error={auth.setInputError('confirmPassword', responseMessage as any)}
         />
         <input type="hidden" value={tokenId} name="resetPasswordTokenId" />
         <SubmitButton>Enviar</SubmitButton>
