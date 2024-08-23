@@ -2,16 +2,16 @@ import { revalidatePath } from 'next/cache';
 
 import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
 import { createAuthenticationDataSource } from '@/data/authentication';
-import {
-  ForgetPasswordInput,
-  ForgetPasswordOutput,
-  auth,
-} from '@/models/authentication';
 import { emailService } from '@/models/email';
+import {
+  ForgotPasswordInput,
+  ForgotPasswordOutput,
+  password,
+} from '@/models/password';
 import { feedbackMessage } from '@/src/utils/feedbackMessage';
 import { form } from '@/src/utils/form';
 
-let responseMessage: ForgetPasswordOutput;
+let responseMessage: ForgotPasswordOutput;
 let successMessage: {
   email: string;
 };
@@ -19,10 +19,10 @@ let successMessage: {
 async function forgetPassword(formData: FormData) {
   'use server';
 
-  const { email } = form.sanitizeData<ForgetPasswordInput>(formData);
+  const { email } = form.sanitizeData<ForgotPasswordInput>(formData);
 
   const authDataSource = createAuthenticationDataSource();
-  responseMessage = await auth.forgetPassword(authDataSource, {
+  responseMessage = await password.forgot(authDataSource, {
     email,
   });
 
