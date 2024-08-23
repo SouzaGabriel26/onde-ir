@@ -25,7 +25,7 @@ export default function Page() {
           placeholder="Email*"
           name="email"
           required
-          error={auth.setInputError('email', responseMessage as any)}
+          error={auth.setInputError('email', responseMessage)}
         />
         <SubmitButton>Enviar</SubmitButton>
       </form>
