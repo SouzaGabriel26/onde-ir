@@ -912,22 +912,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "actualPassword"', () => {
+  describe('Testing "currentPassword"', () => {
     test('Providing valid value to optional parameter', () => {
-      const actualPassword = 'password';
+      const currentPassword = 'password';
 
       const result = validator(
         {
-          actualPassword,
+          currentPassword,
         },
         {
-          actualPassword: 'optional',
+          currentPassword: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          actualPassword,
+          currentPassword,
         },
         error: null,
       });
@@ -936,37 +936,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          actualPassword: 123 as any,
+          currentPassword: 123 as any,
         },
         {
-          actualPassword: 'optional',
+          currentPassword: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"actualPassword" precisa ser uma string.',
-          fields: ['actualPassword'],
+          message: '"currentPassword" precisa ser uma string.',
+          fields: ['currentPassword'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const actualPassword = 'password';
+      const currentPassword = 'password';
 
       const result = validator(
         {
-          actualPassword,
+          currentPassword,
         },
         {
-          actualPassword: 'required',
+          currentPassword: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          actualPassword,
+          currentPassword,
         },
         error: null,
       });
@@ -975,18 +975,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          actualPassword: 123 as any,
+          currentPassword: 123 as any,
         },
         {
-          actualPassword: 'required',
+          currentPassword: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"actualPassword" precisa ser uma string.',
-          fields: ['actualPassword'],
+          message: '"currentPassword" precisa ser uma string.',
+          fields: ['currentPassword'],
         },
       });
     });
