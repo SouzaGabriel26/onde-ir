@@ -152,7 +152,7 @@ async function reset(
 
 type ChangePasswordInput = {
   userId: string;
-  actualPassword: string;
+  currentPassword: string;
   newPassword: string;
   confirmNewPassword: string;
 };
@@ -163,14 +163,14 @@ async function change(
 ) {
   const insecureInput = {
     userId: input.userId,
-    actualPassword: input.actualPassword,
+    currentPassword: input.currentPassword,
     newPassword: input.newPassword,
     confirmNewPassword: input.confirmNewPassword,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
     userId: 'required',
-    actualPassword: 'required',
+    currentPassword: 'required',
     newPassword: 'required',
     confirmNewPassword: 'required',
   });
@@ -179,7 +179,7 @@ async function change(
     return operationResult.failure(error);
   }
 
-  const { userId, actualPassword, newPassword, confirmNewPassword } =
+  const { userId, currentPassword, newPassword, confirmNewPassword } =
     secureInput;
 
   const areNewPasswordsEqual = newPassword === confirmNewPassword;
@@ -203,11 +203,11 @@ async function change(
     });
   }
 
-  const isPasswordValid = compare(actualPassword, user.password!);
+  const isPasswordValid = compare(currentPassword, user.password!);
   if (!isPasswordValid) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'Senha atual inválida',
-      fields: ['actualPassword'],
+      fields: ['currentPassword'],
     });
   }
 
