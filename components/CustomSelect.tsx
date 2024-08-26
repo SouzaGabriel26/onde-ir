@@ -5,9 +5,9 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
 
-import { Button } from './Button';
-import { Input } from './Input';
-import { Popover, PopoverContent, PopoverTrigger } from './Popover';
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/Popover';
 
 export type Option = {
   label: string;
