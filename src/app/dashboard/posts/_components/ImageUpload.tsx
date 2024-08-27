@@ -17,7 +17,11 @@ type Upload = {
   progress: number;
 };
 
-export function ImageUpload() {
+type ImageUploadProps = {
+  actionOnUpload: (urls: Array<string>) => Promise<void>;
+};
+
+export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [uploads, setUploads] = useState<Array<Upload>>([]);
 
@@ -41,7 +45,7 @@ export function ImageUpload() {
     try {
       setIsLoading(true);
 
-      const uploadsObject = await Promise.all(
+      const uploadObjects = await Promise.all(
         uploads.map(async ({ file }) => ({
           url: await getPresignedURL(file),
           file,
@@ -49,7 +53,7 @@ export function ImageUpload() {
       );
 
       const responses = await Promise.allSettled(
-        uploadsObject.map(({ url, file }, index) =>
+        uploadObjects.map(({ url, file }, index) =>
           uploadFileToS3(url.presigned_url, file, (progress) => {
             setUploads((prevState) => {
               const newUploads = [...prevState];
@@ -71,7 +75,10 @@ export function ImageUpload() {
       toast.success('Arquivos enviados com sucesso!', {
         className: '!text-green-500',
       });
+
       // save url.file_url (uploadsObject) in database
+      const urls = uploadObjects.map((upload) => upload.url.file_url);
+      await actionOnUpload(urls);
     } catch {
       console.error('Erro ao recuperar as URLs de upload.');
       toast.error('Erro ao recuperar as URLs de upload.');
