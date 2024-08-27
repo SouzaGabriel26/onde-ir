@@ -1,6 +1,6 @@
 import { revalidatePath } from 'next/cache';
 
-import { Option } from '@/components/ui/CustomSelect';
+import { Option } from '@/components/CustomSelect';
 import { location } from '@/models/location';
 import { feedbackMessage } from '@/src/utils/feedbackMessage';
 import { form } from '@/src/utils/form';
@@ -94,10 +94,17 @@ function getCities() {
   };
 }
 
+async function createPlaceImagesAction(urls: Array<string>) {
+  'use server';
+
+  console.log({ urls });
+}
+
 export const store = Object.freeze({
   createPostMetadataAction,
   fetchStatesAction,
   getStates,
   getCitiesByStateAction,
   getCities,
+  createPlaceImagesAction,
 });

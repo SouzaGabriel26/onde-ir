@@ -1,8 +1,8 @@
 import { revalidatePath } from 'next/cache';
 import { ReactNode } from 'react';
 
+import { CustomSelect } from '@/components/CustomSelect';
 import { Button } from '@/components/ui/Button';
-import { CustomSelect } from '@/components/ui/CustomSelect';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
 import { ImageUpload } from '@/src/app/dashboard/posts/_components/ImageUpload';
@@ -19,7 +19,6 @@ export default async function Page() {
 
   const { currentStep, formSteps } = multiStepFormStore.getSteps();
   const lastStep = formSteps[formSteps.length - 1];
-  const firstStep = formSteps[0];
 
   return (
     <form className="space-y-4">
@@ -86,7 +85,17 @@ export default async function Page() {
       </StepContent>
 
       <StepContent step="images">
-        <ImageUpload />
+        <ImageUpload
+          actionOnUpload={async (urls: string[]) => {
+            'use server';
+
+            await store.createPlaceImagesAction(urls);
+
+            multiStepFormStore.setStepProgress('images', 100);
+
+            return revalidatePath('/dashboard/posts/create');
+          }}
+        />
       </StepContent>
 
       <fieldset className="flex justify-end gap-4">
