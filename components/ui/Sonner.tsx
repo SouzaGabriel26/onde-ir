@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { Toaster as Sonner, toast } from 'sonner';
 
-import { FeedbackMessage } from '@/src/utils/feedbackMessage';
+import { FeedbackMessage } from '@/utils/feedbackMessage';
 
 type ToasterProps = React.ComponentProps<typeof Sonner> & {
   message?: FeedbackMessage | null;

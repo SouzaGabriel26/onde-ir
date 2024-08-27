@@ -1,6 +1,6 @@
 import { PlaceDataSource } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
-import { operationResult } from '@/src/utils/operationResult';
+import { operationResult } from '@/utils/operationResult';
 
 import { ValidationSchema, validator } from './validator';
 

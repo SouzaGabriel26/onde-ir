@@ -1,6 +1,6 @@
 import { UserDataSource } from '@/data/user';
 import { user } from '@/models/user';
-import { operationResult } from '@/src/utils/operationResult';
+import { operationResult } from '@/utils/operationResult';
 
 export const ability = Object.freeze({
   hasPermissionTo,

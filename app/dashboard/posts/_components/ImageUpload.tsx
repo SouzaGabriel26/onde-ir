@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Progress } from '@/components/ui/Progress';
 import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg'];
 

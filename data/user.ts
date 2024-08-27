@@ -1,6 +1,6 @@
 import { database } from '@/infra/database';
-import { sql } from '@/src/utils/syntax-highlighting';
 import { User } from '@/types';
+import { sql } from '@/utils/syntax-highlighting';
 
 export type UserDataSource = ReturnType<typeof createUserDataSource>;
 

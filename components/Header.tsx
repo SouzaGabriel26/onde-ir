@@ -11,8 +11,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/Sheet';
-import { constants } from '@/src/utils/constants';
 import { User } from '@/types';
+import { constants } from '@/utils/constants';
 
 import { NavButton } from './NavButton';
 import { Button } from './ui/Button';

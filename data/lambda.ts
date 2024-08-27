@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { env } from '@/src/utils/env';
+import { env } from '@/utils/env';
 
 type GetPresignedURLResponse = {
   presigned_url: string;

@@ -1,6 +1,6 @@
 import { database } from '@/infra/database';
 import { CreatePlaceInput } from '@/models/place';
-import { sql } from '@/src/utils/syntax-highlighting';
+import { sql } from '@/utils/syntax-highlighting';
 
 export type PlaceDataSource = ReturnType<typeof createPlaceDataSource>;
 

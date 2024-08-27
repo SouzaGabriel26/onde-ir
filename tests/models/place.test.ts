@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import { createPlaceDataSource } from '@/data/place';
 import { database } from '@/infra/database';
 import { place } from '@/models/place';
-import { sql } from '@/src/utils/syntax-highlighting';
+import { sql } from '@/utils/syntax-highlighting';
 
 import { orchestrator } from '../orchestrator';
 
