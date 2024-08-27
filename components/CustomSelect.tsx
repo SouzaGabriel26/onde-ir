@@ -3,7 +3,7 @@
 import { Check, ChevronDown } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';

@@ -1,6 +1,6 @@
 import { UserDataSource } from '@/data/user';
-import { operationResult } from '@/src/utils/operationResult';
 import { User } from '@/types';
+import { operationResult } from '@/utils/operationResult';
 
 import { validator } from './validator';
 

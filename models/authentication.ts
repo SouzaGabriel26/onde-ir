@@ -7,8 +7,8 @@ import {
   ValidationSchemaKeys,
   validator,
 } from '@/models/validator';
-import { env } from '@/src/utils/env';
-import { Failure, operationResult, Success } from '@/src/utils/operationResult';
+import { env } from '@/utils/env';
+import { Failure, operationResult, Success } from '@/utils/operationResult';
 
 type AvailableSignUpFields = keyof SignUpProps;
 type AvailableSignInFields = keyof SignInProps;

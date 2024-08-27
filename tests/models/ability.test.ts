@@ -1,7 +1,7 @@
 import { createUserDataSource } from '@/data/user';
 import { database } from '@/infra/database';
 import { ability } from '@/models/ability';
-import { sql } from '@/src/utils/syntax-highlighting';
+import { sql } from '@/utils/syntax-highlighting';
 
 import { orchestrator } from '../orchestrator';
 

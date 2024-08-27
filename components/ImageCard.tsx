@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 type ImageCardProps = {
   src: string;

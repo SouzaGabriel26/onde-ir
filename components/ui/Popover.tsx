@@ -3,7 +3,7 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
 
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 const Popover = PopoverPrimitive.Root;
 

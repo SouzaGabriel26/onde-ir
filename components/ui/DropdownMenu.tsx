@@ -4,7 +4,7 @@ import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { DotFilledIcon } from '@radix-ui/react-icons';
 import * as React from 'react';
 
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 

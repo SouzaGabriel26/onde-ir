@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth, SignInProps, SignInResponse } from '@/models/authentication';
-import { constants } from '@/src/utils/constants';
-import { feedbackMessage } from '@/src/utils/feedbackMessage';
-import { form } from '@/src/utils/form';
+import { constants } from '@/utils/constants';
+import { feedbackMessage } from '@/utils/feedbackMessage';
+import { form } from '@/utils/form';
 
 let signInResponse: SignInResponse;
 

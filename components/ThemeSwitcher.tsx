@@ -12,7 +12,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
-import { constants } from '@/src/utils/constants';
+import { constants } from '@/utils/constants';
 
 import { Skeleton } from './ui/Skeleton';
 

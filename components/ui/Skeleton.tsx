@@ -1,4 +1,4 @@
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 function Skeleton({
   className,

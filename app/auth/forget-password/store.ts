@@ -8,8 +8,8 @@ import {
   ForgotPasswordOutput,
   password,
 } from '@/models/password';
-import { feedbackMessage } from '@/src/utils/feedbackMessage';
-import { form } from '@/src/utils/form';
+import { feedbackMessage } from '@/utils/feedbackMessage';
+import { form } from '@/utils/form';
 
 let responseMessage: ForgotPasswordOutput;
 let successMessage: {

@@ -1,12 +1,12 @@
 import { revalidatePath } from 'next/cache';
 import { ReactNode } from 'react';
 
+import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
 import { CustomSelect } from '@/components/CustomSelect';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
-import { ImageUpload } from '@/src/app/dashboard/posts/_components/ImageUpload';
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 import { FormSteps, multiStepFormStore } from './multiStepFormStore';
 import { store } from './store';

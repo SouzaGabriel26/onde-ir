@@ -1,8 +1,8 @@
 import { createUserDataSource } from '@/data/user';
 import { database } from '@/infra/database';
 import { user } from '@/models/user';
-import { sql } from '@/src/utils/syntax-highlighting';
 import { orchestrator } from '@/tests/orchestrator';
+import { sql } from '@/utils/syntax-highlighting';
 
 beforeAll(async () => {
   await orchestrator.resetDatabase();

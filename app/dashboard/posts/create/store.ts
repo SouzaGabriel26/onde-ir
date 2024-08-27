@@ -2,9 +2,9 @@ import { revalidatePath } from 'next/cache';
 
 import { Option } from '@/components/CustomSelect';
 import { location } from '@/models/location';
-import { feedbackMessage } from '@/src/utils/feedbackMessage';
-import { form } from '@/src/utils/form';
 import { City, UF } from '@/types';
+import { feedbackMessage } from '@/utils/feedbackMessage';
+import { form } from '@/utils/form';
 
 async function createPostMetadataAction(formData: FormData) {
   'use server';

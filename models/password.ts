@@ -4,8 +4,8 @@ import { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
 import { auth } from '@/models/authentication';
 import { validator } from '@/models/validator';
-import { env } from '@/src/utils/env';
-import { operationResult } from '@/src/utils/operationResult';
+import { env } from '@/utils/env';
+import { operationResult } from '@/utils/operationResult';
 
 type PasswordErrorResponse = {
   fields: string[];

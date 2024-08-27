@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { sanitizeClassName } from '@/src/utils/sanitizeClassName';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

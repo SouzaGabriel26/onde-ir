@@ -1,5 +1,5 @@
-import { operationResult } from '@/src/utils/operationResult';
 import { City, UF } from '@/types';
+import { operationResult } from '@/utils/operationResult';
 
 import { validator } from './validator';
 

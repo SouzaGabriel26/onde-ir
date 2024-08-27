@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { operationResult } from '@/src/utils/operationResult';
+import { operationResult } from '@/utils/operationResult';
 
 export function validator<T extends Partial<ValidationSchema>>(
   payload: T,
