@@ -1,4 +1,5 @@
 import { revalidatePath } from 'next/cache';
+import { redirect, RedirectType } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
@@ -6,16 +7,33 @@ import { CustomSelect } from '@/components/CustomSelect';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
+import { createPlaceDataSource } from '@/data/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { verify } from '@/utils/verify';
 
 import { FormSteps, multiStepFormStore } from './multiStepFormStore';
 import { store } from './store';
 
 export default async function Page() {
+  const { data: userData, error: userNotAuthenticated } =
+    await verify.loggedUser();
+
+  if (userNotAuthenticated) {
+    return redirect(
+      '/auth/signin?redirect_reason=not-authenticated',
+      RedirectType.replace,
+    );
+  }
+
   await store.fetchStatesAction();
 
   const { stateOptions } = store.getStates();
   const { cityOptions } = store.getCities();
+
+  const placeDataSource = createPlaceDataSource();
+  // TODO: refactor `findCategories`
+  const categories = await placeDataSource.findCategories();
+  const activeCategories = categories.filter((category) => category.is_active);
 
   const { currentStep, formSteps } = multiStepFormStore.getSteps();
   const lastStep = formSteps[formSteps.length - 1];
@@ -68,13 +86,10 @@ export default async function Page() {
           required
           label="Categoria*"
           name="category_id"
-          // TODO: search categories dynamically
-          options={[
-            { value: 'restaurantes', label: 'Restaurante' },
-            { value: 'parques', label: 'Parque' },
-            { value: 'museus', label: 'Museu' },
-            { value: 'bares', label: 'Bar' },
-          ]}
+          options={activeCategories.map((category) => ({
+            label: category.name,
+            value: category.id,
+          }))}
         />
 
         <div className="flex gap-4">
@@ -82,6 +97,26 @@ export default async function Page() {
 
           <Input name="longitude" placeholder="Longitude" type="number" />
         </div>
+
+        <input type="hidden" name="created_by" defaultValue={userData.id} />
+
+        <fieldset className="flex justify-end gap-4">
+          <Button
+            className={sanitizeClassName(currentStep === lastStep && 'hidden')}
+            formAction={async (formData: FormData) => {
+              'use server';
+
+              await store.createPlaceAction(formData);
+
+              multiStepFormStore.setStepProgress('place_metadata', 100);
+              multiStepFormStore.setCurrentStep('images');
+
+              return revalidatePath('/dashboard/posts/create');
+            }}
+          >
+            Salvar e ir para próxima etapa
+          </Button>
+        </fieldset>
       </StepContent>
 
       <StepContent step="images">
@@ -97,24 +132,6 @@ export default async function Page() {
           }}
         />
       </StepContent>
-
-      <fieldset className="flex justify-end gap-4">
-        <Button
-          className={sanitizeClassName(currentStep === lastStep && 'hidden')}
-          formAction={async (formData: FormData) => {
-            'use server';
-
-            await store.createPostMetadataAction(formData);
-
-            multiStepFormStore.setStepProgress('place_metadata', 100);
-            multiStepFormStore.setCurrentStep('images');
-
-            return revalidatePath('/dashboard/posts/create');
-          }}
-        >
-          Próxima etapa
-        </Button>
-      </fieldset>
     </form>
   );
 }
@@ -127,6 +144,7 @@ function StepsPreview() {
     <div className="flex justify-center gap-8">
       {formSteps.map((step) => (
         <span
+          title={formStepLabels[step]}
           key={step}
           className={sanitizeClassName(
             `
