@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
       );
 
       if (payload.sub) {
-        response.headers.set('x-user-id', payload.sub);
+        response.headers.set(constants.headerPayloadKey, payload.sub);
       }
     } catch {
       response.cookies.delete(constants.accessTokenKey);

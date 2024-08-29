@@ -1,21 +1,14 @@
-import { headers } from 'next/headers';
 import { ReactNode } from 'react';
 
 import { Header } from '@/components/Header';
-import { createUserDataSource } from '@/data/user';
-import { user } from '@/models/user';
+import { verify } from '@/utils/verify';
 
 type Props = {
   children: ReactNode;
 };
 
 export default async function Layout({ children }: Props) {
-  const userId = headers().get('x-user-id');
-
-  const userDataSource = createUserDataSource();
-  const { data } = await user.findById(userDataSource, {
-    id: userId ?? '',
-  });
+  const { data } = await verify.loggedUser();
 
   return (
     <main className="flex h-screen flex-col overflow-y-hidden">
