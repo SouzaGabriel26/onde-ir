@@ -3,46 +3,14 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { ImageCard } from '@/components/ImageCard';
 import { Button } from '@/components/ui/Button';
+import { verify } from '@/utils/verify';
 
 export default async function Page() {
-  const mockedData = {
-    firstColumn: [
-      {
-        name: 'Café Bamboo',
-        country: 'Brasil',
-        state: 'ES',
-        image_url:
-          'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-03.jpg?raw=true',
-      },
-      {
-        name: 'Churrascaria Espeto de Ouro',
-        country: 'Brasil',
-        state: 'ES',
-        image_url:
-          'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-01.jpg?raw=true',
-      },
-    ],
-    secondColumn: [
-      {
-        name: 'Restaurante do Porto',
-        country: 'Brasil',
-        state: 'ES',
-        image_url:
-          'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-02.jpg?raw=true',
-      },
-      {
-        name: 'Madero Steak House',
-        country: 'Brasil',
-        state: 'ES',
-        image_url:
-          'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-05.jpg?raw=true',
-      },
-    ],
-  };
+  const { data: userData } = await verify.loggedUser();
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden lg:max-h-screen">
-      <Header />
+      <Header userData={userData} />
       <main
         className={`
           mt-20
@@ -137,3 +105,38 @@ export default async function Page() {
     </div>
   );
 }
+
+const mockedData = {
+  firstColumn: [
+    {
+      name: 'Café Bamboo',
+      country: 'Brasil',
+      state: 'ES',
+      image_url:
+        'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-03.jpg?raw=true',
+    },
+    {
+      name: 'Churrascaria Espeto de Ouro',
+      country: 'Brasil',
+      state: 'ES',
+      image_url:
+        'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-01.jpg?raw=true',
+    },
+  ],
+  secondColumn: [
+    {
+      name: 'Restaurante do Porto',
+      country: 'Brasil',
+      state: 'ES',
+      image_url:
+        'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-02.jpg?raw=true',
+    },
+    {
+      name: 'Madero Steak House',
+      country: 'Brasil',
+      state: 'ES',
+      image_url:
+        'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-05.jpg?raw=true',
+    },
+  ],
+};

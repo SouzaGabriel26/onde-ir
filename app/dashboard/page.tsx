@@ -1,17 +1,11 @@
-import { headers } from 'next/headers';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/Button';
-import { createUserDataSource } from '@/data/user';
-import { user } from '@/models/user';
+import { verify } from '@/utils/verify';
 
 export default async function Page() {
-  const userId = headers().get('x-user-id');
-
-  const userDataSource = createUserDataSource();
-  const { data: userData } = await user.findById(userDataSource, {
-    id: userId ?? '',
-  });
+  const { data: userData, error: userNotAuthenticated } =
+    await verify.loggedUser();
 
   return (
     <div className="h-full">
@@ -22,9 +16,9 @@ export default async function Page() {
         <Link
           className="self-end justify-self-end"
           href={
-            userData
-              ? '/dashboard/posts/create'
-              : '/auth/signin?redirect_reason=not-authenticated'
+            userNotAuthenticated
+              ? '/auth/signin?redirect_reason=not-authenticated'
+              : '/dashboard/posts/create'
           }
         >
           <Button variant="secondary">Crie sua postagem</Button>
