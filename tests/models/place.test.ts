@@ -308,6 +308,24 @@ describe('> models/place', () => {
       });
     });
 
+    test('Providing "where" with "state" property containing less than 2 characters', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const result = await place.findAll(placeDataSource, {
+        where: {
+          state: 'E',
+        },
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"state" precisa ter no mínimo 2 caracteres.',
+          fields: ['state'],
+        },
+      });
+    });
+
     test('Providing "limit" property', async () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource, {
@@ -395,6 +413,23 @@ describe('> models/place', () => {
         ],
       });
     });
+
+    test('Providing "name" property', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const { data: places } = await place.findAll(placeDataSource, {
+        limit: 1,
+      });
+
+      const result = await place.findAll(placeDataSource, {
+        where: {
+          name: places![0].name,
+        },
+      });
+
+      expect(result.error).toBeNull();
+      expect(result.data![0].name).toBe(places![0].name);
+    });
   });
 
   describe('Invoking "create" method', () => {
@@ -470,6 +505,33 @@ describe('> models/place', () => {
         error: {
           message: 'Usuário não encontrado.',
           fields: ['created_by'],
+        },
+      });
+    });
+
+    test('Providing an existent "name"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const { data: places } = await place.findAll(placeDataSource, {
+        limit: 1,
+      });
+
+      const existentPlaceName = places![0].name;
+
+      const result = await place.create(placeDataSource, {
+        name: existentPlaceName,
+        category_id: places![0].category_id,
+        city: places![0].city,
+        country: places![0].country,
+        created_by: places![0].created_by,
+        state: places![0].state,
+        street: places![0].street,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: `Já existe um local registrado com o nome ${existentPlaceName}.`,
+          fields: ['name'],
         },
       });
     });
