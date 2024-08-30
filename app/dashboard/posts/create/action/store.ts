@@ -1,34 +1,42 @@
 import { revalidatePath } from 'next/cache';
 
 import { Option } from '@/components/CustomSelect';
+import { createPlaceDataSource } from '@/data/place';
 import { location } from '@/models/location';
+import { CreatePlaceInput, place } from '@/models/place';
 import { City, UF } from '@/types';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
-async function createPostMetadataAction(formData: FormData) {
+import { multiStepFormStore } from './multiStepFormStore';
+
+async function createPlaceAction(formData: FormData) {
   'use server';
 
-  type CreatePostInput = {
-    name: string;
-    country: string;
-    state: string;
-    city: string;
-    street: string;
-    num_place: number;
-    complement: string;
-    description: string;
-  };
+  const data = form.sanitizeData<CreatePlaceInput>(formData);
 
-  const data = form.sanitizeData<CreatePostInput>(formData);
+  const placeDataSource = createPlaceDataSource();
+  const { data: createdPlace, error } = await place.create(placeDataSource, {
+    ...data,
+    num_place: data.num_place ? Number(data.num_place) : undefined,
+  });
 
-  console.log({ data });
-  // TODO: create post metadata (without pass image)
+  if (error) {
+    feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: error.message,
+    });
+
+    return revalidatePath('/dashboard/posts/create');
+  }
 
   feedbackMessage.setFeedbackMessage({
     type: 'success',
-    content: 'Dados salvos com sucesso. Agora restam apenas as imagens.',
+    content: `${createdPlace.name} criado com sucesso!`,
   });
+
+  multiStepFormStore.setStepProgress('place_metadata', 100);
+  multiStepFormStore.setCurrentStep('images');
 
   return revalidatePath('/dashboard/posts/create');
 }
@@ -101,7 +109,7 @@ async function createPlaceImagesAction(urls: Array<string>) {
 }
 
 export const store = Object.freeze({
-  createPostMetadataAction,
+  createPlaceAction,
   fetchStatesAction,
   getStates,
   getCitiesByStateAction,

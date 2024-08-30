@@ -11,8 +11,8 @@ import { createPlaceDataSource } from '@/data/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 
-import { FormSteps, multiStepFormStore } from './multiStepFormStore';
-import { store } from './store';
+import { FormSteps, multiStepFormStore } from './action/multiStepFormStore';
+import { store } from './action/store';
 
 export default async function Page() {
   const { data: userData, error: userNotAuthenticated } =
@@ -35,11 +35,8 @@ export default async function Page() {
   const categories = await placeDataSource.findCategories();
   const activeCategories = categories.filter((category) => category.is_active);
 
-  const { currentStep, formSteps } = multiStepFormStore.getSteps();
-  const lastStep = formSteps[formSteps.length - 1];
-
   return (
-    <form className="space-y-4">
+    <form className="flex-1 space-y-4">
       <StepsPreview />
 
       <StepContent step="place_metadata" className="space-y-4">
@@ -101,19 +98,7 @@ export default async function Page() {
         <input type="hidden" name="created_by" defaultValue={userData.id} />
 
         <fieldset className="flex justify-end gap-4">
-          <Button
-            className={sanitizeClassName(currentStep === lastStep && 'hidden')}
-            formAction={async (formData: FormData) => {
-              'use server';
-
-              await store.createPlaceAction(formData);
-
-              multiStepFormStore.setStepProgress('place_metadata', 100);
-              multiStepFormStore.setCurrentStep('images');
-
-              return revalidatePath('/dashboard/posts/create');
-            }}
-          >
+          <Button formAction={store.createPlaceAction}>
             Salvar e ir para próxima etapa
           </Button>
         </fieldset>
@@ -127,10 +112,29 @@ export default async function Page() {
             await store.createPlaceImagesAction(urls);
 
             multiStepFormStore.setStepProgress('images', 100);
+            multiStepFormStore.setCurrentStep('final');
 
             return revalidatePath('/dashboard/posts/create');
           }}
         />
+      </StepContent>
+
+      <StepContent step="final">
+        <p className="text-center text-xl text-zinc-300">
+          Parabéns! Você concluiu o cadastro do local.
+        </p>
+
+        <Button
+          className="mt-4 w-full"
+          formAction={async () => {
+            'use server';
+
+            multiStepFormStore.reset();
+            return redirect('/dashboard');
+          }}
+        >
+          Ver post criado
+        </Button>
       </StepContent>
     </form>
   );
