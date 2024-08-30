@@ -451,10 +451,8 @@ describe('> models/place', () => {
 
       expect(result).toStrictEqual({
         data: {
-          place: {
-            id: expect.any(String),
-            name: 'Bar do Zé',
-          },
+          id: expect.any(String),
+          name: 'Bar do Zé',
         },
         error: null,
       });

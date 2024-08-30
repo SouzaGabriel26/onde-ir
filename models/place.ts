@@ -132,7 +132,7 @@ async function create(
     });
   }
 
-  const result = await placeDataSource.create(validatedInput);
+  const createdPlace = await placeDataSource.create(validatedInput);
 
-  return operationResult.success({ place: result });
+  return operationResult.success(createdPlace);
 }
