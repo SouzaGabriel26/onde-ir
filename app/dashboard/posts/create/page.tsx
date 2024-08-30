@@ -1,4 +1,5 @@
 import { revalidatePath } from 'next/cache';
+import { redirect, RedirectType } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
@@ -6,22 +7,36 @@ import { CustomSelect } from '@/components/CustomSelect';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
+import { createPlaceDataSource } from '@/data/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { verify } from '@/utils/verify';
 
-import { FormSteps, multiStepFormStore } from './multiStepFormStore';
-import { store } from './store';
+import { FormSteps, multiStepFormStore } from './action/multiStepFormStore';
+import { store } from './action/store';
 
 export default async function Page() {
+  const { data: userData, error: userNotAuthenticated } =
+    await verify.loggedUser();
+
+  if (userNotAuthenticated) {
+    return redirect(
+      '/auth/signin?redirect_reason=not-authenticated',
+      RedirectType.replace,
+    );
+  }
+
   await store.fetchStatesAction();
 
   const { stateOptions } = store.getStates();
   const { cityOptions } = store.getCities();
 
-  const { currentStep, formSteps } = multiStepFormStore.getSteps();
-  const lastStep = formSteps[formSteps.length - 1];
+  const placeDataSource = createPlaceDataSource();
+  // TODO: refactor `findCategories`
+  const categories = await placeDataSource.findCategories();
+  const activeCategories = categories.filter((category) => category.is_active);
 
   return (
-    <form className="space-y-4">
+    <form className="flex-1 space-y-4">
       <StepsPreview />
 
       <StepContent step="place_metadata" className="space-y-4">
@@ -68,13 +83,10 @@ export default async function Page() {
           required
           label="Categoria*"
           name="category_id"
-          // TODO: search categories dynamically
-          options={[
-            { value: 'restaurantes', label: 'Restaurante' },
-            { value: 'parques', label: 'Parque' },
-            { value: 'museus', label: 'Museu' },
-            { value: 'bares', label: 'Bar' },
-          ]}
+          options={activeCategories.map((category) => ({
+            label: category.name,
+            value: category.id,
+          }))}
         />
 
         <div className="flex gap-4">
@@ -82,6 +94,14 @@ export default async function Page() {
 
           <Input name="longitude" placeholder="Longitude" type="number" />
         </div>
+
+        <input type="hidden" name="created_by" defaultValue={userData.id} />
+
+        <fieldset className="flex justify-end gap-4">
+          <Button formAction={store.createPlaceAction}>
+            Salvar e ir para próxima etapa
+          </Button>
+        </fieldset>
       </StepContent>
 
       <StepContent step="images">
@@ -92,29 +112,30 @@ export default async function Page() {
             await store.createPlaceImagesAction(urls);
 
             multiStepFormStore.setStepProgress('images', 100);
+            multiStepFormStore.setCurrentStep('final');
 
             return revalidatePath('/dashboard/posts/create');
           }}
         />
       </StepContent>
 
-      <fieldset className="flex justify-end gap-4">
+      <StepContent step="final">
+        <p className="text-center text-xl text-zinc-300">
+          Parabéns! Você concluiu o cadastro do local.
+        </p>
+
         <Button
-          className={sanitizeClassName(currentStep === lastStep && 'hidden')}
-          formAction={async (formData: FormData) => {
+          className="mt-4 w-full"
+          formAction={async () => {
             'use server';
 
-            await store.createPostMetadataAction(formData);
-
-            multiStepFormStore.setStepProgress('place_metadata', 100);
-            multiStepFormStore.setCurrentStep('images');
-
-            return revalidatePath('/dashboard/posts/create');
+            multiStepFormStore.reset();
+            return redirect('/dashboard');
           }}
         >
-          Próxima etapa
+          Ver post criado
         </Button>
-      </fieldset>
+      </StepContent>
     </form>
   );
 }
@@ -127,6 +148,7 @@ function StepsPreview() {
     <div className="flex justify-center gap-8">
       {formSteps.map((step) => (
         <span
+          title={formStepLabels[step]}
           key={step}
           className={sanitizeClassName(
             `

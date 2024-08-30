@@ -19,6 +19,7 @@ export function createPlaceDataSource() {
     where?: {
       approved?: 'true' | 'false';
       state?: string;
+      name?: string;
     };
   };
 
@@ -83,6 +84,11 @@ export function createPlaceDataSource() {
       if (where?.state) {
         whereClauses.push(sql`state = `.concat(`$${++index}`));
         query.values.push(where.state);
+      }
+
+      if (where?.name) {
+        whereClauses.push(sql`name = `.concat(`$${++index}`));
+        query.values.push(where.name);
       }
 
       if (where?.approved) {

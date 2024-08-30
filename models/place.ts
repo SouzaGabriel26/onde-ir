@@ -15,6 +15,7 @@ type FindAllInput = {
   where?: {
     approved?: 'true' | 'false';
     state?: string;
+    name?: string;
   };
 };
 
@@ -29,10 +30,14 @@ async function findAll(
     {
       page: input.page,
       limit: input.limit,
+      state: input.where?.state,
+      name: input.where?.name,
     },
     {
       limit: 'required',
       page: 'required',
+      state: 'optional',
+      name: 'optional',
     },
   );
 
@@ -113,7 +118,21 @@ async function create(
     });
   }
 
-  const result = await placeDataSource.create(validatedInput);
+  const { data: places } = await findAll(placeDataSource, {
+    limit: 1,
+    where: {
+      name: validatedInput.name,
+    },
+  });
 
-  return operationResult.success({ place: result });
+  if (places && places.length > 0) {
+    return operationResult.failure({
+      message: `Já existe um local registrado com o nome ${validatedInput.name}.`,
+      fields: ['name'],
+    });
+  }
+
+  const createdPlace = await placeDataSource.create(validatedInput);
+
+  return operationResult.success(createdPlace);
 }

@@ -1,4 +1,4 @@
-const formSteps = ['place_metadata', 'images'] as const;
+const formSteps = ['place_metadata', 'images', 'final'] as const;
 export type FormSteps = (typeof formSteps)[number];
 
 let currentStep: FormSteps = formSteps[0];
@@ -6,11 +6,13 @@ let currentStep: FormSteps = formSteps[0];
 const stepProgressObject: Record<FormSteps, number> = {
   place_metadata: 0,
   images: 0,
+  final: 0,
 };
 
 const formStepLabels: Record<FormSteps, string> = {
   place_metadata: 'Dados sobre o local',
   images: 'Imagens',
+  final: 'Final',
 };
 
 function getSteps() {
@@ -34,8 +36,18 @@ async function setStepProgress(step: FormSteps, progress: number) {
   stepProgressObject[step] = progress;
 }
 
+async function reset() {
+  'use server';
+
+  currentStep = formSteps[0];
+  Object.keys(stepProgressObject).forEach((step) => {
+    stepProgressObject[step as FormSteps] = 0;
+  });
+}
+
 export const multiStepFormStore = Object.freeze({
   getSteps,
   setCurrentStep,
   setStepProgress,
+  reset,
 });
