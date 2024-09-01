@@ -3,14 +3,18 @@ import { revalidatePath } from 'next/cache';
 import { Option } from '@/components/CustomSelect';
 import { createPlaceDataSource } from '@/data/place';
 import { location } from '@/models/location';
-import { CreatePlaceInput, place } from '@/models/place';
+import {
+  CreatePlaceImagesInput,
+  CreatePlaceInput,
+  place,
+} from '@/models/place';
 import { City, UF } from '@/types';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
 import { multiStepFormStore } from './multiStepFormStore';
 
-let createPlaceError: Awaited<ReturnType<typeof place.create>>['error'];
+let createdPlaceResult: Awaited<ReturnType<typeof place.create>>;
 
 async function createPlaceAction(formData: FormData) {
   'use server';
@@ -18,16 +22,16 @@ async function createPlaceAction(formData: FormData) {
   const data = form.sanitizeData<CreatePlaceInput>(formData);
 
   const placeDataSource = createPlaceDataSource();
-  const { data: createdPlace, error } = await place.create(placeDataSource, {
+  createdPlaceResult = await place.create(placeDataSource, {
     ...data,
     num_place: data.num_place ? Number(data.num_place) : undefined,
     latitude: data.latitude ? Number(data.latitude) : undefined,
     longitude: data.longitude ? Number(data.longitude) : undefined,
   });
 
-  if (error) {
-    createPlaceError = error;
+  const { data: createdPlace, error } = createdPlaceResult;
 
+  if (error) {
     feedbackMessage.setFeedbackMessage({
       type: 'error',
       content: error.message,
@@ -47,9 +51,9 @@ async function createPlaceAction(formData: FormData) {
   return revalidatePath('/dashboard/posts/create');
 }
 
-function getCreatePlaceError() {
+function getCreatedPlaceResult() {
   return Object.freeze({
-    createPlaceError,
+    createdPlaceResult,
   });
 }
 
@@ -114,10 +118,16 @@ function getCities() {
   };
 }
 
-async function createPlaceImagesAction(urls: Array<string>) {
+async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
   'use server';
 
-  console.log({ urls });
+  const placeDataSource = createPlaceDataSource();
+  await place.createImages(placeDataSource, input);
+
+  multiStepFormStore.setStepProgress('images', 100);
+  multiStepFormStore.setCurrentStep('final');
+
+  return revalidatePath('/dashboard/posts/create');
 }
 
 export const store = Object.freeze({
@@ -127,5 +137,5 @@ export const store = Object.freeze({
   getCitiesByStateAction,
   getCities,
   createPlaceImagesAction,
-  getCreatePlaceError,
+  getCreatedPlaceResult,
 });
