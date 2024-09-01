@@ -1,4 +1,3 @@
-import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -20,8 +19,6 @@ export default async function Page() {
   const { data: userData, error: userNotAuthenticated } =
     await verify.loggedUser();
 
-  const { createPlaceError } = store.getCreatePlaceError();
-
   if (userNotAuthenticated) {
     return redirect(
       '/auth/signin?redirect_reason=not-authenticated',
@@ -30,6 +27,8 @@ export default async function Page() {
   }
 
   await store.fetchStatesAction();
+
+  const { createdPlaceResult } = store.getCreatedPlaceResult();
 
   const { stateOptions } = store.getStates();
   const { cityOptions } = store.getCities();
@@ -49,8 +48,8 @@ export default async function Page() {
           placeholder="Nome*"
           required
           error={setInputError('name', {
-            fields: createPlaceError?.fields,
-            message: createPlaceError?.message,
+            fields: createdPlaceResult?.error?.fields,
+            message: createdPlaceResult?.error?.message,
           })}
         />
 
@@ -85,8 +84,8 @@ export default async function Page() {
             placeholder="Cidade*"
             required
             error={setInputError('city', {
-              fields: createPlaceError?.fields,
-              message: createPlaceError?.message,
+              fields: createdPlaceResult?.error?.fields,
+              message: createdPlaceResult?.error?.message,
             })}
           />
         )}
@@ -96,8 +95,8 @@ export default async function Page() {
           placeholder="Rua*"
           required
           error={setInputError('street', {
-            fields: createPlaceError?.fields,
-            message: createPlaceError?.message,
+            fields: createdPlaceResult?.error?.fields,
+            message: createdPlaceResult?.error?.message,
           })}
         />
 
@@ -106,8 +105,8 @@ export default async function Page() {
           placeholder="Número"
           type="number"
           error={setInputError('num_place', {
-            fields: createPlaceError?.fields,
-            message: createPlaceError?.message,
+            fields: createdPlaceResult?.error?.fields,
+            message: createdPlaceResult?.error?.message,
           })}
         />
 
@@ -115,8 +114,8 @@ export default async function Page() {
           name="complement"
           placeholder="Complemento"
           error={setInputError('complement', {
-            fields: createPlaceError?.fields,
-            message: createPlaceError?.message,
+            fields: createdPlaceResult?.error?.fields,
+            message: createdPlaceResult?.error?.message,
           })}
         />
 
@@ -143,8 +142,8 @@ export default async function Page() {
             placeholder="Latitude"
             type="number"
             error={setInputError('latitude', {
-              fields: createPlaceError?.fields,
-              message: createPlaceError?.message,
+              fields: createdPlaceResult?.error?.fields,
+              message: createdPlaceResult?.error?.message,
             })}
           />
 
@@ -153,8 +152,8 @@ export default async function Page() {
             placeholder="Longitude"
             type="number"
             error={setInputError('longitude', {
-              fields: createPlaceError?.fields,
-              message: createPlaceError?.message,
+              fields: createdPlaceResult?.error?.fields,
+              message: createdPlaceResult?.error?.message,
             })}
           />
         </div>
@@ -173,12 +172,14 @@ export default async function Page() {
           actionOnUpload={async (urls: string[]) => {
             'use server';
 
-            await store.createPlaceImagesAction(urls);
+            if (createdPlaceResult?.error) return;
 
-            multiStepFormStore.setStepProgress('images', 100);
-            multiStepFormStore.setCurrentStep('final');
-
-            return revalidatePath('/dashboard/posts/create');
+            const { id, country, name, state } = createdPlaceResult?.data;
+            await store.createPlaceImagesAction({
+              place_id: id,
+              urls,
+              description: `Imagem do local: ${name}, ${country} - ${state}`,
+            });
           }}
         />
       </StepContent>

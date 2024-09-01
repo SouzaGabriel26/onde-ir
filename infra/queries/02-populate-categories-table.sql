@@ -4,4 +4,4 @@ VALUES
 	('restaurantes', TRUE),
   ('parques', FALSE),
   ('museus', FALSE),
-  ('bares', FALSE);
+  ('bares', TRUE);

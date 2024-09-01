@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto, { randomUUID } from 'node:crypto';
 
 import { createPlaceDataSource } from '@/data/place';
 import { database } from '@/infra/database';
@@ -453,6 +453,8 @@ describe('> models/place', () => {
         data: {
           id: expect.any(String),
           name: 'Bar do Zé',
+          country: 'Brasil',
+          state: 'ES',
         },
         error: null,
       });
@@ -532,6 +534,132 @@ describe('> models/place', () => {
           fields: ['name'],
         },
       });
+    });
+  });
+
+  describe('Invoking "createImages" method', () => {
+    test('Providing invalid "place_id"', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const result = await place.createImages(placeDataSource, {
+        place_id: '123',
+        description: 'imagem do local',
+        urls: ['http://example.com/image.jpg'],
+      });
+
+      expect(result).toStrictEqual({
+        error: {
+          message: '"place_id" precisa ser um UUID válido.',
+          fields: ['place_id'],
+        },
+        data: null,
+      });
+    });
+
+    test('Providing invalid "urls" property', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const placeId = randomUUID();
+
+      const result = await place.createImages(placeDataSource, {
+        place_id: placeId,
+        description: 'imagem do local',
+        urls: ['http://example.com/image.jpg', 123 as unknown as string],
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"urls" precisa ser um array de strings.',
+          fields: ['urls'],
+        },
+      });
+    });
+
+    test('Providing "urls" as an empty array', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const placeId = randomUUID();
+      const result = await place.createImages(placeDataSource, {
+        place_id: placeId,
+        urls: [],
+        description: 'imagem do local',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"urls" precisa ter no mínimo 1 item.',
+          fields: ['urls'],
+        },
+      });
+    });
+
+    test('Providing invalid "description" property', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const placeId = randomUUID();
+
+      const result = await place.createImages(placeDataSource, {
+        place_id: placeId,
+        description: 123 as unknown as string,
+        urls: ['http://example.com/image.jpg'],
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"description" precisa ser uma string.',
+          fields: ['description'],
+        },
+      });
+    });
+
+    test('Providing a non-existent "place_id"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const placeId = randomUUID();
+
+      const result = await place.createImages(placeDataSource, {
+        place_id: placeId,
+        description: 'imagem do local',
+        urls: ['http://example.com/image.jpg', 'http://example.com/image2.jpg'],
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Local não encontrado.',
+          fields: ['place_id'],
+        },
+      });
+    });
+
+    test('Providing a valid input', async () => {
+      await orchestrator.resetDatabase();
+
+      const testPool = database.getPool();
+      const placeImagesBefore = await testPool.query(sql`
+        SELECT * FROM place_images
+      `);
+
+      expect(placeImagesBefore?.rows.length).toBe(5);
+
+      const placeDataSource = createPlaceDataSource();
+      const places = await place.findAll(placeDataSource, { limit: 1 });
+
+      const result = await place.createImages(placeDataSource, {
+        place_id: places.data![0].id,
+        description: 'imagem do local',
+        urls: ['http://example.com/image.jpg', 'http://example.com/image2.jpg'],
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const placeImagesAfter = await testPool.query(sql`
+        SELECT * FROM place_images
+      `);
+
+      expect(placeImagesAfter?.rows.length).toBe(7);
     });
   });
 });
