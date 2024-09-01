@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
 import { createPlaceDataSource } from '@/data/place';
+import { setInputError } from '@/utils/inputError';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 
@@ -18,6 +19,8 @@ import { store } from './action/store';
 export default async function Page() {
   const { data: userData, error: userNotAuthenticated } =
     await verify.loggedUser();
+
+  const { createPlaceError } = store.getCreatePlaceError();
 
   if (userNotAuthenticated) {
     return redirect(
@@ -41,7 +44,15 @@ export default async function Page() {
       <StepsPreview />
 
       <StepContent step="place_metadata" className="space-y-4">
-        <Input name="name" placeholder="Nome*" required />
+        <Input
+          name="name"
+          placeholder="Nome*"
+          required
+          error={setInputError('name', {
+            fields: createPlaceError?.fields,
+            message: createPlaceError?.message,
+          })}
+        />
 
         <CustomSelect
           required
@@ -57,9 +68,7 @@ export default async function Page() {
           label="Estado*"
           name="state"
           options={stateOptions}
-          actionOnSelect={
-            cityOptions.length > 0 ? store.getCitiesByStateAction : undefined
-          }
+          actionOnSelect={store.getCitiesByStateAction}
         />
 
         {cityOptions.length > 0 ? (
@@ -71,19 +80,51 @@ export default async function Page() {
             options={cityOptions}
           />
         ) : (
-          <Input name="city" placeholder="Cidade*" required />
+          <Input
+            name="city"
+            placeholder="Cidade*"
+            required
+            error={setInputError('city', {
+              fields: createPlaceError?.fields,
+              message: createPlaceError?.message,
+            })}
+          />
         )}
 
-        <Input name="street" placeholder="Rua*" required />
+        <Input
+          name="street"
+          placeholder="Rua*"
+          required
+          error={setInputError('street', {
+            fields: createPlaceError?.fields,
+            message: createPlaceError?.message,
+          })}
+        />
 
-        <Input name="num_place" placeholder="Número" type="number" />
+        <Input
+          name="num_place"
+          placeholder="Número"
+          type="number"
+          error={setInputError('num_place', {
+            fields: createPlaceError?.fields,
+            message: createPlaceError?.message,
+          })}
+        />
 
-        <Input name="complement" placeholder="Complemento" />
+        <Input
+          name="complement"
+          placeholder="Complemento"
+          error={setInputError('complement', {
+            fields: createPlaceError?.fields,
+            message: createPlaceError?.message,
+          })}
+        />
 
         <textarea
           name="description"
           className="max-h-32 w-full p-2 text-sm"
           placeholder="Descrição do local"
+          // add `setInputError`
         ></textarea>
 
         <CustomSelect
@@ -97,9 +138,25 @@ export default async function Page() {
         />
 
         <div className="flex gap-4">
-          <Input name="latitude" placeholder="Latitude" type="number" />
+          <Input
+            name="latitude"
+            placeholder="Latitude"
+            type="number"
+            error={setInputError('latitude', {
+              fields: createPlaceError?.fields,
+              message: createPlaceError?.message,
+            })}
+          />
 
-          <Input name="longitude" placeholder="Longitude" type="number" />
+          <Input
+            name="longitude"
+            placeholder="Longitude"
+            type="number"
+            error={setInputError('longitude', {
+              fields: createPlaceError?.fields,
+              message: createPlaceError?.message,
+            })}
+          />
         </div>
 
         <input type="hidden" name="created_by" defaultValue={userData.id} />
@@ -160,12 +217,13 @@ function StepsPreview() {
           className={sanitizeClassName(
             `
               relative
-              text-sm
+              text-xs
               font-medium
               text-zinc-500
               before:absolute
               before:-left-5
               before:content-[">"]
+              lg:text-sm
             `,
             currentStep === step && 'text-blue-500',
             stepProgressObject[step] === 100 &&
