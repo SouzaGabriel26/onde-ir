@@ -9,5 +9,5 @@ export function setInputError(
 ) {
   if (!error.fields || error.fields.length === 0) return '';
 
-  if (error.fields.includes(inputName)) error.message;
+  if (error.fields.includes(inputName)) return error.message;
 }

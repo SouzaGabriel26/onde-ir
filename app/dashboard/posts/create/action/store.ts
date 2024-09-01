@@ -10,6 +10,8 @@ import { form } from '@/utils/form';
 
 import { multiStepFormStore } from './multiStepFormStore';
 
+let createPlaceError: Awaited<ReturnType<typeof place.create>>['error'];
+
 async function createPlaceAction(formData: FormData) {
   'use server';
 
@@ -19,9 +21,13 @@ async function createPlaceAction(formData: FormData) {
   const { data: createdPlace, error } = await place.create(placeDataSource, {
     ...data,
     num_place: data.num_place ? Number(data.num_place) : undefined,
+    latitude: data.latitude ? Number(data.latitude) : undefined,
+    longitude: data.longitude ? Number(data.longitude) : undefined,
   });
 
   if (error) {
+    createPlaceError = error;
+
     feedbackMessage.setFeedbackMessage({
       type: 'error',
       content: error.message,
@@ -39,6 +45,12 @@ async function createPlaceAction(formData: FormData) {
   multiStepFormStore.setCurrentStep('images');
 
   return revalidatePath('/dashboard/posts/create');
+}
+
+function getCreatePlaceError() {
+  return Object.freeze({
+    createPlaceError,
+  });
 }
 
 let states: Array<UF> = [];
@@ -115,4 +127,5 @@ export const store = Object.freeze({
   getCitiesByStateAction,
   getCities,
   createPlaceImagesAction,
+  getCreatePlaceError,
 });
