@@ -7,6 +7,7 @@ import { ValidationSchema, validator } from './validator';
 export const place = Object.freeze({
   findAll,
   create,
+  createImages,
 });
 
 type FindAllInput = {
@@ -135,4 +136,38 @@ async function create(
   const createdPlace = await placeDataSource.create(validatedInput);
 
   return operationResult.success(createdPlace);
+}
+
+export type CreatePlaceImagesInput = {
+  place_id: string;
+  urls: Array<string>;
+  description: string;
+};
+
+async function createImages(
+  placeDataSource: PlaceDataSource,
+  input: CreatePlaceImagesInput,
+) {
+  const { data: validatedInput, error } = validator(
+    { ...input },
+    {
+      place_id: 'required',
+      urls: 'required',
+      description: 'required',
+    },
+  );
+
+  if (error) return operationResult.failure(error);
+
+  const placeExists = await placeDataSource.findOneById(input.place_id);
+  if (!placeExists) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  await placeDataSource.createImages(validatedInput);
+
+  return operationResult.success({});
 }

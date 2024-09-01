@@ -236,6 +236,27 @@ const schema = z.object({
     .min(1, {
       message: '"num_place" precisa ser um número maior que 0.',
     }),
+  place_id: z
+    .string({
+      required_error: '"place_id" é obrigatório.',
+      invalid_type_error: '"place_id" precisa ser uma string.',
+    })
+    .uuid({
+      message: '"place_id" precisa ser um UUID válido.',
+    }),
+  urls: z
+    .array(
+      z.string({
+        message: '"urls" precisa ser um array de strings.',
+      }),
+      {
+        invalid_type_error: '"urls" precisa ser um array de strings.',
+        required_error: '"urls" é obrigatório.',
+      },
+    )
+    .min(1, {
+      message: '"urls" precisa ter no mínimo 1 item.',
+    }),
   complement: z
     .string({
       invalid_type_error: '"complement" precisa ser uma string.',
