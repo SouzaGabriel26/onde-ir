@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { auth } from '@/models/authentication';
+import { setInputError } from '@/utils/inputError';
 
 import { store } from './store';
 
@@ -25,7 +25,10 @@ export default function Page() {
           placeholder="Email*"
           name="email"
           required
-          error={auth.setInputError('email', responseMessage)}
+          error={setInputError('email', {
+            fields: responseMessage?.error?.fields,
+            message: responseMessage?.error?.message,
+          })}
         />
         <SubmitButton>Enviar</SubmitButton>
       </form>

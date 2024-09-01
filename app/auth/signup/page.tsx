@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
-import { auth } from '@/models/authentication';
+import { setInputError } from '@/utils/inputError';
 
 import { store } from './store';
 
@@ -29,14 +29,20 @@ export default function Page() {
           placeholder="Nome*"
           name="name"
           autoComplete="off"
-          error={auth.setInputError('name', signUpResponse)}
+          error={setInputError('name', {
+            fields: signUpResponse?.error?.fields,
+            message: signUpResponse?.error?.message,
+          })}
         />
         <Input
           required
           id="email"
           placeholder="Email*"
           name="email"
-          error={auth.setInputError('email', signUpResponse)}
+          error={setInputError('email', {
+            fields: signUpResponse?.error?.fields,
+            message: signUpResponse?.error?.message,
+          })}
         />
         <Input
           required
@@ -44,7 +50,10 @@ export default function Page() {
           placeholder="Username*"
           name="userName"
           autoComplete="off"
-          error={auth.setInputError('userName', signUpResponse)}
+          error={setInputError('userName', {
+            fields: signUpResponse?.error?.fields,
+            message: signUpResponse?.error?.message,
+          })}
         />
         <Input
           required
@@ -53,7 +62,10 @@ export default function Page() {
           type="password"
           name="password"
           autoComplete="off"
-          error={auth.setInputError('password', signUpResponse)}
+          error={setInputError('password', {
+            fields: signUpResponse?.error?.fields,
+            message: signUpResponse?.error?.message,
+          })}
         />
         <Input
           required
@@ -62,7 +74,10 @@ export default function Page() {
           type="password"
           name="confirmPassword"
           autoComplete="off"
-          error={auth.setInputError('confirmPassword', signUpResponse)}
+          error={setInputError('confirmPassword', {
+            fields: signUpResponse?.error?.fields,
+            message: signUpResponse?.error?.message,
+          })}
         />
         <SubmitButton>Cadastrar</SubmitButton>
       </form>
