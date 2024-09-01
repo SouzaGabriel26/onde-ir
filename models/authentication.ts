@@ -2,11 +2,7 @@ import { jwtVerify, SignJWT } from 'jose';
 
 import { AuthenticationDataSource } from '@/data/authentication';
 import { password } from '@/models/password';
-import {
-  ValidationSchema,
-  ValidationSchemaKeys,
-  validator,
-} from '@/models/validator';
+import { ValidationSchema, validator } from '@/models/validator';
 import { env } from '@/utils/env';
 import { Failure, operationResult, Success } from '@/utils/operationResult';
 
@@ -57,7 +53,6 @@ export const auth = Object.freeze({
   signIn,
   signUp,
   verifyToken,
-  setInputError,
   generateAccessToken,
 });
 
@@ -220,16 +215,4 @@ async function verifyToken({ token, secret }: VerifyTokenProps) {
   } catch {
     return null;
   }
-}
-
-function setInputError(
-  inputName: ValidationSchemaKeys,
-  responseMessage: Success<unknown> | Failure<{ fields: Array<string> }>,
-) {
-  if (!responseMessage?.error) return '';
-
-  const { message, fields } = responseMessage.error;
-  const inputHasError = fields.includes(inputName);
-
-  return inputHasError ? message : '';
 }

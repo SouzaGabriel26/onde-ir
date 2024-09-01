@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
-import { auth } from '@/models/authentication';
+import { setInputError } from '@/utils/inputError';
 
 import { store } from './store';
 
@@ -53,7 +53,10 @@ export default function Page({ searchParams }: Props) {
           name="email"
           required
           autoComplete="email"
-          error={auth.setInputError('email', signInResponse)}
+          error={setInputError('email', {
+            fields: signInResponse?.error?.fields,
+            message: signInResponse?.error?.message,
+          })}
         />
         <Input
           placeholder="Senha*"
@@ -62,7 +65,10 @@ export default function Page({ searchParams }: Props) {
           type="password"
           required
           autoComplete="current-password"
-          error={auth.setInputError('password', signInResponse)}
+          error={setInputError('password', {
+            fields: signInResponse?.error?.fields,
+            message: signInResponse?.error?.message,
+          })}
         />
         <SubmitButton>Entrar</SubmitButton>
       </form>

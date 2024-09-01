@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
-import { auth } from '@/models/authentication';
+import { setInputError } from '@/utils/inputError';
 
 import { store } from './store';
 
@@ -52,7 +52,10 @@ export default function Page({ searchParams }: Props) {
           type="password"
           name="password"
           placeholder="Digite uma nova senha"
-          error={auth.setInputError('password', responseMessage)}
+          error={setInputError('password', {
+            fields: responseMessage?.error?.fields,
+            message: responseMessage?.error?.message,
+          })}
         />
         <Input
           required
@@ -60,7 +63,10 @@ export default function Page({ searchParams }: Props) {
           type="password"
           name="confirmPassword"
           placeholder="Confirmação de senha"
-          error={auth.setInputError('confirmPassword', responseMessage)}
+          error={setInputError('confirmPassword', {
+            fields: responseMessage?.error?.fields,
+            message: responseMessage?.error?.message,
+          })}
         />
         <input type="hidden" value={tokenId} name="resetPasswordTokenId" />
         <SubmitButton>Enviar</SubmitButton>
@@ -68,7 +74,7 @@ export default function Page({ searchParams }: Props) {
 
       {hasAuthenticationError && (
         <p className="text-center text-red-400">
-          {responseMessage.error?.message}
+          {responseMessage?.error?.message}
         </p>
       )}
     </div>
