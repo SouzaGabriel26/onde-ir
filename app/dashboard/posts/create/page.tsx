@@ -2,6 +2,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 import { ReactNode } from 'react';
 
+import { ButtonLoading } from '@/app/dashboard/posts/_components/ButtonLoading';
 import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
 import { CustomSelect } from '@/components/CustomSelect';
 import { Button } from '@/components/ui/Button';
@@ -56,16 +57,22 @@ export default async function Page() {
           label="Estado*"
           name="state"
           options={stateOptions}
-          actionOnSelect={store.getCitiesByStateAction}
+          actionOnSelect={
+            cityOptions.length > 0 ? store.getCitiesByStateAction : undefined
+          }
         />
 
-        <CustomSelect
-          required
-          searchable
-          label="Cidade*"
-          name="city"
-          options={cityOptions}
-        />
+        {cityOptions.length > 0 ? (
+          <CustomSelect
+            required
+            searchable
+            label="Cidade*"
+            name="city"
+            options={cityOptions}
+          />
+        ) : (
+          <Input name="city" placeholder="Cidade*" required />
+        )}
 
         <Input name="street" placeholder="Rua*" required />
 
@@ -98,9 +105,9 @@ export default async function Page() {
         <input type="hidden" name="created_by" defaultValue={userData.id} />
 
         <fieldset className="flex justify-end gap-4">
-          <Button formAction={store.createPlaceAction}>
+          <ButtonLoading formAction={store.createPlaceAction}>
             Salvar e ir para próxima etapa
-          </Button>
+          </ButtonLoading>
         </fieldset>
       </StepContent>
 
