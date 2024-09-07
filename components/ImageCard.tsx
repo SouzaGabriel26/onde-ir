@@ -24,14 +24,14 @@ export function ImageCard({
     <Link
       title={title}
       href="#"
-      className={sanitizeClassName('rounded-[20px] shadow', className)}
+      className={sanitizeClassName(
+        'h-fit w-fit rounded-[20px] shadow',
+        className,
+      )}
     >
       <div className="rounded-[20px] border border-[#DCE2E5] transition hover:scale-105 hover:shadow-2xl">
         <div
-          className={sanitizeClassName(
-            'relative',
-            variant === 'md' ? 'h-44 w-64' : 'h-52 w-72',
-          )}
+          className={sanitizeClassName('relative', 'h-44 w-64 md:h-52 md:w-72')}
         >
           <Image
             fill
@@ -66,7 +66,16 @@ export function ImageCard({
           >
             {title}
           </h3>
-          <p className="text-paragraph leading-6 text-muted-foreground">
+          <p
+            className={`
+              max-w-56
+              overflow-hidden
+              text-ellipsis
+              whitespace-break-spaces
+              leading-6
+              text-muted-foreground
+          `}
+          >
             {description}
           </p>
         </div>

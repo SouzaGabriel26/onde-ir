@@ -73,7 +73,7 @@ export default async function Page() {
 
               return (
                 <ImageCard
-                  className="animate-fade-in"
+                  className="cursor-default"
                   key={`${index}-${place.name}`}
                   title={place.name}
                   description={description}
@@ -90,7 +90,7 @@ export default async function Page() {
 
               return (
                 <ImageCard
-                  className="animate-fade-in"
+                  className="cursor-default"
                   key={`${index}-${place.name}`}
                   title={place.name}
                   description={description}
