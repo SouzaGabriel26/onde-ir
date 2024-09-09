@@ -42,6 +42,7 @@ export function createPlaceDataSource() {
     approved_by?: string;
     created_by: string;
     created_at: Date;
+    images: string[];
   };
 
   async function findAll(input: FindAllInput) {

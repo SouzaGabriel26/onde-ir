@@ -1,28 +1,56 @@
 import Link from 'next/link';
 
+import { ImageCard } from '@/components/ImageCard';
 import { Button } from '@/components/ui/Button';
+import { createPlaceDataSource } from '@/data/place';
+import { place } from '@/models/place';
 import { verify } from '@/utils/verify';
 
 export default async function Page() {
   const { data: userData, error: userNotAuthenticated } =
     await verify.loggedUser();
 
-  return (
-    <div className="h-full">
-      <h1>Dashboard</h1>
-      <p>Bem vindo {userData?.name}</p>
+  const placeDataSource = createPlaceDataSource();
+  const { data: places } = await place.findAll(placeDataSource, {
+    where: {
+      approved: 'true',
+    },
+  });
 
-      <section className="grid">
-        <Link
-          className="self-end justify-self-end"
-          href={
-            userNotAuthenticated
-              ? '/auth/signin?redirect_reason=not-authenticated'
-              : '/dashboard/posts/create'
-          }
-        >
-          <Button variant="secondary">Crie sua postagem</Button>
-        </Link>
+  return (
+    <div className="flex h-full flex-col gap-2">
+      <Link
+        className="self-end"
+        href={
+          userNotAuthenticated
+            ? '/auth/signin?redirect_reason=not-authenticated'
+            : '/dashboard/posts/create'
+        }
+      >
+        <Button variant="secondary">Crie sua postagem</Button>
+      </Link>
+      <section
+        className={`
+          grid
+          flex-1
+          grid-cols-1
+          place-items-center
+          gap-3
+          overflow-y-auto
+          sm:grid-cols-2
+          md:grid-cols-3
+          2xl:grid-cols-5
+        `}
+      >
+        {places?.map((place) => (
+          <ImageCard
+            key={place.id}
+            title={place.name}
+            alt={`foto de ${place.name}`}
+            src={place.images[0] ?? 'https://via.placeholder.com/300'}
+            description={place.description ?? 'sem descrição'}
+          />
+        ))}
       </section>
     </div>
   );
