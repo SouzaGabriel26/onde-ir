@@ -1,6 +1,10 @@
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { database } from '@/infra/database';
-import { SignInProps, SignUpProps, auth } from '@/models/authentication';
+import {
+  type SignInProps,
+  type SignUpProps,
+  auth,
+} from '@/models/authentication';
 import { orchestrator } from '@/tests/orchestrator';
 
 beforeAll(async () => {

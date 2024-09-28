@@ -1,5 +1,5 @@
-import { UserDataSource } from '@/data/user';
-import { User } from '@/types';
+import type { UserDataSource } from '@/data/user';
+import type { User } from '@/types';
 import { operationResult } from '@/utils/operationResult';
 
 import { validator } from './validator';
@@ -8,7 +8,7 @@ export const user = Object.freeze({
   findById,
 });
 
-type FindByIdInput = {
+export type FindByIdInput = {
   id: string;
   select?: Array<keyof User>;
 };

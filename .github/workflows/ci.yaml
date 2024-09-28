@@ -87,7 +87,7 @@ jobs:
         run: pnpm i
 
       - name: Run lint script
-        run: pnpm lint
+        run: pnpm biome
 
   run-test:
     name: Run Tests

@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import { database } from '../infra/database';
 
@@ -14,7 +14,7 @@ async function resetDatabase() {
   });
 
   let queryFileNameToResetDatabase = '';
-  let queryFileNamesToPopulateDatabase: string[] = [];
+  const queryFileNamesToPopulateDatabase: string[] = [];
 
   for (const query of queries) {
     if (query.startsWith('drop-schema')) {

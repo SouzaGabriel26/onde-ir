@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import { redirect, RedirectType } from 'next/navigation';
-import { ReactNode } from 'react';
+import { RedirectType, redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { verify } from '@/utils/verify';

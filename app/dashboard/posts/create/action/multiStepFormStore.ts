@@ -40,9 +40,9 @@ async function reset() {
   'use server';
 
   currentStep = formSteps[0];
-  Object.keys(stepProgressObject).forEach((step) => {
+  for (const step of Object.keys(stepProgressObject)) {
     stepProgressObject[step as FormSteps] = 0;
-  });
+  }
 }
 
 export const multiStepFormStore = Object.freeze({

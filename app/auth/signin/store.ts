@@ -2,7 +2,11 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { auth, SignInProps, SignInResponse } from '@/models/authentication';
+import {
+  type SignInProps,
+  type SignInResponse,
+  auth,
+} from '@/models/authentication';
 import { constants } from '@/utils/constants';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';

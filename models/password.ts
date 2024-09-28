@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import { AuthenticationDataSource } from '@/data/authentication';
+import type { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
 import { auth } from '@/models/authentication';
 import { validator } from '@/models/validator';
@@ -150,7 +150,7 @@ async function reset(
   return operationResult.success({});
 }
 
-type ChangePasswordInput = {
+export type ChangePasswordInput = {
   userId: string;
   currentPassword: string;
   newPassword: string;

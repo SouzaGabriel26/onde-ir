@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
 import {
-  ResetPasswordInput,
-  ResetPasswordOutput,
+  type ResetPasswordInput,
+  type ResetPasswordOutput,
   password,
 } from '@/models/password';
 import { feedbackMessage } from '@/utils/feedbackMessage';

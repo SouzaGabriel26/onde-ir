@@ -1,4 +1,4 @@
-import { UserDataSource } from '@/data/user';
+import type { UserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 import { operationResult } from '@/utils/operationResult';
 

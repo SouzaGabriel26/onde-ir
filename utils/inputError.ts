@@ -1,4 +1,4 @@
-import { ValidationSchemaKeys } from '@/models/validator';
+import type { ValidationSchemaKeys } from '@/models/validator';
 
 export function setInputError(
   inputName: ValidationSchemaKeys,

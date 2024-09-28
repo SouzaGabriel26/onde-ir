@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { Toaster as Sonner, toast } from 'sonner';
 
-import { FeedbackMessage } from '@/utils/feedbackMessage';
+import type { FeedbackMessage } from '@/utils/feedbackMessage';
 
 type ToasterProps = React.ComponentProps<typeof Sonner> & {
   message?: FeedbackMessage | null;
@@ -14,7 +14,7 @@ const Toaster = ({ message, ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme();
 
   useEffect(() => {
-    if (!!message) {
+    if (message) {
       toast[message.type](message.content, {
         className:
           message.type === 'error' ? '!text-red-500' : '!text-green-500',

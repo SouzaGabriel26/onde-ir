@@ -1,5 +1,0 @@
-node_modules/
-.next/
-**/*.js
-**/*.json
-pnpm-lock.yaml

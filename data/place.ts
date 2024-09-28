@@ -1,5 +1,5 @@
 import { database } from '@/infra/database';
-import { CreatePlaceImagesInput, CreatePlaceInput } from '@/models/place';
+import type { CreatePlaceImagesInput, CreatePlaceInput } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
 
 export type PlaceDataSource = ReturnType<typeof createPlaceDataSource>;
@@ -224,11 +224,11 @@ export function createPlaceDataSource() {
     function setValues() {
       const statementValues: string[] = [];
 
-      urls.forEach((url) => {
+      for (const url of urls) {
         statementValues.push(`($${index}, $${index + 1}, $${index + 2})`);
         queryValues.push(place_id, description, url);
         index += 3;
-      });
+      }
 
       queryText = queryText.replace('$values', statementValues.join(','));
     }

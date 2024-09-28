@@ -1,8 +1,13 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { auth } from '@/models/authentication';
-import { password } from '@/models/password';
+import {
+  type ChangePasswordInput,
+  type ForgotPasswordInput,
+  type ResetPasswordInput,
+  password,
+} from '@/models/password';
 
 import { orchestrator } from '../orchestrator';
 
@@ -29,7 +34,10 @@ describe('> models/password', () => {
 
     test('Providing an empty object', async () => {
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.forgot(authDataSource, {} as any);
+      const result = await password.forgot(
+        authDataSource,
+        {} as ForgotPasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -79,7 +87,10 @@ describe('> models/password', () => {
 
     test('Providing an empty object', async () => {
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.reset(authDataSource, {} as any);
+      const result = await password.reset(
+        authDataSource,
+        {} as ResetPasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -115,7 +126,10 @@ describe('> models/password', () => {
         resetPasswordTokenId: uuid,
       };
 
-      const result = await password.reset(authDataSource, input as any);
+      const result = await password.reset(
+        authDataSource,
+        input as ResetPasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -134,7 +148,10 @@ describe('> models/password', () => {
         resetPasswordTokenId: uuid,
       };
 
-      const result = await password.reset(authDataSource, input as any);
+      const result = await password.reset(
+        authDataSource,
+        input as ResetPasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -186,7 +203,7 @@ describe('> models/password', () => {
         email: userEmail,
       });
 
-      const input = {
+      const input: ResetPasswordInput = {
         password: 'gabriel123',
         confirmPassword: 'gabriel123',
         resetPasswordTokenId: data!.resetPasswordTokenId,
@@ -299,7 +316,10 @@ describe('> models/password', () => {
       };
 
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.change(authDataSource, input as any);
+      const result = await password.change(
+        authDataSource,
+        input as ChangePasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -342,7 +362,10 @@ describe('> models/password', () => {
       };
 
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.change(authDataSource, input as any);
+      const result = await password.change(
+        authDataSource,
+        input as ChangePasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -396,7 +419,10 @@ describe('> models/password', () => {
       };
 
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.change(authDataSource, input as any);
+      const result = await password.change(
+        authDataSource,
+        input as ChangePasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,
@@ -439,7 +465,10 @@ describe('> models/password', () => {
       };
 
       const authDataSource = createAuthenticationDataSource();
-      const result = await password.change(authDataSource, input as any);
+      const result = await password.change(
+        authDataSource,
+        input as ChangePasswordInput,
+      );
 
       expect(result).toStrictEqual({
         data: null,

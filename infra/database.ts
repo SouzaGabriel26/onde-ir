@@ -1,4 +1,4 @@
-import { Client, Pool, QueryConfig } from 'pg';
+import { Client, Pool, type QueryConfig } from 'pg';
 
 import { env } from '@/utils/env';
 
