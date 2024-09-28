@@ -4,8 +4,8 @@ import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword
 import { createAuthenticationDataSource } from '@/data/authentication';
 import { emailService } from '@/models/email';
 import {
-  ForgotPasswordInput,
-  ForgotPasswordOutput,
+  type ForgotPasswordInput,
+  type ForgotPasswordOutput,
   password,
 } from '@/models/password';
 import { feedbackMessage } from '@/utils/feedbackMessage';

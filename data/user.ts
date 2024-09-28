@@ -1,5 +1,5 @@
 import { database } from '@/infra/database';
-import { User } from '@/types';
+import type { User } from '@/types';
 import { sql } from '@/utils/syntax-highlighting';
 
 export type UserDataSource = ReturnType<typeof createUserDataSource>;
@@ -110,6 +110,6 @@ export function createUserDataSource() {
 
     const queryResult = await userPool.query(query);
 
-    return queryResult?.rows[0] ? true : false;
+    return !!queryResult?.rows[0];
   }
 }

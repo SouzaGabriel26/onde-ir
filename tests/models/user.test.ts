@@ -1,6 +1,6 @@
 import { createUserDataSource } from '@/data/user';
 import { database } from '@/infra/database';
-import { user } from '@/models/user';
+import { type FindByIdInput, user } from '@/models/user';
 import { orchestrator } from '@/tests/orchestrator';
 import { sql } from '@/utils/syntax-highlighting';
 
@@ -88,7 +88,7 @@ describe('> models/user', () => {
     test('Providing an empty object ("id is required")', async () => {
       const userDataSource = createUserDataSource();
 
-      const result = await user.findById(userDataSource, {} as any);
+      const result = await user.findById(userDataSource, {} as FindByIdInput);
 
       expect(result).toStrictEqual({
         data: null,
@@ -149,7 +149,7 @@ describe('> models/user', () => {
 
       const foundUser = await user.findById(userDataSource, {
         id: userIdFromDatabase,
-        select: ['email', 'invalid_field'] as any,
+        select: ['email', 'invalid_field'] as FindByIdInput['select'],
       });
 
       expect(foundUser).toStrictEqual({

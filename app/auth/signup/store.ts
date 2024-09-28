@@ -2,7 +2,11 @@ import { redirect } from 'next/navigation';
 
 import { Welcome } from '@/components/email-templates/Welcome';
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { SignUpProps, SignUpResponse, auth } from '@/models/authentication';
+import {
+  type SignUpProps,
+  type SignUpResponse,
+  auth,
+} from '@/models/authentication';
 import { emailService } from '@/models/email';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';

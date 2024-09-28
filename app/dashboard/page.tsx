@@ -7,8 +7,7 @@ import { place } from '@/models/place';
 import { verify } from '@/utils/verify';
 
 export default async function Page() {
-  const { data: userData, error: userNotAuthenticated } =
-    await verify.loggedUser();
+  const { error: userNotAuthenticated } = await verify.loggedUser();
 
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {

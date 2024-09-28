@@ -122,7 +122,9 @@ describe('> models/place', () => {
 
     test('Providing invalid type for "page" property', async () => {
       const placeDataSource = createPlaceDataSource();
-      const result = await place.findAll(placeDataSource, { page: '1' as any });
+      const result = await place.findAll(placeDataSource, {
+        page: '1' as unknown as number,
+      });
 
       expect(result).toStrictEqual({
         data: null,
@@ -149,7 +151,7 @@ describe('> models/place', () => {
     test('Providing invalid type for "limit" property', async () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource, {
-        limit: '10' as any,
+        limit: '10' as unknown as number,
       });
 
       expect(result).toStrictEqual({
@@ -423,12 +425,12 @@ describe('> models/place', () => {
 
       const result = await place.findAll(placeDataSource, {
         where: {
-          name: places![0].name,
+          name: places?.[0].name,
         },
       });
 
       expect(result.error).toBeNull();
-      expect(result.data![0].name).toBe(places![0].name);
+      expect(result.data?.[0].name).toBe(places?.[0].name);
     });
   });
 

@@ -1,4 +1,4 @@
-import { ClassValue, clsx } from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export function sanitizeClassName(...inputs: ClassValue[]) {
@@ -7,7 +7,7 @@ export function sanitizeClassName(...inputs: ClassValue[]) {
   return sanitizedClassName;
 
   function buildClassNameWithConditionals(classNames: ClassValue[]) {
-    return clsx(inputs);
+    return clsx(classNames);
   }
 
   function removeDuplicateClassNames(duplicateClassNames: string) {

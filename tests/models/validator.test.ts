@@ -34,7 +34,7 @@ describe('> models/validator', () => {
   test('Providing a null value to optional parameter', () => {
     const result = validator(
       {
-        name: null as any,
+        name: null as unknown as string,
       },
       {
         name: 'optional',
@@ -53,7 +53,7 @@ describe('> models/validator', () => {
   test('Providing a null value to required parameter', () => {
     const result = validator(
       {
-        name: null as any,
+        name: null as unknown as string,
       },
       {
         name: 'required',
@@ -110,7 +110,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          name: 123 as any,
+          name: 123 as unknown as string,
         },
         {
           name: 'optional',
@@ -148,7 +148,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          name: 123 as any,
+          name: 123 as unknown as string,
         },
         {
           name: 'required',
@@ -228,7 +228,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          email: 123 as any,
+          email: 123 as unknown as string,
         },
         {
           email: 'optional',
@@ -266,7 +266,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          email: 123 as any,
+          email: 123 as unknown as string,
         },
         {
           email: 'required',
@@ -346,7 +346,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          userName: 123 as any,
+          userName: 123 as unknown as string,
         },
         {
           userName: 'optional',
@@ -384,7 +384,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          userName: 123 as any,
+          userName: 123 as unknown as string,
         },
         {
           userName: 'required',
@@ -464,7 +464,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          password: 123 as any,
+          password: 123 as unknown as string,
         },
         {
           password: 'optional',
@@ -522,7 +522,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          password: 123 as any,
+          password: 123 as unknown as string,
         },
         {
           password: 'optional',
@@ -582,7 +582,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as any,
+          confirmPassword: 123 as unknown as string,
         },
         {
           confirmPassword: 'optional',
@@ -640,7 +640,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as any,
+          confirmPassword: 123 as unknown as string,
         },
         {
           confirmPassword: 'required',
@@ -700,7 +700,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as any,
+          resetPasswordTokenId: 123 as unknown as string,
         },
         {
           resetPasswordTokenId: 'optional',
@@ -719,7 +719,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as any,
+          resetPasswordTokenId: '123' as unknown as string,
         },
         {
           resetPasswordTokenId: 'optional',
@@ -758,7 +758,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as any,
+          resetPasswordTokenId: 123 as unknown as string,
         },
         {
           resetPasswordTokenId: 'required',
@@ -777,7 +777,7 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as any,
+          resetPasswordTokenId: '123' as unknown as string,
         },
         {
           resetPasswordTokenId: 'required',
@@ -818,7 +818,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          userId: 123 as any,
+          userId: 123 as unknown as string,
         },
         {
           userId: 'optional',
@@ -837,7 +837,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to optional parameter', () => {
       const result = validator(
         {
-          userId: '123' as any,
+          userId: '123' as unknown as string,
         },
         {
           userId: 'optional',
@@ -876,7 +876,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          userId: 123 as any,
+          userId: 123 as unknown as string,
         },
         {
           userId: 'required',
@@ -895,7 +895,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to required parameter', () => {
       const result = validator(
         {
-          userId: '123' as any,
+          userId: '123' as unknown as string,
         },
         {
           userId: 'required',
@@ -936,7 +936,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as any,
+          currentPassword: 123 as unknown as string,
         },
         {
           currentPassword: 'optional',
@@ -975,7 +975,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as any,
+          currentPassword: 123 as unknown as string,
         },
         {
           currentPassword: 'required',
@@ -1016,7 +1016,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as any,
+          newPassword: 123 as unknown as string,
         },
         {
           newPassword: 'optional',
@@ -1074,7 +1074,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as any,
+          newPassword: 123 as unknown as string,
         },
         {
           newPassword: 'required',
@@ -1134,7 +1134,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as any,
+          confirmNewPassword: 123 as unknown as string,
         },
         {
           confirmNewPassword: 'optional',
@@ -1192,7 +1192,7 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as any,
+          confirmNewPassword: 123 as unknown as string,
         },
         {
           confirmNewPassword: 'required',
@@ -1286,7 +1286,7 @@ describe('> models/validator', () => {
     test('Providing invalid type value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as any,
+          selectUserFields: 123 as unknown as string[],
         },
         {
           selectUserFields: 'optional',
@@ -1362,7 +1362,7 @@ describe('> models/validator', () => {
     test('Providing invalid type value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as any,
+          selectUserFields: 123 as unknown as string[],
         },
         {
           selectUserFields: 'required',
@@ -1417,7 +1417,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to optional parameter', () => {
       const result = validator(
         {
-          stateId: '32' as any,
+          stateId: '32' as unknown as number,
         },
         {
           stateId: 'optional',
@@ -1492,7 +1492,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to required parameter', () => {
       const result = validator(
         {
-          stateId: '32' as any,
+          stateId: '32' as unknown as number,
         },
         {
           stateId: 'required',
@@ -1566,7 +1566,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to optional parameter', () => {
       const result = validator(
         {
-          page: '1' as any,
+          page: '1' as unknown as number,
         },
         {
           page: 'optional',
@@ -1660,7 +1660,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to required parameter', () => {
       const result = validator(
         {
-          page: '1' as any,
+          page: '1' as unknown as number,
         },
         {
           page: 'required',
@@ -1753,7 +1753,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to optional parameter', () => {
       const result = validator(
         {
-          limit: '1' as any,
+          limit: '1' as unknown as number,
         },
         {
           limit: 'optional',
@@ -1847,7 +1847,7 @@ describe('> models/validator', () => {
     test('Providing invalid type to required parameter', () => {
       const result = validator(
         {
-          limit: '1' as any,
+          limit: '1' as unknown as number,
         },
         {
           limit: 'required',

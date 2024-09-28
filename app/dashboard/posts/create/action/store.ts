@@ -1,14 +1,14 @@
 import { revalidatePath } from 'next/cache';
 
-import { Option } from '@/components/CustomSelect';
+import type { Option } from '@/components/CustomSelect';
 import { createPlaceDataSource } from '@/data/place';
 import { location } from '@/models/location';
 import {
-  CreatePlaceImagesInput,
-  CreatePlaceInput,
+  type CreatePlaceImagesInput,
+  type CreatePlaceInput,
   place,
 } from '@/models/place';
-import { City, UF } from '@/types';
+import type { City, UF } from '@/types';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 

@@ -1,4 +1,4 @@
-import { City, UF } from '@/types';
+import type { City, UF } from '@/types';
 import { operationResult } from '@/utils/operationResult';
 
 import { validator } from './validator';

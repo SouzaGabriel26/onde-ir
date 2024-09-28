@@ -1,10 +1,14 @@
-import { jwtVerify, SignJWT } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 
-import { AuthenticationDataSource } from '@/data/authentication';
+import type { AuthenticationDataSource } from '@/data/authentication';
 import { password } from '@/models/password';
-import { ValidationSchema, validator } from '@/models/validator';
+import { type ValidationSchema, validator } from '@/models/validator';
 import { env } from '@/utils/env';
-import { Failure, operationResult, Success } from '@/utils/operationResult';
+import {
+  type Failure,
+  type Success,
+  operationResult,
+} from '@/utils/operationResult';
 
 type AvailableSignUpFields = keyof SignUpProps;
 type AvailableSignInFields = keyof SignInProps;

@@ -1,8 +1,8 @@
-import { PlaceDataSource } from '@/data/place';
+import type { PlaceDataSource } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
 import { operationResult } from '@/utils/operationResult';
 
-import { ValidationSchema, validator } from './validator';
+import { type ValidationSchema, validator } from './validator';
 
 export const place = Object.freeze({
   findAll,

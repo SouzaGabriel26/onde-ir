@@ -1,4 +1,4 @@
-import { UF } from './UF';
+import type { UF } from './UF';
 
 export type City = {
   id: number;

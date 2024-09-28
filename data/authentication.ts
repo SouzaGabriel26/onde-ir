@@ -1,5 +1,5 @@
 import { database } from '@/infra/database';
-import { SignUpProps } from '@/models/authentication';
+import type { SignUpProps } from '@/models/authentication';
 import { sql } from '@/utils/syntax-highlighting';
 
 export type AuthenticationDataSource = ReturnType<

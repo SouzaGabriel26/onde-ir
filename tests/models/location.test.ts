@@ -35,11 +35,13 @@ describe('> models/location', () => {
 
       expect(result.data?.length).toBe(78);
 
-      expect(result.data![0].nome).toStrictEqual('Afonso Cláudio');
+      expect(result.data?.[0].nome).toStrictEqual('Afonso Cláudio');
     });
 
     test('Providing undefined "stateId"', async () => {
-      const result = await location.getCitiesByState(undefined as any);
+      const result = await location.getCitiesByState(
+        undefined as unknown as number,
+      );
 
       expect(result).toStrictEqual({
         error: {
@@ -51,7 +53,7 @@ describe('> models/location', () => {
     });
 
     test('Providing an invaid type "stateId"', async () => {
-      const result = await location.getCitiesByState('32' as any);
+      const result = await location.getCitiesByState('32' as unknown as number);
 
       expect(result).toStrictEqual({
         error: {

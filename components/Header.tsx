@@ -11,12 +11,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/Sheet';
-import { User } from '@/types';
+import type { User } from '@/types';
 import { constants } from '@/utils/constants';
 
 import { NavButton } from './NavButton';
-import { Button } from './ui/Button';
 import { UserAvatar } from './UserAvatar';
+import { Button } from './ui/Button';
 
 type HeaderProps = {
   userData?: Partial<User> | null;
@@ -54,11 +54,7 @@ export function Header({ userData }: HeaderProps) {
       </Link>
 
       <nav className="flex items-center gap-2 text-sm md:gap-4 md:text-base">
-        {!userData && (
-          <>
-            <NavButton href="/auth/signin" title="Entrar" />
-          </>
-        )}
+        {!userData && <NavButton href="/auth/signin" title="Entrar" />}
 
         <ThemeSwitcher />
 

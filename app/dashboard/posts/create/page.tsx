@@ -1,5 +1,5 @@
-import { redirect, RedirectType } from 'next/navigation';
-import { ReactNode } from 'react';
+import { RedirectType, redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 import { ButtonLoading } from '@/app/dashboard/posts/_components/ButtonLoading';
 import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
@@ -12,7 +12,10 @@ import { setInputError } from '@/utils/inputError';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 
-import { FormSteps, multiStepFormStore } from './action/multiStepFormStore';
+import {
+  type FormSteps,
+  multiStepFormStore,
+} from './action/multiStepFormStore';
 import { store } from './action/store';
 
 export default async function Page() {
@@ -124,7 +127,7 @@ export default async function Page() {
           className="max-h-32 w-full p-2 text-sm"
           placeholder="Descrição do local"
           // add `setInputError`
-        ></textarea>
+        />
 
         <CustomSelect
           required
@@ -174,7 +177,7 @@ export default async function Page() {
 
             if (createdPlaceResult?.error) return;
 
-            const { id, country, name, state } = createdPlaceResult?.data;
+            const { id, country, name, state } = createdPlaceResult!.data;
             await store.createPlaceImagesAction({
               place_id: id,
               urls,
