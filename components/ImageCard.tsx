@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import type { Route } from 'next';
 
 type ImageCardProps = {
   src: string;
@@ -10,6 +11,7 @@ type ImageCardProps = {
   description: string;
   variant?: 'md' | 'lg';
   className?: string;
+  href?: Route;
 };
 
 export function ImageCard({
@@ -19,11 +21,12 @@ export function ImageCard({
   description,
   variant = 'lg',
   src,
+  href,
 }: ImageCardProps) {
   return (
     <Link
       title={title}
-      href="#"
+      href={href ?? '#'}
       className={sanitizeClassName(
         'h-fit w-fit rounded-[20px] shadow',
         className,

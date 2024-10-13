@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
 import { verify } from '@/utils/verify';
+import type { Route } from 'next';
 
 export default async function Page() {
   const { error: userNotAuthenticated } = await verify.loggedUser();
@@ -47,6 +48,7 @@ export default async function Page() {
       >
         {places?.map((place) => (
           <ImageCard
+            href={`/dashboard/posts/${place.id}` as Route}
             key={place.id}
             title={place.name}
             alt={`foto de ${place.name}`}
