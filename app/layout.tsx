@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { Toaster } from '@/components/ui/Sonner';
+import { Toaster } from '@/components/ui/Toaster';
 
 import { constants } from '../utils/constants';
 import { feedbackMessage } from '../utils/feedbackMessage';

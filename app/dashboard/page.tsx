@@ -26,7 +26,11 @@ export default async function Page() {
             : '/dashboard/posts/create'
         }
       >
-        <Button variant="secondary">Crie sua postagem</Button>
+        <Button variant="secondary">
+          {userNotAuthenticated
+            ? 'Faça login para criar uma postagem'
+            : 'Crie sua postagem'}
+        </Button>
       </Link>
       <section
         className={`

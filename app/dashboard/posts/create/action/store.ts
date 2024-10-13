@@ -14,7 +14,10 @@ import { form } from '@/utils/form';
 
 import { multiStepFormStore } from './multiStepFormStore';
 
-let createdPlaceResult: Awaited<ReturnType<typeof place.create>>;
+type CreatedPlaceResultResponse = Awaited<ReturnType<typeof place.create>>;
+
+let createdPlaceResult: CreatedPlaceResultResponse =
+  {} as CreatedPlaceResultResponse;
 
 async function createPlaceAction(formData: FormData) {
   'use server';

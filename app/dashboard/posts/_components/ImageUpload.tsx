@@ -68,7 +68,9 @@ export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
       );
 
       if (responses.some((response) => response.status === 'rejected')) {
-        toast.error('Algo deu errado ao enviar os arquivos.');
+        toast.error('Algo deu errado ao enviar os arquivos.', {
+          className: '!text-red-500',
+        });
         return;
       }
 
@@ -76,7 +78,6 @@ export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
         className: '!text-green-500',
       });
 
-      // save url.file_url (uploadsObject) in database
       const urls = uploadObjects.map((upload) => upload.url.file_url);
       await actionOnUpload(urls);
     } catch {
