@@ -97,7 +97,12 @@ export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
         className="self-end"
         type="button"
         onClick={handleUpload}
-        disabled={isLoading || !uploads.length || hasSomeInvalidFileType}
+        disabled={
+          isLoading ||
+          !uploads.length ||
+          hasSomeInvalidFileType ||
+          uploads.length > 4
+        }
       >
         {isLoading && <Loader2Icon className="mr-2 animate-spin" />}
         Enviar
@@ -128,7 +133,7 @@ export function Dropzone({ onDrop }: DropzoneProps) {
         isDragActive && 'bg-primary-foreground',
       )}
     >
-      <input {...getInputProps()} />
+      <input accept="image/png, image/jpg, image/jpeg" {...getInputProps()} />
 
       <div className="flex h-full flex-col items-center justify-center">
         <PackageOpenIcon className="mb-2 size-12" />
@@ -150,6 +155,13 @@ function FilesPreview({ uploads, onDeleteUpload }: FilesPreviewProps) {
   return (
     <div className="space-y-2">
       <span className="text-xl">Arquivos selecionados: {uploads.length}</span>
+
+      {uploads.length > 4 && (
+        <span className="text-sm block text-destructive">
+          O número máximo de arquivos permitidos é 4
+        </span>
+      )}
+
       <div className="max-h-80 space-y-2 overflow-y-auto rounded-md p-2">
         {uploads.map(({ file, progress }) => (
           <FileItem
