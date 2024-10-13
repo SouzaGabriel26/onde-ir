@@ -1,4 +1,4 @@
-import { Client, Pool, type QueryConfig } from 'pg';
+import pg, { type QueryConfig } from 'pg';
 
 import { env } from '@/utils/env';
 
@@ -16,10 +16,10 @@ const { db_user, db_password, db_host, db_port, default_db } = env;
 
 const databaseConnectionString = `postgres://${db_user}:${db_password}@${db_host}:${db_port}/${default_db}`;
 
-const pools: Array<Pool> = [];
+const pools: Array<pg.Pool> = [];
 
 function getClient() {
-  const client = new Client({
+  const client = new pg.Client({
     connectionString: databaseConnectionString,
     ssl: IS_PRODUCTION_ENVIRONMENT,
   });
@@ -41,7 +41,7 @@ function getClient() {
 }
 
 function getPool() {
-  const pool = new Pool({
+  const pool = new pg.Pool({
     connectionString: databaseConnectionString,
     ssl: IS_PRODUCTION_ENVIRONMENT,
     max: 1,
