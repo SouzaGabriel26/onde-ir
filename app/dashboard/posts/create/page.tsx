@@ -1,4 +1,4 @@
-import { RedirectType, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { ButtonLoading } from '@/app/dashboard/posts/_components/ButtonLoading';
@@ -19,15 +19,7 @@ import {
 import { store } from './action/store';
 
 export default async function Page() {
-  const { data: userData, error: userNotAuthenticated } =
-    await verify.loggedUser();
-
-  if (userNotAuthenticated) {
-    return redirect(
-      '/auth/signin?redirect_reason=not-authenticated',
-      RedirectType.replace,
-    );
-  }
+  const { data: userData } = await verify.loggedUser();
 
   await store.fetchStatesAction();
 
@@ -161,7 +153,7 @@ export default async function Page() {
           />
         </div>
 
-        <input type="hidden" name="created_by" defaultValue={userData.id} />
+        <input type="hidden" name="created_by" defaultValue={userData!.id} />
 
         <fieldset className="flex justify-end gap-4">
           <ButtonLoading formAction={store.createPlaceAction}>
@@ -177,7 +169,7 @@ export default async function Page() {
 
             if (createdPlaceResult?.error) return;
 
-            const { id, country, name, state } = createdPlaceResult!.data;
+            const { id, country, name, state } = createdPlaceResult.data;
             await store.createPlaceImagesAction({
               place_id: id,
               urls,
@@ -196,12 +188,13 @@ export default async function Page() {
           className="mt-4 w-full"
           formAction={async () => {
             'use server';
+            if (createdPlaceResult.error) return;
 
             multiStepFormStore.reset();
-            return redirect('/dashboard');
+            return redirect(`/dashboard/posts/${createdPlaceResult.data?.id}`);
           }}
         >
-          Ver post criado
+          Acompanhar status do post
         </Button>
       </StepContent>
     </form>
