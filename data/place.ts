@@ -14,7 +14,7 @@ export function createPlaceDataSource() {
     create,
     createImages,
     findCategories,
-    findOneById,
+    findById,
   });
 
   type FindAllInput = {
@@ -111,27 +111,28 @@ export function createPlaceDataSource() {
     }
   }
 
-  async function findOneById(id: string) {
+  async function findById(id: string) {
     const query = {
       text: sql`
         SELECT
-          id,
-          name
+          places.*,
+          array_remove(ARRAY_AGG(place_images.url), NULL) AS images
         FROM
           places
-        WHERE
-          id = $1;
+          LEFT JOIN place_images ON place_images.place_id = places.id
+          WHERE
+            places.id = $1
+        GROUP BY
+          places.id
       `,
       values: [id],
     };
 
     const queryResult = await placePool.query(query);
+
     if (!queryResult?.rows[0]) return null;
 
-    return queryResult.rows[0] as {
-      id: string;
-      name: string;
-    };
+    return queryResult.rows[0] as FindAllPlacesOutput;
   }
 
   async function create(input: CreatePlaceInput) {

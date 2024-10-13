@@ -6,6 +6,7 @@ import { type ValidationSchema, validator } from './validator';
 
 export const place = Object.freeze({
   findAll,
+  findById,
   create,
   createImages,
 });
@@ -58,6 +59,25 @@ async function findAll(
   return operationResult.success(places);
 }
 
+async function findById(placeDataSource: PlaceDataSource, id: string) {
+  const validationResult = validator(
+    { place_id: id },
+    { place_id: 'required' },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const place = await placeDataSource.findById(id);
+
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  return operationResult.success(place);
+}
 export type CreatePlaceInput = {
   name: string;
   country: string;
@@ -161,7 +181,7 @@ async function createImages(
 
   if (error) return operationResult.failure(error);
 
-  const placeExists = await placeDataSource.findOneById(input.place_id);
+  const placeExists = await placeDataSource.findById(input.place_id);
   if (!placeExists) {
     return operationResult.failure({
       message: 'Local não encontrado.',
