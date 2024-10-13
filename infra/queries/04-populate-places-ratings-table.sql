@@ -6,7 +6,7 @@ WITH approved_places as (
   FROM
     places
   WHERE
-    approved
+    status = 'APPROVED'
 )
 INSERT INTO place_ratings
 	(
