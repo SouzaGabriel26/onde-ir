@@ -12,7 +12,7 @@ export default async function Page() {
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     where: {
-      approved: 'true',
+      status: 'APPROVED',
     },
   });
 

@@ -35,8 +35,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3274,
             longitude: -40.2922,
-            approved: false,
-            approved_by: null,
+            status: 'REJECTED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -56,8 +56,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.2969,
-            approved: true,
-            approved_by: expect.any(String),
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -76,8 +76,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -96,8 +96,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: false,
-            approved_by: null,
+            status: 'PENDING',
+            reviewed_by: null,
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -163,11 +163,11 @@ describe('> models/place', () => {
       });
     });
 
-    test('Providing "where" with "approved" property as true', async () => {
+    test('Providing "where" with status equals to "APPROVED"', async () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource, {
         where: {
-          approved: 'true',
+          status: 'APPROVED',
         },
       });
 
@@ -188,8 +188,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.2969,
-            approved: true,
-            approved_by: expect.any(String),
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -208,8 +208,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -219,11 +219,11 @@ describe('> models/place', () => {
       });
     });
 
-    test('Providing "where" with "approved" property as false', async () => {
+    test('Providing "where" status equals to "REJECTED"', async () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource, {
         where: {
-          approved: 'false',
+          status: 'REJECTED',
         },
       });
 
@@ -244,28 +244,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3274,
             longitude: -40.2922,
-            approved: false,
-            approved_by: null,
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-          {
-            id: expect.any(String),
-            name: 'Pizzaria do Zé',
-            country: 'Brasil',
-            state: 'RJ',
-            city: 'Rio de Janeiro',
-            street: 'Av. Jerônimo Monteiro',
-            num_place: 1234,
-            complement: null,
-            description: 'Pizzaria com variedade de sabores e promoções',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            approved: false,
-            approved_by: null,
+            status: 'REJECTED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -299,8 +279,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: false,
-            approved_by: null,
+            status: 'PENDING',
+            reviewed_by: null,
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -351,8 +331,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3274,
             longitude: -40.2922,
-            approved: false,
-            approved_by: null,
+            status: 'REJECTED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -385,8 +365,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: true,
-            approved_by: expect.any(String),
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -405,8 +385,8 @@ describe('> models/place', () => {
             category_id: expect.any(String),
             latitude: -20.3155,
             longitude: -40.3128,
-            approved: false,
-            approved_by: null,
+            status: 'PENDING',
+            reviewed_by: null,
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),

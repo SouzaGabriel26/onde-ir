@@ -1,4 +1,4 @@
-import type { PlaceDataSource } from '@/data/place';
+import type { PlaceDataSource, PlaceStatus } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
 import { operationResult } from '@/utils/operationResult';
 
@@ -14,7 +14,7 @@ type FindAllInput = {
   page?: ValidationSchema['page'];
   limit?: ValidationSchema['limit'];
   where?: {
-    approved?: 'true' | 'false';
+    status?: PlaceStatus;
     state?: string;
     name?: string;
   };
@@ -33,12 +33,14 @@ async function findAll(
       limit: input.limit,
       state: input.where?.state,
       name: input.where?.name,
+      status: input.where?.status,
     },
     {
       limit: 'required',
       page: 'required',
       state: 'optional',
       name: 'optional',
+      status: 'optional',
     },
   );
 
