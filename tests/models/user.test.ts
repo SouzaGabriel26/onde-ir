@@ -58,9 +58,9 @@ describe('> models/user', () => {
         error: null,
         data: {
           id: userIdFromDatabase,
-          email: 'janedoe@email.com',
-          name: 'Jane Doe',
-          userName: 'janeDoe',
+          email: 'user@email.com',
+          name: 'Normal user',
+          userName: 'normal_user',
           userRole: 'USER',
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
@@ -112,9 +112,9 @@ describe('> models/user', () => {
       expect(foundUser).toStrictEqual({
         data: {
           id: userIdFromDatabase,
-          email: 'janedoe@email.com',
-          name: 'Jane Doe',
-          userName: 'janeDoe',
+          email: 'user@email.com',
+          name: 'Normal user',
+          userName: 'normal_user',
           userRole: 'USER',
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
@@ -136,8 +136,8 @@ describe('> models/user', () => {
       expect(foundUser).toStrictEqual({
         error: null,
         data: {
-          name: 'Jane Doe',
-          email: 'janedoe@email.com',
+          name: 'Normal user',
+          email: 'user@email.com',
         },
       });
     });

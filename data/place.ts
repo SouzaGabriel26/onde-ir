@@ -2,6 +2,8 @@ import { database } from '@/infra/database';
 import type { CreatePlaceImagesInput, CreatePlaceInput } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
 
+export type PlaceStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
+
 export type PlaceDataSource = ReturnType<typeof createPlaceDataSource>;
 
 export function createPlaceDataSource() {
@@ -12,14 +14,14 @@ export function createPlaceDataSource() {
     create,
     createImages,
     findCategories,
-    findOneById,
+    findById,
   });
 
   type FindAllInput = {
     limit: number;
     offset: number;
     where?: {
-      approved?: 'true' | 'false';
+      status?: PlaceStatus;
       state?: string;
       name?: string;
     };
@@ -38,10 +40,11 @@ export function createPlaceDataSource() {
     category_id: string;
     latitude?: number;
     longitude?: number;
-    approved: boolean;
-    approved_by?: string;
+    status: PlaceStatus;
+    reviewed_by?: string;
     created_by: string;
     created_at: Date;
+    updated_at: Date;
     images: string[];
   };
 
@@ -94,11 +97,9 @@ export function createPlaceDataSource() {
         query.values.push(where.name);
       }
 
-      if (where?.approved) {
-        const approvedWhereStatement =
-          where.approved === 'true' ? sql`approved` : sql`NOT approved`;
-
-        whereClauses.push(approvedWhereStatement);
+      if (where?.status) {
+        whereClauses.push(sql`status = `.concat(`$${++index}`));
+        query.values.push(where.status);
       }
 
       let whereClauseText = '';
@@ -110,27 +111,28 @@ export function createPlaceDataSource() {
     }
   }
 
-  async function findOneById(id: string) {
+  async function findById(id: string) {
     const query = {
       text: sql`
         SELECT
-          id,
-          name
+          places.*,
+          array_remove(ARRAY_AGG(place_images.url), NULL) AS images
         FROM
           places
-        WHERE
-          id = $1;
+          LEFT JOIN place_images ON place_images.place_id = places.id
+          WHERE
+            places.id = $1
+        GROUP BY
+          places.id
       `,
       values: [id],
     };
 
     const queryResult = await placePool.query(query);
+
     if (!queryResult?.rows[0]) return null;
 
-    return queryResult.rows[0] as {
-      id: string;
-      name: string;
-    };
+    return queryResult.rows[0] as FindAllPlacesOutput;
   }
 
   async function create(input: CreatePlaceInput) {

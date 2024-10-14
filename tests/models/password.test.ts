@@ -64,7 +64,7 @@ describe('> models/password', () => {
     });
 
     test('Providing an existent "email"', async () => {
-      const existentEmail = 'gabriel@email.com';
+      const existentEmail = 'admin@email.com';
 
       const authDataSource = createAuthenticationDataSource();
       const result = await password.forgot(authDataSource, {
@@ -74,7 +74,7 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         error: null,
         data: {
-          name: 'Gabriel',
+          name: 'Admin user',
           resetPasswordTokenId: expect.any(String),
         },
       });
@@ -83,7 +83,7 @@ describe('> models/password', () => {
 
   describe('Invoking "reset" method after calling "forgot"', () => {
     const uuid = randomUUID();
-    const userEmail = 'gabriel@email.com';
+    const userEmail = 'admin@email.com';
 
     test('Providing an empty object', async () => {
       const authDataSource = createAuthenticationDataSource();

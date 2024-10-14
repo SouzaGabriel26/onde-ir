@@ -8,16 +8,16 @@ INSERT INTO users
   )
 VALUES
 	(
-    'janedoe@email.com',
-    'Jane Doe',
-    'janeDoe',
+    'user@email.com',
+    'Normal user',
+    'normal_user',
     'USER',
     '$2b$10$Vtq78yo4RxbWPtARY6R7CO2vVeGu1Nd4XASIhxB/PylfTL1/Bf3TG'
   ),
   (
-    'gabriel@email.com',
-    'Gabriel',
-    'gbsouza',
+    'admin@email.com',
+    'Admin user',
+    'admin_user',
     'ADMIN',
     '$2b$10$Vtq78yo4RxbWPtARY6R7CO2vVeGu1Nd4XASIhxB/PylfTL1/Bf3TG'
   );

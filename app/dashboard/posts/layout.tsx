@@ -30,7 +30,7 @@ export default async function Layout({ children }: Props) {
         </Link>
       </div>
 
-      <div className="flex flex-grow flex-col items-center rounded-md border p-4">
+      <div className="flex flex-grow flex-col overflow-y-auto items-center rounded-md border p-4">
         {children}
       </div>
     </section>

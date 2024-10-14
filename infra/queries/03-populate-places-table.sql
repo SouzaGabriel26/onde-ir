@@ -11,8 +11,8 @@ INSERT INTO places
     category_id,
     latitude,
     longitude,
-    approved,
-    approved_by,
+    status,
+    reviewed_by,
     created_by
   )
 VALUES
@@ -28,7 +28,7 @@ VALUES
     (SELECT id FROM categories WHERE name = 'restaurantes'),
     -20.3155,
     -40.3128,
-    TRUE,
+    'APPROVED',
     (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1)
   ),
@@ -44,7 +44,7 @@ VALUES
     (SELECT id FROM categories WHERE name = 'restaurantes'),
     -20.3155,
     -40.2969,
-    TRUE,
+    'APPROVED',
     (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM USERS WHERE user_role = 'USER' LIMIT 1)
   ),
@@ -60,8 +60,8 @@ VALUES
     (SELECT id FROM categories WHERE name = 'restaurantes'),
     -20.3274,
     -40.2922,
-    FALSE,
-    NULL,
+    'REJECTED',
+    (SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1),
     (SELECT id FROM users WHERE user_role = 'USER' LIMIT 1)
   ),
   (
@@ -76,7 +76,7 @@ VALUES
     (SELECT id FROM categories WHERE name = 'restaurantes'),
     -20.3155,
     -40.3128,
-    FALSE,
+    'PENDING',
     NULL,
     (SELECT id FROM users WHERE user_role = 'USER' LIMIT 1)
   );

@@ -315,4 +315,15 @@ const schema = z.object({
     .uuid({
       message: '"created_by" precisa ser um UUID válido.',
     }),
+  status: z.enum(['APPROVED', 'PENDING', 'REJECTED'], {
+    errorMap: (issue) => {
+      const error = {
+        message: '"status" é obrigatório.',
+      };
+      if (issue.code === 'invalid_enum_value') {
+        error.message = '"status" deve ser APPROVED, PENDING ou REJECTED.';
+      }
+      return error;
+    },
+  }),
 });

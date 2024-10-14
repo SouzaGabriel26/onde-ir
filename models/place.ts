@@ -1,4 +1,4 @@
-import type { PlaceDataSource } from '@/data/place';
+import type { PlaceDataSource, PlaceStatus } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
 import { operationResult } from '@/utils/operationResult';
 
@@ -6,6 +6,7 @@ import { type ValidationSchema, validator } from './validator';
 
 export const place = Object.freeze({
   findAll,
+  findById,
   create,
   createImages,
 });
@@ -14,7 +15,7 @@ type FindAllInput = {
   page?: ValidationSchema['page'];
   limit?: ValidationSchema['limit'];
   where?: {
-    approved?: 'true' | 'false';
+    status?: PlaceStatus;
     state?: string;
     name?: string;
   };
@@ -33,12 +34,14 @@ async function findAll(
       limit: input.limit,
       state: input.where?.state,
       name: input.where?.name,
+      status: input.where?.status,
     },
     {
       limit: 'required',
       page: 'required',
       state: 'optional',
       name: 'optional',
+      status: 'optional',
     },
   );
 
@@ -56,6 +59,25 @@ async function findAll(
   return operationResult.success(places);
 }
 
+async function findById(placeDataSource: PlaceDataSource, id: string) {
+  const validationResult = validator(
+    { place_id: id },
+    { place_id: 'required' },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const place = await placeDataSource.findById(id);
+
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  return operationResult.success(place);
+}
 export type CreatePlaceInput = {
   name: string;
   country: string;
@@ -159,7 +181,7 @@ async function createImages(
 
   if (error) return operationResult.failure(error);
 
-  const placeExists = await placeDataSource.findOneById(input.place_id);
+  const placeExists = await placeDataSource.findById(input.place_id);
   if (!placeExists) {
     return operationResult.failure({
       message: 'Local não encontrado.',

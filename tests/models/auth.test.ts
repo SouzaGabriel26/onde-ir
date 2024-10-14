@@ -186,7 +186,7 @@ describe('> models/authentication', () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input: SignUpProps = {
-        email: 'gabriel@email.com',
+        email: 'user@email.com',
         name: 'Gabriel',
         userName: 'gabrielNovo',
         password: '123456',
@@ -210,7 +210,7 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'gabrie+1@email.com',
         name: 'Gabriel',
-        userName: 'gbsouza',
+        userName: 'normal_user',
         password: '123456',
         confirmPassword: '123456',
       };
@@ -312,7 +312,7 @@ describe('> models/authentication', () => {
       const authDataSource = createAuthenticationDataSource();
 
       const result = await auth.signIn(authDataSource, {
-        email: 'gabriel@email.com',
+        email: 'user@email.com',
         password: '123456',
       });
 
