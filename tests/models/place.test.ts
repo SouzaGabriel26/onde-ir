@@ -5,6 +5,7 @@ import { database } from '@/infra/database';
 import { place } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
 
+import { createUserDataSource } from '@/data/user';
 import { orchestrator } from '../orchestrator';
 
 beforeAll(async () => {
@@ -416,12 +417,13 @@ describe('> models/place', () => {
 
   describe('Invoking "create" method', () => {
     test('Providing valid input', async () => {
+      const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
 
       const createdBy = await getUserId();
       const categories = await placeDataSource.findCategories();
 
-      const result = await place.create(placeDataSource, {
+      const result = await place.create(userDataSource, placeDataSource, {
         name: 'Bar do Zé',
         category_id: categories[0].id,
         city: 'Vila Velha',
@@ -446,8 +448,9 @@ describe('> models/place', () => {
       const uuid = crypto.randomUUID();
       const category_uuid = crypto.randomUUID();
 
+      const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
-      const result = await place.create(placeDataSource, {
+      const result = await place.create(userDataSource, placeDataSource, {
         name: 'Bar do Zé',
         category_id: category_uuid,
         city: 'Vila Velha',
@@ -467,12 +470,13 @@ describe('> models/place', () => {
     });
 
     test('Providing unexistent "created_by"', async () => {
+      const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
 
       const categories = await placeDataSource.findCategories();
       const uuid = crypto.randomUUID();
 
-      const result = await place.create(placeDataSource, {
+      const result = await place.create(userDataSource, placeDataSource, {
         name: 'Bar do Zé',
         category_id: categories[0].id,
         city: 'Vila Velha',
@@ -492,6 +496,7 @@ describe('> models/place', () => {
     });
 
     test('Providing an existent "name"', async () => {
+      const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
       const { data: places } = await place.findAll(placeDataSource, {
         limit: 1,
@@ -499,7 +504,7 @@ describe('> models/place', () => {
 
       const existentPlaceName = places![0].name;
 
-      const result = await place.create(placeDataSource, {
+      const result = await place.create(userDataSource, placeDataSource, {
         name: existentPlaceName,
         category_id: places![0].category_id,
         city: places![0].city,
@@ -647,21 +652,26 @@ describe('> models/place', () => {
 
   describe('Invoking "findById" method', () => {
     test('Providing valid place "id"', async () => {
+      const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
       const categories = await placeDataSource.findCategories();
       const name = randomBytes(10).toString('hex');
 
       const createdBy = await getUserId();
 
-      const { data: createdPlace } = await place.create(placeDataSource, {
-        name,
-        category_id: categories[0].id,
-        city: 'Vila Velha',
-        country: 'Brasil',
-        created_by: createdBy,
-        state: 'ES',
-        street: 'Av. Hugo Musso',
-      });
+      const { data: createdPlace } = await place.create(
+        userDataSource,
+        placeDataSource,
+        {
+          name,
+          category_id: categories[0].id,
+          city: 'Vila Velha',
+          country: 'Brasil',
+          created_by: createdBy,
+          state: 'ES',
+          street: 'Av. Hugo Musso',
+        },
+      );
 
       const result = await place.findById(placeDataSource, createdPlace!.id);
 

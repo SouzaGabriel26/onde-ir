@@ -12,6 +12,7 @@ import type { City, UF } from '@/types';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
+import { createUserDataSource } from '@/data/user';
 import { multiStepFormStore } from './multiStepFormStore';
 
 type CreatedPlaceResultResponse = Awaited<ReturnType<typeof place.create>>;
@@ -24,8 +25,9 @@ async function createPlaceAction(formData: FormData) {
 
   const data = form.sanitizeData<CreatePlaceInput>(formData);
 
+  const userDataSource = createUserDataSource();
   const placeDataSource = createPlaceDataSource();
-  createdPlaceResult = await place.create(placeDataSource, {
+  createdPlaceResult = await place.create(userDataSource, placeDataSource, {
     ...data,
     num_place: data.num_place ? Number(data.num_place) : undefined,
     latitude: data.latitude ? Number(data.latitude) : undefined,

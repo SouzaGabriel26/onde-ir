@@ -1,5 +1,5 @@
 import type { PlaceDataSource, PlaceStatus } from '@/data/place';
-import { createUserDataSource } from '@/data/user';
+import type { UserDataSource } from '@/data/user';
 import { operationResult } from '@/utils/operationResult';
 
 import { type ValidationSchema, validator } from './validator';
@@ -94,6 +94,7 @@ export type CreatePlaceInput = {
 };
 
 async function create(
+  userDataSource: UserDataSource,
   placeDataSource: PlaceDataSource,
   props: CreatePlaceInput,
 ) {
@@ -129,7 +130,6 @@ async function create(
     });
   }
 
-  const userDataSource = createUserDataSource();
   const userExists = await userDataSource.checkById({
     id: validatedInput.created_by,
   });
