@@ -52,17 +52,17 @@ export function ThemeSwitcher() {
         <Moon className="hidden dark:block" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-28 rounded-md border shadow-md">
+      <DropdownMenuContent className="rounded-md border shadow-md">
         <DropdownMenuRadioGroup
           value={resolvedTheme}
           onValueChange={handleChangeTheme}
           className="p-2"
         >
-          <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
           {systemTheme && (
-            <DropdownMenuRadioItem value={systemTheme}>
-              System
+            <DropdownMenuRadioItem value={systemTheme} showIndicator={false}>
+              Padrão do sistema
             </DropdownMenuRadioItem>
           )}
         </DropdownMenuRadioGroup>
