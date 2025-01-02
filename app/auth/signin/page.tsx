@@ -1,10 +1,6 @@
 import Link from 'next/link';
 
-import { SubmitButton } from '@/components/SubmitButton';
-import { Input } from '@/components/ui/Input';
-import { setInputError } from '@/utils/inputError';
-
-import { store } from './store';
+import { SigninForm } from './SigninForm';
 
 type Props = {
   searchParams: Promise<{
@@ -15,7 +11,6 @@ type Props = {
 
 export default async function Page(props: Props) {
   const searchParams = await props.searchParams;
-  const { signInResponse } = store.getSignInResponse();
 
   const { userName, redirect_reason } = searchParams;
 
@@ -47,32 +42,7 @@ export default async function Page(props: Props) {
         </Link>
       </p>
 
-      <form action={store.signInAction} className="flex flex-col gap-2">
-        <Input
-          placeholder="Email*"
-          id="email"
-          name="email"
-          required
-          autoComplete="email"
-          error={setInputError('email', {
-            fields: signInResponse?.error?.fields,
-            message: signInResponse?.error?.message,
-          })}
-        />
-        <Input
-          placeholder="Senha*"
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          error={setInputError('password', {
-            fields: signInResponse?.error?.fields,
-            message: signInResponse?.error?.message,
-          })}
-        />
-        <SubmitButton>Entrar</SubmitButton>
-      </form>
+      <SigninForm />
 
       <p className="text-center text-sm text-gray-400">
         Esqueceu sua senha?{' '}
