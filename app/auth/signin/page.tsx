@@ -7,13 +7,14 @@ import { setInputError } from '@/utils/inputError';
 import { store } from './store';
 
 type Props = {
-  searchParams: {
+  searchParams: Promise<{
     userName?: string;
     redirect_reason?: string;
-  };
+  }>;
 };
 
-export default function Page({ searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
   const { signInResponse } = store.getSignInResponse();
 
   const { userName, redirect_reason } = searchParams;

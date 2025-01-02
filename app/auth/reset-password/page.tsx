@@ -7,12 +7,13 @@ import { setInputError } from '@/utils/inputError';
 import { store } from './store';
 
 type Props = {
-  searchParams: {
+  searchParams: Promise<{
     tokenId: string;
-  };
+  }>;
 };
 
-export default function Page({ searchParams }: Props) {
+export default async function Page(props: Props) {
+  const searchParams = await props.searchParams;
   const { responseMessage } = store.getResponseMessage();
 
   const { tokenId } = searchParams;

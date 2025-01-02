@@ -39,7 +39,7 @@ async function forgetPassword(formData: FormData) {
       }),
     });
 
-    feedbackMessage.setFeedbackMessage({
+    await feedbackMessage.setFeedbackMessage({
       type: 'success',
       content: 'Instruções enviadas para o email informado',
     });
@@ -49,7 +49,7 @@ async function forgetPassword(formData: FormData) {
 
   revalidatePath('/auth/forget-password');
 
-  feedbackMessage.setFeedbackMessage({
+  await feedbackMessage.setFeedbackMessage({
     type: 'error',
     content: responseMessage.error.message,
   });

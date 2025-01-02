@@ -25,7 +25,7 @@ type HeaderProps = {
 async function signOut() {
   'use server';
 
-  cookies().delete(constants.accessTokenKey);
+  (await cookies()).delete(constants.accessTokenKey);
 
   return redirect('/auth/signin');
 }

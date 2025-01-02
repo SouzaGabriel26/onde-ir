@@ -1,10 +1,8 @@
-import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { ButtonLoading } from '@/app/dashboard/posts/_components/ButtonLoading';
 import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
 import { CustomSelect } from '@/components/CustomSelect';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
 import { createPlaceDataSource } from '@/data/place';
@@ -12,6 +10,8 @@ import { setInputError } from '@/utils/inputError';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 
+import { Button } from '@/components/ui/Button';
+import { location } from '@/models/location';
 import {
   type FormSteps,
   multiStepFormStore,
@@ -21,11 +21,15 @@ import { store } from './action/store';
 export default async function Page() {
   const { data: userData } = await verify.loggedUser();
 
-  await store.fetchStatesAction();
+  const { data: states } = await location.getStates();
+
+  const stateOptions = states.map((state) => ({
+    label: state.nome,
+    value: state.id,
+  }));
 
   const { createdPlaceResult } = store.getCreatedPlaceResult();
 
-  const { stateOptions } = store.getStates();
   const { cityOptions } = store.getCities();
 
   const placeDataSource = createPlaceDataSource();
@@ -186,13 +190,7 @@ export default async function Page() {
 
         <Button
           className="mt-4 w-full"
-          formAction={async () => {
-            'use server';
-            if (createdPlaceResult.error) return;
-
-            multiStepFormStore.reset();
-            return redirect(`/dashboard/posts/${createdPlaceResult.data?.id}`);
-          }}
+          formAction={store.finishPlaceCreationAction}
         >
           Acompanhar status do post
         </Button>

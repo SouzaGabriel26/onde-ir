@@ -4,6 +4,8 @@ import { useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/ui/Button';
 
+import type { JSX } from 'react';
+
 type SubmitButtonProps = JSX.IntrinsicElements['button'] & {
   children: React.ReactNode;
 };
