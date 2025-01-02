@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, ChevronDown } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { type JSX, useCallback, useMemo, useState } from 'react';
 
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 
@@ -19,7 +19,7 @@ type CustomSelectProps = Omit<JSX.IntrinsicElements['button'], 'name'> & {
   defaultOption?: Option['value'];
   name: JSX.IntrinsicElements['input']['name'];
   label: string;
-  actionOnSelect?: (value: string) => Promise<void>;
+  actionOnSelect?: (value: string | number) => Promise<void>;
   required?: boolean;
   searchable?: boolean;
 };
@@ -55,7 +55,7 @@ export function CustomSelect({
       setOpen(false);
       setSearchTerm('');
 
-      actionOnSelect?.(String(value));
+      actionOnSelect?.(value);
     },
     [actionOnSelect],
   );

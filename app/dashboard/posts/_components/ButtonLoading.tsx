@@ -5,6 +5,8 @@ import { useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/ui/Button';
 
+import type { JSX } from 'react';
+
 type ButtonLoadingProps = JSX.IntrinsicElements['button'];
 export function ButtonLoading({ children, ...props }: ButtonLoadingProps) {
   const { pending } = useFormStatus();

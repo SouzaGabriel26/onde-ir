@@ -7,7 +7,7 @@ import { constants } from './constants';
 import { operationResult } from './operationResult';
 
 async function loggedUser() {
-  const userId = headers().get(constants.headerPayloadKey);
+  const userId = (await headers()).get(constants.headerPayloadKey);
 
   const userDataSource = createUserDataSource();
   const { data } = await user.findById(userDataSource, {

@@ -32,7 +32,7 @@ async function signUpAction(formData: FormData) {
       }),
     });
 
-    feedbackMessage.setFeedbackMessage({
+    await feedbackMessage.setFeedbackMessage({
       type: 'success',
       content: 'Usuário cadastrado com sucesso!',
     });
@@ -40,7 +40,7 @@ async function signUpAction(formData: FormData) {
     redirect(`/auth/signin?userName=${userName}`);
   }
 
-  feedbackMessage.setFeedbackMessage({
+  await feedbackMessage.setFeedbackMessage({
     type: 'error',
     content: signUpResponse.error.message,
   });

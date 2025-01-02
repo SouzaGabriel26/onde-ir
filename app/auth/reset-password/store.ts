@@ -20,7 +20,7 @@ async function resetPasswordAction(formData: FormData) {
   responseMessage = await password.reset(authDataSource, data);
 
   if (responseMessage.error) {
-    feedbackMessage.setFeedbackMessage({
+    await feedbackMessage.setFeedbackMessage({
       type: 'error',
       content: responseMessage.error.message,
     });
@@ -28,7 +28,7 @@ async function resetPasswordAction(formData: FormData) {
     return;
   }
 
-  feedbackMessage.setFeedbackMessage({
+  await feedbackMessage.setFeedbackMessage({
     type: 'success',
     content: 'Senha atualizada com sucesso',
   });

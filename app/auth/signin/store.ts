@@ -26,12 +26,12 @@ async function signInAction(formData: FormData) {
 
     const sevenDaysInMilliseconds = 60 * 60 * 24 * 7 * 1000;
 
-    cookies().set(constants.accessTokenKey, accessToken, {
+    (await cookies()).set(constants.accessTokenKey, accessToken, {
       expires: new Date(Date.now() + sevenDaysInMilliseconds),
       httpOnly: true,
     });
 
-    feedbackMessage.setFeedbackMessage({
+    await feedbackMessage.setFeedbackMessage({
       type: 'success',
       content: 'Login efetuado com sucesso!',
     });
@@ -39,7 +39,7 @@ async function signInAction(formData: FormData) {
     redirect('/dashboard');
   }
 
-  feedbackMessage.setFeedbackMessage({
+  await feedbackMessage.setFeedbackMessage({
     type: 'error',
     content: signInResponse.error.message,
   });

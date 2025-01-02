@@ -11,12 +11,12 @@ type SetFeedbackMessageProps = FeedbackMessage & {
   duration?: number; // in milliseconds
 };
 
-function setFeedbackMessage({
+async function setFeedbackMessage({
   content,
   duration = 1000,
   type,
 }: SetFeedbackMessageProps) {
-  cookies().set(
+  (await cookies()).set(
     DEFAULT_FEEDBACK_MESSAGE_KEY,
     JSON.stringify({ type, content }),
     {
@@ -26,8 +26,8 @@ function setFeedbackMessage({
   );
 }
 
-function getFeedbackMessage() {
-  const message = cookies().get(DEFAULT_FEEDBACK_MESSAGE_KEY)?.value;
+async function getFeedbackMessage() {
+  const message = (await cookies()).get(DEFAULT_FEEDBACK_MESSAGE_KEY)?.value;
 
   if (!message) {
     return null;
