@@ -1,3 +1,5 @@
+'use server';
+
 import { redirect } from 'next/navigation';
 
 import { Welcome } from '@/components/email-templates/Welcome';
@@ -11,15 +13,18 @@ import { emailService } from '@/models/email';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
-let signUpResponse: SignUpResponse;
+export type SignUpActionResponse = SignUpResponse & {
+  inputs?: Partial<SignUpProps>;
+};
 
-async function signUpAction(formData: FormData) {
-  'use server';
-
+export async function signUpAction(
+  _prevState: SignUpActionResponse,
+  formData: FormData,
+): Promise<SignUpActionResponse> {
   const sanitizedData = form.sanitizeData<SignUpProps>(formData);
 
   const authDataSource = createAuthenticationDataSource();
-  signUpResponse = await auth.signUp(authDataSource, sanitizedData);
+  const signUpResponse = await auth.signUp(authDataSource, sanitizedData);
 
   if (signUpResponse.data) {
     const { userName, email, name } = signUpResponse.data;
@@ -44,15 +49,16 @@ async function signUpAction(formData: FormData) {
     type: 'error',
     content: signUpResponse.error.message,
   });
-}
 
-export function getSignUpResponse() {
-  return Object.freeze({
-    signUpResponse,
-  });
+  return {
+    data: signUpResponse.data,
+    error: signUpResponse.error,
+    inputs: {
+      confirmPassword: sanitizedData.confirmPassword,
+      email: sanitizedData.email,
+      name: sanitizedData.name,
+      password: sanitizedData.password,
+      userName: sanitizedData.userName,
+    },
+  };
 }
-
-export const store = Object.freeze({
-  signUpAction,
-  getSignUpResponse,
-});
