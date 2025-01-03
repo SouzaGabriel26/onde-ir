@@ -1,3 +1,5 @@
+'use server';
+
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -11,15 +13,18 @@ import { constants } from '@/utils/constants';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
-let signInResponse: SignInResponse;
+export type SignInResponseAction = SignInResponse & {
+  inputs?: Partial<SignInProps>;
+};
 
-async function signInAction(formData: FormData) {
-  'use server';
-
+export async function signInAction(
+  _prevState: SignInResponseAction,
+  formData: FormData,
+): Promise<SignInResponseAction> {
   const sanitizedData = form.sanitizeData<SignInProps>(formData);
 
   const authDataSource = createAuthenticationDataSource();
-  signInResponse = await auth.signIn(authDataSource, sanitizedData);
+  const signInResponse = await auth.signIn(authDataSource, sanitizedData);
 
   if (signInResponse.data) {
     const { accessToken } = signInResponse.data;
@@ -43,14 +48,13 @@ async function signInAction(formData: FormData) {
     type: 'error',
     content: signInResponse.error.message,
   });
-}
 
-function getSignInResponse() {
-  return Object.freeze({
-    signInResponse,
-  });
+  return {
+    data: signInResponse.data,
+    error: signInResponse.error,
+    inputs: {
+      email: sanitizedData.email,
+      password: sanitizedData.password,
+    },
+  };
 }
-export const store = Object.freeze({
-  signInAction,
-  getSignInResponse,
-});

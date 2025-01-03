@@ -1,3 +1,5 @@
+'use server';
+
 import { revalidatePath } from 'next/cache';
 
 import { ForgetPasswordEmail } from '@/components/email-templates/ForgetPassword';
@@ -11,23 +13,24 @@ import {
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
-let responseMessage: ForgotPasswordOutput;
-let successMessage: {
-  email: string;
+export type ForgetPasswordActionResponse = ForgotPasswordOutput & {
+  inputs?: Partial<ForgotPasswordInput>;
 };
 
-async function forgetPassword(formData: FormData) {
+export async function forgetPasswordAction(
+  _initialState: ForgetPasswordActionResponse,
+  formData: FormData,
+): Promise<ForgetPasswordActionResponse> {
   'use server';
 
   const { email } = form.sanitizeData<ForgotPasswordInput>(formData);
 
   const authDataSource = createAuthenticationDataSource();
-  responseMessage = await password.forgot(authDataSource, {
+  const responseMessage = await password.forgot(authDataSource, {
     email,
   });
 
   if (responseMessage.data) {
-    successMessage = { email };
     const { resetPasswordTokenId, name } = responseMessage.data;
 
     await emailService.sendResetPasswordEmail({
@@ -44,7 +47,13 @@ async function forgetPassword(formData: FormData) {
       content: 'Instruções enviadas para o email informado',
     });
 
-    return;
+    return {
+      data: responseMessage.data,
+      error: responseMessage.error,
+      inputs: {
+        email,
+      },
+    };
   }
 
   revalidatePath('/auth/forget-password');
@@ -53,16 +62,12 @@ async function forgetPassword(formData: FormData) {
     type: 'error',
     content: responseMessage.error.message,
   });
-}
 
-function getForgetPasswordResponse() {
-  return Object.freeze({
-    responseMessage,
-    successMessage,
-  });
+  return {
+    data: responseMessage.data,
+    error: responseMessage.error,
+    inputs: {
+      email,
+    },
+  };
 }
-
-export const store = Object.freeze({
-  forgetPassword,
-  getForgetPasswordResponse,
-});

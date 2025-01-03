@@ -1,3 +1,5 @@
+'use server';
+
 import { redirect } from 'next/navigation';
 
 import { createAuthenticationDataSource } from '@/data/authentication';
@@ -9,15 +11,18 @@ import {
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
-let responseMessage: ResetPasswordOutput;
+export type ResetPasswordActionResponse = ResetPasswordOutput & {
+  inputs?: Partial<ResetPasswordInput>;
+};
 
-async function resetPasswordAction(formData: FormData) {
-  'use server';
-
+export async function resetPasswordAction(
+  _prevState: ResetPasswordActionResponse,
+  formData: FormData,
+): Promise<ResetPasswordActionResponse> {
   const data = form.sanitizeData<ResetPasswordInput>(formData);
 
   const authDataSource = createAuthenticationDataSource();
-  responseMessage = await password.reset(authDataSource, data);
+  const responseMessage = await password.reset(authDataSource, data);
 
   if (responseMessage.error) {
     await feedbackMessage.setFeedbackMessage({
@@ -25,7 +30,15 @@ async function resetPasswordAction(formData: FormData) {
       content: responseMessage.error.message,
     });
 
-    return;
+    return {
+      data: responseMessage.data,
+      error: responseMessage.error,
+      inputs: {
+        resetPasswordTokenId: data.resetPasswordTokenId,
+        confirmPassword: data.confirmPassword,
+        password: data.password,
+      },
+    };
   }
 
   await feedbackMessage.setFeedbackMessage({
@@ -35,12 +48,3 @@ async function resetPasswordAction(formData: FormData) {
 
   redirect('/auth/signin');
 }
-
-function getResponseMessage() {
-  return Object.freeze({ responseMessage });
-}
-
-export const store = Object.freeze({
-  resetPasswordAction,
-  getResponseMessage,
-});
