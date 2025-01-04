@@ -8,7 +8,7 @@ import { verify } from '@/utils/verify';
 import type { Route } from 'next';
 
 export default async function Page() {
-  const { error: userNotAuthenticated } = await verify.loggedUser();
+  const { error: userNotAuthenticated, data: user } = await verify.loggedUser();
 
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
@@ -46,16 +46,21 @@ export default async function Page() {
           2xl:grid-cols-5
         `}
       >
-        {places?.map((place) => (
-          <ImageCard
-            href={`/dashboard/posts/${place.id}` as Route}
-            key={place.id}
-            title={place.name}
-            alt={`foto de ${place.name}`}
-            src={place.images[0] ?? 'https://via.placeholder.com/300'}
-            description={place.description ?? 'sem descrição'}
-          />
-        ))}
+        {places?.map((place) => {
+          const isPostOwner = place.created_by === user?.id;
+
+          return (
+            <ImageCard
+              href={`/dashboard/posts/${place.id}` as Route}
+              key={place.id}
+              title={place.name}
+              alt={`foto de ${place.name}`}
+              src={place.images[0] ?? 'https://via.placeholder.com/300'}
+              description={place.description ?? 'sem descrição'}
+              isOwner={isPostOwner}
+            />
+          );
+        })}
       </section>
     </div>
   );
