@@ -28,7 +28,7 @@ export function ImageCard({
       title={title}
       href={href ?? '#'}
       className={sanitizeClassName(
-        'h-fit w-fit rounded-[20px] shadow',
+        'rounded-[20px] shadow w-[258px] md:w-[290px]',
         className,
       )}
     >
