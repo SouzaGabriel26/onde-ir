@@ -1,39 +1,49 @@
+'use server';
+
 import { revalidatePath } from 'next/cache';
 
-import type { Option } from '@/components/CustomSelect';
-import { createPlaceDataSource } from '@/data/place';
+import { type CreatePlaceOutput, createPlaceDataSource } from '@/data/place';
 import { location } from '@/models/location';
 import {
   type CreatePlaceImagesInput,
   type CreatePlaceInput,
   place,
 } from '@/models/place';
-import type { City } from '@/types';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { form } from '@/utils/form';
 
 import { createUserDataSource } from '@/data/user';
+import { constants } from '@/utils/constants';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { multiStepFormStore } from './multiStepFormStore';
 
 type CreatedPlaceResultResponse = Awaited<ReturnType<typeof place.create>>;
 
-let createdPlaceResult: CreatedPlaceResultResponse =
-  {} as CreatedPlaceResultResponse;
+export type CreatePlaceActionResponse = CreatedPlaceResultResponse & {
+  inputs?: Partial<CreatePlaceInput>;
+};
 
-async function createPlaceAction(formData: FormData) {
+export async function createPlaceAction(
+  _prevState: CreatePlaceActionResponse,
+  formData: FormData,
+): Promise<CreatePlaceActionResponse> {
   'use server';
 
   const data = form.sanitizeData<CreatePlaceInput>(formData);
 
   const userDataSource = createUserDataSource();
   const placeDataSource = createPlaceDataSource();
-  createdPlaceResult = await place.create(userDataSource, placeDataSource, {
-    ...data,
-    num_place: data.num_place ? Number(data.num_place) : undefined,
-    latitude: data.latitude ? Number(data.latitude) : undefined,
-    longitude: data.longitude ? Number(data.longitude) : undefined,
-  });
+  const createdPlaceResult = await place.create(
+    userDataSource,
+    placeDataSource,
+    {
+      ...data,
+      num_place: data.num_place ? Number(data.num_place) : undefined,
+      latitude: data.latitude ? Number(data.latitude) : undefined,
+      longitude: data.longitude ? Number(data.longitude) : undefined,
+    },
+  );
 
   const { data: createdPlace, error } = createdPlaceResult;
 
@@ -43,7 +53,11 @@ async function createPlaceAction(formData: FormData) {
       content: error.message,
     });
 
-    return revalidatePath('/dashboard/posts/create');
+    return {
+      data: createdPlace,
+      error,
+      inputs: data,
+    };
   }
 
   await feedbackMessage.setFeedbackMessage({
@@ -54,20 +68,15 @@ async function createPlaceAction(formData: FormData) {
   multiStepFormStore.setStepProgress('place_metadata', 100);
   multiStepFormStore.setCurrentStep('images');
 
-  return revalidatePath('/dashboard/posts/create');
+  (await cookies()).set(
+    constants.uncompletedPlaceCreatedKey,
+    JSON.stringify(createdPlace),
+  );
+
+  redirect(`/dashboard/posts/${createdPlace.id}/create/images`);
 }
 
-function getCreatedPlaceResult() {
-  return Object.freeze({
-    createdPlaceResult,
-  });
-}
-
-let cities: Array<City> = [];
-
-async function getCitiesByStateAction(stateId: string | number) {
-  'use server';
-
+export async function getCitiesByStateAction(stateId: string | number) {
   const result = await location.getCitiesByState(Number(stateId));
 
   if (result.error) {
@@ -76,25 +85,14 @@ async function getCitiesByStateAction(stateId: string | number) {
       content: result.error.message,
     });
 
-    return;
+    return { cities: [] };
   }
 
-  cities = result.data;
-  revalidatePath('/dashboard/posts/create');
+  const cities = result.data;
+  return { cities };
 }
 
-function getCities() {
-  return {
-    cityOptions: cities.map<Option>((city) => ({
-      label: city.nome,
-      value: city.nome,
-    })),
-  };
-}
-
-async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
-  'use server';
-
+export async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
   const placeDataSource = createPlaceDataSource();
   await place.createImages(placeDataSource, input);
 
@@ -104,22 +102,24 @@ async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
   return revalidatePath('/dashboard/posts/create');
 }
 
-async function finishPlaceCreationAction() {
-  'use server';
+export async function dismissUncompletedPlaceCreationAction() {
+  // TODO: delete uncompleted place created from database
 
-  console.log({ createdPlaceResult });
+  (await cookies()).delete(constants.uncompletedPlaceCreatedKey);
 
-  if (createdPlaceResult.error) return;
-
-  multiStepFormStore.reset();
-  redirect(`/dashboard/posts/${createdPlaceResult.data?.id}`);
+  redirect('/dashboard/posts/create');
 }
 
-export const store = Object.freeze({
-  createPlaceAction,
-  getCitiesByStateAction,
-  getCities,
-  createPlaceImagesAction,
-  getCreatedPlaceResult,
-  finishPlaceCreationAction,
-});
+export async function getUncompletedPlaceCreatedAction() {
+  const cookieStore = await cookies();
+
+  const uncompletedPlaceCreated = cookieStore.get(
+    constants.uncompletedPlaceCreatedKey,
+  )?.value;
+
+  const parsedUncompletedPlace = uncompletedPlaceCreated
+    ? (JSON.parse(uncompletedPlaceCreated) as CreatePlaceOutput)
+    : null;
+
+  return parsedUncompletedPlace;
+}

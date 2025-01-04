@@ -44,7 +44,7 @@ function getPool() {
   const pool = new pg.Pool({
     connectionString: databaseConnectionString,
     ssl: IS_PRODUCTION_ENVIRONMENT,
-    max: 1,
+    max: 20,
   });
 
   pools.push(pool);
