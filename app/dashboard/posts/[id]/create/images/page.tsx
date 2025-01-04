@@ -26,7 +26,7 @@ export default async function Page(props: Props) {
   const { data: placeFound } = await place.findById(placeDataSource, id);
 
   if (!placeFound) {
-    return redirect('/dashboard/posts');
+    return redirect('/dashboard');
   }
 
   return (
