@@ -6,6 +6,19 @@ export type PlaceStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
 
 export type PlaceDataSource = ReturnType<typeof createPlaceDataSource>;
 
+export type Category = {
+  id: string;
+  name: string;
+  is_active: boolean;
+};
+
+export type CreatePlaceOutput = {
+  id: string;
+  name: string;
+  country: string;
+  state: string;
+};
+
 export function createPlaceDataSource() {
   const placePool = database.getPool();
 
@@ -187,13 +200,6 @@ export function createPlaceDataSource() {
 
     const queryResult = await placePool.query(query);
 
-    type CreatePlaceOutput = {
-      id: string;
-      name: string;
-      country: string;
-      state: string;
-    };
-
     return (queryResult?.rows[0] as CreatePlaceOutput) ?? {};
   }
 
@@ -235,12 +241,6 @@ export function createPlaceDataSource() {
       queryText = queryText.replace('$values', statementValues.join(','));
     }
   }
-
-  type Category = {
-    id: string;
-    name: string;
-    is_active: boolean;
-  };
 
   async function findCategories() {
     const query = {

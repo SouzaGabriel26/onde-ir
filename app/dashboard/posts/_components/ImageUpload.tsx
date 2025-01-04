@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Progress } from '@/components/ui/Progress';
 import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { useRouter } from 'next/navigation';
 
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg'];
 
@@ -19,9 +20,15 @@ type Upload = {
 
 type ImageUploadProps = {
   actionOnUpload: (urls: Array<string>) => Promise<void>;
+  successRedirectPath?: string;
 };
 
-export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
+export function ImageUpload({
+  actionOnUpload,
+  successRedirectPath,
+}: ImageUploadProps) {
+  const route = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
   const [uploads, setUploads] = useState<Array<Upload>>([]);
 
@@ -80,6 +87,7 @@ export function ImageUpload({ actionOnUpload }: ImageUploadProps) {
 
       const urls = uploadObjects.map((upload) => upload.url.file_url);
       await actionOnUpload(urls);
+      if (successRedirectPath) route.replace(successRedirectPath);
     } catch {
       console.error('Erro ao recuperar as URLs de upload.');
       toast.error('Erro ao recuperar as URLs de upload.');
