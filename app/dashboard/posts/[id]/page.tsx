@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/Button';
-import { createPlaceDataSource } from '@/data/place';
+import { type PlaceStatus, createPlaceDataSource } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
 import { place } from '@/models/place';
+import { user } from '@/models/user';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 import Image from 'next/image';
@@ -43,9 +44,15 @@ export default async function Page(props: PageProps) {
   );
 
   const userDataSource = createUserDataSource();
-  const reviewedBy = await userDataSource.findById({
+
+  const { data: reviewedBy } = await user.findById(userDataSource, {
     id: postFound.reviewed_by!,
     select: ['name'],
+  });
+
+  const { data: postOwner } = await user.findById(userDataSource, {
+    id: postFound.created_by,
+    select: ['name', 'id'],
   });
 
   return (
@@ -110,7 +117,7 @@ export default async function Page(props: PageProps) {
 
         <TextInfo label="Categoria" value={postCategory?.name ?? '-'} />
 
-        <TextInfo label="Status" value={postFound.status} />
+        <PostStatus status={postFound.status} />
 
         {postFound.status !== 'PENDING' && (
           <TextInfo label="Revisado por" value={reviewedBy?.name ?? '-'} />
@@ -120,6 +127,8 @@ export default async function Page(props: PageProps) {
           label="Criado em"
           value={new Date(postFound.created_at).toLocaleDateString()}
         />
+
+        <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />
 
         <TextInfo
           label="Atualizado em"
@@ -135,6 +144,27 @@ function TextInfo({ label, value }: { label: string; value: string }) {
     <div className="flex space-x-2">
       <span className="text-slate-500">{label}: </span>
       <span>{value}</span>
+    </div>
+  );
+}
+
+function PostStatus({ status }: { status: PlaceStatus }) {
+  const StatusEnum = {
+    PENDING: 'Pendente',
+    APPROVED: 'Aprovado',
+    REJECTED: 'Rejeitado',
+  };
+
+  const StatusStyleEnum = {
+    PENDING: 'text-yellow-500',
+    APPROVED: 'text-green-500',
+    REJECTED: 'text-red-500',
+  };
+
+  return (
+    <div className="flex space-x-2">
+      <span className="text-slate-500">Status: </span>
+      <span className={StatusStyleEnum[status]}>{StatusEnum[status]}</span>
     </div>
   );
 }
