@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/Badge';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { BadgeInfo } from 'lucide-react';
 import type { Route } from 'next';
 
 type ImageCardProps = {
@@ -12,6 +14,7 @@ type ImageCardProps = {
   variant?: 'md' | 'lg';
   className?: string;
   href?: Route;
+  isOwner?: boolean;
 };
 
 export function ImageCard({
@@ -22,13 +25,14 @@ export function ImageCard({
   variant = 'lg',
   src,
   href,
+  isOwner,
 }: ImageCardProps) {
   return (
     <Link
       title={title}
       href={href ?? '#'}
       className={sanitizeClassName(
-        'h-fit w-fit rounded-[20px] shadow',
+        'rounded-[20px] shadow w-[258px] md:w-[290px] relative',
         className,
       )}
     >
@@ -44,28 +48,29 @@ export function ImageCard({
             className="rounded-t-[20px] object-cover"
           />
         </div>
+
         <div
           className={sanitizeClassName(
             `
-          space-y-2
-          rounded-b-[20px]
-          bg-white
-          p-6
-          `,
+            space-y-2
+            rounded-b-[20px]
+            bg-white
+            p-6
+            `,
             variant === 'md' ? 'h-20' : 'h-28',
           )}
         >
           <h3
             className={`
-            max-w-56
-            overflow-hidden
-            text-ellipsis
-            whitespace-nowrap
-            text-xl
-            font-semibold
-            leading-5
-            text-[#123952]
-          `}
+              max-w-56
+              overflow-hidden
+              text-ellipsis
+              whitespace-nowrap
+              text-xl
+              font-semibold
+              leading-5
+              text-[#123952]
+            `}
           >
             {title}
           </h3>
@@ -77,12 +82,21 @@ export function ImageCard({
               whitespace-break-spaces
               leading-6
               text-muted-foreground
-          `}
+            `}
           >
             {description}
           </p>
         </div>
       </div>
+
+      {isOwner && (
+        <Badge
+          className="absolute top-2 right-2"
+          title="Você é o dono desse post"
+        >
+          <BadgeInfo />
+        </Badge>
+      )}
     </Link>
   );
 }
