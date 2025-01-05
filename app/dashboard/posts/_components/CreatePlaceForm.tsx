@@ -11,7 +11,7 @@ import {
   type CreatePlaceActionResponse,
   createPlaceAction,
   getCitiesByStateAction,
-} from '../create/action/store';
+} from '../actions';
 import { ButtonLoading } from './ButtonLoading';
 
 const initialState: CreatePlaceActionResponse = {
