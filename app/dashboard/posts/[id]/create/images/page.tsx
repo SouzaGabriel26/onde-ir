@@ -1,14 +1,14 @@
+import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
+import {
+  createPlaceImagesAction,
+  getUncompletedPlaceCreatedAction,
+} from '@/app/dashboard/posts/actions';
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
 import { constants } from '@/utils/constants';
 import { feedbackMessage } from '@/utils/feedbackMessage';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { ImageUpload } from '../../../_components/ImageUpload';
-import {
-  createPlaceImagesAction,
-  getUncompletedPlaceCreatedAction,
-} from '../../../create/action/store';
 
 type Props = {
   params: Promise<{
@@ -37,7 +37,7 @@ export default async function Page(props: Props) {
       </div>
 
       <ImageUpload
-        successRedirectPath={`/dashboard/posts/${id}`}
+        successRedirectPath={`/dashboard/posts/${id}/create/result`}
         actionOnUpload={async (urls: string[]) => {
           'use server';
 

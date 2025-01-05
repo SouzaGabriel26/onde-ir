@@ -16,7 +16,6 @@ import { createUserDataSource } from '@/data/user';
 import { constants } from '@/utils/constants';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { multiStepFormStore } from './multiStepFormStore';
 
 type CreatedPlaceResultResponse = Awaited<ReturnType<typeof place.create>>;
 
@@ -65,9 +64,6 @@ export async function createPlaceAction(
     content: `${createdPlace.name} criado com sucesso!`,
   });
 
-  multiStepFormStore.setStepProgress('place_metadata', 100);
-  multiStepFormStore.setCurrentStep('images');
-
   (await cookies()).set(
     constants.uncompletedPlaceCreatedKey,
     JSON.stringify(createdPlace),
@@ -95,9 +91,6 @@ export async function getCitiesByStateAction(stateId: string | number) {
 export async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
   const placeDataSource = createPlaceDataSource();
   await place.createImages(placeDataSource, input);
-
-  multiStepFormStore.setStepProgress('images', 100);
-  multiStepFormStore.setCurrentStep('final');
 
   return revalidatePath('/dashboard/posts/create');
 }
