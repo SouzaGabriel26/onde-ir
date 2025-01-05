@@ -92,16 +92,15 @@ export function ImageCard({
             </p>
           </div>
         </div>
-
-        {isOwner && (
-          <Badge
-            className="absolute top-2 right-2 rounded-full"
-            title="Você é o dono desse post"
-          >
-            <BadgeInfo />
-          </Badge>
-        )}
       </CustomTooltip>
+
+      {isOwner && (
+        <Badge className="absolute top-2 right-2 rounded-full">
+          <CustomTooltip tip="Você é o dono desse post">
+            <BadgeInfo />
+          </CustomTooltip>
+        </Badge>
+      )}
     </Link>
   );
 }
