@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { CustomTooltip } from '@/components/CustomTooltip';
 import { Badge } from '@/components/ui/Badge';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { BadgeInfo } from 'lucide-react';
@@ -29,39 +30,42 @@ export function ImageCard({
 }: ImageCardProps) {
   return (
     <Link
-      title={title}
       href={href ?? '#'}
       className={sanitizeClassName(
         'rounded-[20px] shadow w-[258px] md:w-[290px] relative',
         className,
       )}
     >
-      <div className="rounded-[20px] border border-[#DCE2E5] transition hover:scale-105 hover:shadow-2xl">
-        <div
-          className={sanitizeClassName('relative', 'h-44 w-64 md:h-52 md:w-72')}
-        >
-          <Image
-            fill
-            src={src}
-            alt={alt}
-            sizes="100%"
-            className="rounded-t-[20px] object-cover"
-          />
-        </div>
+      <CustomTooltip tip={title}>
+        <div className="rounded-[20px] border border-[#DCE2E5] transition hover:scale-105 hover:shadow-2xl">
+          <div
+            className={sanitizeClassName(
+              'relative',
+              'h-44 w-64 md:h-52 md:w-72',
+            )}
+          >
+            <Image
+              fill
+              src={src}
+              alt={alt}
+              sizes="100%"
+              className="rounded-t-[20px] object-cover"
+            />
+          </div>
 
-        <div
-          className={sanitizeClassName(
-            `
+          <div
+            className={sanitizeClassName(
+              `
             space-y-2
             rounded-b-[20px]
             bg-white
             p-6
             `,
-            variant === 'md' ? 'h-20' : 'h-28',
-          )}
-        >
-          <h3
-            className={`
+              variant === 'md' ? 'h-20' : 'h-28',
+            )}
+          >
+            <h3
+              className={`
               max-w-56
               overflow-hidden
               text-ellipsis
@@ -71,11 +75,11 @@ export function ImageCard({
               leading-5
               text-[#123952]
             `}
-          >
-            {title}
-          </h3>
-          <p
-            className={`
+            >
+              {title}
+            </h3>
+            <p
+              className={`
               max-w-56
               overflow-hidden
               text-ellipsis
@@ -83,18 +87,18 @@ export function ImageCard({
               leading-6
               text-muted-foreground
             `}
-          >
-            {description}
-          </p>
+            >
+              {description}
+            </p>
+          </div>
         </div>
-      </div>
+      </CustomTooltip>
 
       {isOwner && (
-        <Badge
-          className="absolute top-2 right-2"
-          title="Você é o dono desse post"
-        >
-          <BadgeInfo />
+        <Badge className="absolute top-2 right-2 rounded-full">
+          <CustomTooltip tip="Você é o dono desse post">
+            <BadgeInfo />
+          </CustomTooltip>
         </Badge>
       )}
     </Link>
