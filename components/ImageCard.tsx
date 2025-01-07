@@ -28,6 +28,8 @@ export function ImageCard({
   href,
   isOwner,
 }: ImageCardProps) {
+  const MAX_DESCRIPTION_CHARACTERS = 51;
+
   return (
     <Link
       href={href ?? '#'}
@@ -41,7 +43,7 @@ export function ImageCard({
           <div
             className={sanitizeClassName(
               'relative',
-              'h-44 w-64 md:h-52 md:w-72',
+              'h-44 md:h-52 w-[258px] md:w-[290px]',
             )}
           >
             <Image
@@ -56,39 +58,45 @@ export function ImageCard({
           <div
             className={sanitizeClassName(
               `
-            space-y-2
-            rounded-b-[20px]
-            bg-white
-            p-6
+              w-[258px] md:w-[290px]
+              space-y-2
+              rounded-b-[20px]
+              bg-white
+              p-6
             `,
               variant === 'md' ? 'h-20' : 'h-28',
             )}
           >
             <h3
               className={`
-              max-w-56
-              overflow-hidden
-              text-ellipsis
-              whitespace-nowrap
-              text-xl
-              font-semibold
-              leading-5
-              text-[#123952]
-            `}
+                max-w-56
+                overflow-hidden
+                text-ellipsis
+                whitespace-nowrap
+                text-base
+                md:text-xl
+                font-semibold
+                leading-5
+                text-[#123952]
+              `}
             >
               {title}
             </h3>
             <p
               className={`
-              max-w-56
-              overflow-hidden
-              text-ellipsis
-              whitespace-break-spaces
-              leading-6
-              text-muted-foreground
-            `}
+                max-w-56
+                overflow-hidden
+                break-words
+                leading-6
+                text-muted-foreground
+                text-xs
+                sm:text-sm
+                md:text-base
+              `}
             >
-              {description}
+              {description.length > MAX_DESCRIPTION_CHARACTERS
+                ? description.slice(0, MAX_DESCRIPTION_CHARACTERS).concat('...')
+                : description}
             </p>
           </div>
         </div>
