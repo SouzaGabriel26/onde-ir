@@ -6,6 +6,7 @@ import { UncompletedPlaceCreation } from '@/app/dashboard/posts/_components/Unco
 import { getUncompletedPlaceCreatedAction } from '@/app/dashboard/posts/actions';
 import type { Option } from '@/components/CustomSelect';
 import { location } from '@/models/location';
+import { place } from '@/models/place';
 import { RedirectType, redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -29,8 +30,10 @@ export default async function Page() {
   }));
 
   const placeDataSource = createPlaceDataSource();
-  // TODO: refactor `findCategories`
-  const categories = await placeDataSource.findCategories();
+  const { data: categories } = await place.findCategories(placeDataSource, {
+    where: { is_active: true },
+  });
+
   const activeCategories: Category[] = categories.filter(
     (category) => category.is_active,
   );
