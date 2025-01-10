@@ -1,5 +1,9 @@
 import { database } from '@/infra/database';
-import type { CreatePlaceImagesInput, CreatePlaceInput } from '@/models/place';
+import type {
+  CreatePlaceImagesInput,
+  CreatePlaceInput,
+  FindCategoriesInput,
+} from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
 
 export type PlaceStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
@@ -242,17 +246,37 @@ export function createPlaceDataSource() {
     }
   }
 
-  async function findCategories() {
+  async function findCategories({ where }: FindCategoriesInput = {}) {
     const query = {
       text: sql`
         SELECT
           *
         FROM
           categories
+        $whereClause
       `,
     };
 
+    setWhereClause();
+
     const queryResult = await placePool.query(query);
-    return queryResult?.rows as Category[];
+
+    if (!queryResult || !queryResult.rows) return [];
+
+    return queryResult.rows as Category[];
+
+    function setWhereClause() {
+      if (where?.is_active === undefined) {
+        query.text = query.text.replace('$whereClause', '');
+        return;
+      }
+
+      if (where?.is_active !== undefined) {
+        query.text = query.text.replace(
+          '$whereClause',
+          sql`WHERE is_active = `.concat(where.is_active ? 'TRUE' : 'FALSE'),
+        );
+      }
+    }
   }
 }

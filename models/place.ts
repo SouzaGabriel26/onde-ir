@@ -9,6 +9,7 @@ export const place = Object.freeze({
   findById,
   create,
   createImages,
+  findCategories,
 });
 
 type FindAllInput = {
@@ -192,4 +193,19 @@ async function createImages(
   await placeDataSource.createImages(validatedInput);
 
   return operationResult.success({});
+}
+
+export type FindCategoriesInput = {
+  where?: {
+    is_active?: boolean;
+  };
+};
+
+async function findCategories(
+  placeDataSource: PlaceDataSource,
+  input?: FindCategoriesInput,
+) {
+  const categories = await placeDataSource.findCategories(input);
+
+  return operationResult.success(categories);
 }

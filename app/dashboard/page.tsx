@@ -19,9 +19,13 @@ export default async function Page() {
     },
   });
 
+  const { data: categories } = await place.findCategories(placeDataSource, {
+    where: { is_active: true },
+  });
+
   return (
     <div className="flex h-full flex-col gap-4">
-      <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-around">
+      <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
         <Link
           href={
             userNotAuthenticated
@@ -42,51 +46,40 @@ export default async function Page() {
             <SearchIcon />
           </Button>
         </fieldset>
-
-        <fieldset className="pr-4">
-          <nav>
-            <ul className="flex gap-4">
-              <li className="cursor-pointer">
-                <Link
-                  href={{
-                    href: '/dashboard/',
-                    query: {
-                      type: 'all',
-                    },
-                  }}
-                  className="border-b-2 border-primary"
-                >
-                  Todos
-                </Link>
-              </li>
-              <li className="cursor-pointer">
-                <Link
-                  href={{
-                    href: '/dashboard',
-                    query: {
-                      type: 'restaurant',
-                    },
-                  }}
-                >
-                  Restaurantes
-                </Link>
-              </li>
-              <li className="cursor-pointer">
-                <Link
-                  href={{
-                    href: '/dashboard',
-                    query: {
-                      type: 'bar',
-                    },
-                  }}
-                >
-                  Bares
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </fieldset>
       </form>
+
+      <nav className="flex justify-center">
+        <ul className="flex gap-4">
+          <li className="cursor-pointer">
+            <Link
+              href={{
+                href: '/dashboard/',
+                query: {
+                  type: 'all',
+                },
+              }}
+              className="border-b-2 border-primary"
+            >
+              Todos
+            </Link>
+          </li>
+          {categories.map(({ id, name }) => (
+            <li key={id} className="cursor-pointer">
+              <Link
+                href={{
+                  href: '/dashboard/',
+                  query: {
+                    type: name,
+                  },
+                }}
+                className="capitalize"
+              >
+                {name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <section
         className={`
