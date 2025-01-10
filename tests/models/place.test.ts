@@ -700,6 +700,85 @@ describe('> models/place', () => {
       });
     });
   });
+
+  describe('Invoking "findCategories" method', () => {
+    test('Without providing input', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.findCategories(placeDataSource);
+
+      expect(result).toStrictEqual({
+        data: [
+          {
+            id: expect.any(String),
+            name: 'restaurantes',
+            is_active: true,
+          },
+          {
+            id: expect.any(String),
+            name: 'parques',
+            is_active: false,
+          },
+          {
+            id: expect.any(String),
+            name: 'museus',
+            is_active: false,
+          },
+          {
+            id: expect.any(String),
+            name: 'bares',
+            is_active: true,
+          },
+        ],
+        error: null,
+      });
+    });
+
+    test('Providing "is_active" as "true"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.findCategories(placeDataSource, {
+        where: { is_active: true },
+      });
+
+      expect(result).toStrictEqual({
+        data: [
+          {
+            id: expect.any(String),
+            name: 'restaurantes',
+            is_active: true,
+          },
+          {
+            id: expect.any(String),
+            name: 'bares',
+            is_active: true,
+          },
+        ],
+        error: null,
+      });
+    });
+
+    test('Providing "is_active" as "false"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.findCategories(placeDataSource, {
+        where: { is_active: false },
+      });
+
+      expect(result).toStrictEqual({
+        data: [
+          {
+            id: expect.any(String),
+            name: 'parques',
+            is_active: false,
+          },
+          {
+            id: expect.any(String),
+            name: 'museus',
+            is_active: false,
+          },
+        ],
+        error: null,
+      });
+    });
+  });
 });
 
 async function getUserId() {
