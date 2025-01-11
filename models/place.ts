@@ -16,6 +16,7 @@ type FindAllInput = {
   page?: ValidationSchema['page'];
   limit?: ValidationSchema['limit'];
   where?: {
+    searchTerm?: string;
     status?: PlaceStatus;
     state?: string;
     name?: string;
@@ -33,6 +34,7 @@ async function findAll(
     {
       page: input.page,
       limit: input.limit,
+      searchTerm: input.where?.searchTerm,
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
@@ -40,6 +42,7 @@ async function findAll(
     {
       limit: 'required',
       page: 'required',
+      searchTerm: 'optional',
       state: 'optional',
       name: 'optional',
       status: 'optional',

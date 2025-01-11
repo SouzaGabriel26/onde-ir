@@ -23,6 +23,27 @@ export type CreatePlaceOutput = {
   state: string;
 };
 
+export type FindAllPlacesOutput = {
+  id: string;
+  name: string;
+  country: string;
+  state: string;
+  city: string;
+  street: string;
+  num_place?: number;
+  complement?: string;
+  description?: string;
+  category_id: string;
+  latitude?: number;
+  longitude?: number;
+  status: PlaceStatus;
+  reviewed_by?: string;
+  created_by: string;
+  created_at: Date;
+  updated_at: Date;
+  images: string[];
+};
+
 export function createPlaceDataSource() {
   const placePool = database.getPool();
 
@@ -38,31 +59,11 @@ export function createPlaceDataSource() {
     limit: number;
     offset: number;
     where?: {
+      searchTerm?: string;
       status?: PlaceStatus;
       state?: string;
       name?: string;
     };
-  };
-
-  type FindAllPlacesOutput = {
-    id: string;
-    name: string;
-    country: string;
-    state: string;
-    city: string;
-    street: string;
-    num_place?: number;
-    complement?: string;
-    description?: string;
-    category_id: string;
-    latitude?: number;
-    longitude?: number;
-    status: PlaceStatus;
-    reviewed_by?: string;
-    created_by: string;
-    created_at: Date;
-    updated_at: Date;
-    images: string[];
   };
 
   async function findAll(input: FindAllInput) {
@@ -103,6 +104,12 @@ export function createPlaceDataSource() {
 
     function setWhereClause() {
       const whereClauses = [];
+
+      if (where?.searchTerm) {
+        // postgres POSIX operator
+        whereClauses.push(sql`name ~* `.concat(`$${++index}`));
+        query.values.push(where.searchTerm);
+      }
 
       if (where?.state) {
         whereClauses.push(sql`state = `.concat(`$${++index}`));

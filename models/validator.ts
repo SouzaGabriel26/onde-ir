@@ -326,4 +326,13 @@ const schema = z.object({
       return error;
     },
   }),
+  searchTerm: z
+    .string({
+      invalid_type_error: '"searchTerm" precisa ser uma string.',
+      required_error: '"searchTerm" é obrigatório.',
+    })
+    .trim()
+    .min(1, {
+      message: '"searchTerm" precisa ter no mínimo 1 caracteres.',
+    }),
 });
