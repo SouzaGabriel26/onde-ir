@@ -5,12 +5,13 @@ import { sanitizeClassName } from '@/utils/sanitizeClassName';
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
+  parentClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, ...props }, ref) => {
+  ({ parentClassName, className, type, error, ...props }, ref) => {
     return (
-      <div>
+      <div className={parentClassName}>
         <input
           type={type}
           className={sanitizeClassName(
