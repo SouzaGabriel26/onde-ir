@@ -63,6 +63,7 @@ export function createPlaceDataSource() {
       status?: PlaceStatus;
       state?: string;
       name?: string;
+      categoryName?: string;
     };
   };
 
@@ -76,6 +77,7 @@ export function createPlaceDataSource() {
       FROM
         places
         LEFT JOIN place_images ON place_images.place_id = places.id
+        $joinClause
         $whereClause
       GROUP BY
         places.id
@@ -97,10 +99,28 @@ export function createPlaceDataSource() {
 
     let index = query.values.length;
 
+    setJoinClause();
     setWhereClause();
 
     const queryResult = await placePool.query(query);
     return (queryResult?.rows as Array<FindAllPlacesOutput>) ?? [];
+
+    function setJoinClause() {
+      const clauses: string[] = [];
+
+      if (input.where?.categoryName) {
+        clauses.push(sql`
+          LEFT JOIN categories ON categories.id = places.category_id
+        `);
+      }
+
+      if (!clauses.length) {
+        query.text = query.text.replace('$joinClause', '');
+        return;
+      }
+
+      query.text = query.text.replace('$joinClause', clauses.join(' '));
+    }
 
     function setWhereClause() {
       const whereClauses = [];
@@ -124,6 +144,11 @@ export function createPlaceDataSource() {
       if (where?.status) {
         whereClauses.push(sql`status = `.concat(`$${++index}`));
         query.values.push(where.status);
+      }
+
+      if (where?.categoryName) {
+        whereClauses.push(sql`categories.name = `.concat(`$${++index}`));
+        query.values.push(where.categoryName);
       }
 
       let whereClauseText = '';
