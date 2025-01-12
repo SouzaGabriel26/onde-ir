@@ -3,13 +3,22 @@ import { place } from '@/models/place';
 import { verify } from '@/utils/verify';
 import { DashboardContent } from './_components/DashboardContent';
 
-export default async function Page() {
+type Props = {
+  searchParams: Promise<{
+    type: string;
+  }>;
+};
+
+export default async function Page({ searchParams }: Props) {
+  const { type } = await searchParams;
+
   const { error: userNotAuthenticated, data: user } = await verify.loggedUser();
 
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     where: {
       status: 'APPROVED',
+      categoryName: type === 'all' ? undefined : type,
     },
   });
 
@@ -19,6 +28,7 @@ export default async function Page() {
 
   return (
     <DashboardContent
+      key={Date.now()}
       categories={categories}
       places={places}
       userId={user?.id ?? ''}

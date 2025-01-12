@@ -9,6 +9,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { getPlacesAction } from '../actions';
+import { PlacesFilters } from './PlacesFilters';
 
 type PlacesListProps = {
   places: FindAllPlacesOutput[] | null;
@@ -71,38 +72,7 @@ export function DashboardContent({
         </Link>
       </form>
 
-      <nav className="flex justify-center">
-        <ul className="flex gap-4">
-          <li className="cursor-pointer">
-            <Link
-              href={{
-                href: '/dashboard/',
-                query: {
-                  type: 'all',
-                },
-              }}
-              className="border-b-2 border-primary"
-            >
-              Todos
-            </Link>
-          </li>
-          {categories.map(({ id, name }) => (
-            <li key={id} className="cursor-pointer">
-              <Link
-                href={{
-                  href: '/dashboard/',
-                  query: {
-                    type: name,
-                  },
-                }}
-                className="capitalize"
-              >
-                {name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <PlacesFilters categories={categories} />
 
       {!filteredPlaces || !filteredPlaces.length ? (
         <div className="flex flex-1 justify-center items-center">

@@ -20,6 +20,7 @@ type FindAllInput = {
     status?: PlaceStatus;
     state?: string;
     name?: string;
+    categoryName?: string;
   };
 };
 
@@ -38,6 +39,7 @@ async function findAll(
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
+      categoryName: input.where?.categoryName,
     },
     {
       limit: 'required',
@@ -46,6 +48,7 @@ async function findAll(
       state: 'optional',
       name: 'optional',
       status: 'optional',
+      categoryName: 'optional',
     },
   );
 
