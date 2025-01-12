@@ -413,6 +413,19 @@ describe('> models/place', () => {
       expect(result.error).toBeNull();
       expect(result.data?.[0].name).toBe(places?.[0].name);
     });
+
+    test('Providing "categoryName" property', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const result = await place.findAll(placeDataSource, {
+        where: {
+          categoryName: 'restaurantes',
+          status: 'APPROVED',
+        },
+      });
+
+      expect(result.data?.length).toBe(2);
+    });
   });
 
   describe('Invoking "create" method', () => {
