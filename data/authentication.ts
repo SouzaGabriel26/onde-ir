@@ -69,9 +69,9 @@ export function createAuthenticationDataSource() {
   type SignUpInput = Omit<SignUpProps, 'confirmPassword'>;
 
   async function signUp(input: SignUpInput) {
-    const { email, name, password, userName } = input;
+    const { email, name, password, userName, avatarUrl } = input;
 
-    await authenticationPool.query({
+    const query = {
       text: sql`
         INSERT INTO users
           (email, name, password, user_name)
@@ -79,7 +79,19 @@ export function createAuthenticationDataSource() {
           ($1, $2, $3, $4)
       `,
       values: [email, name, password, userName],
-    });
+    };
+
+    if (avatarUrl) {
+      query.text = sql`
+        INSERT INTO users
+          (email, name, password, user_name, avatar_url)
+        VALUES
+          ($1, $2, $3, $4, $5)
+      `;
+      query.values.push(avatarUrl);
+    }
+
+    await authenticationPool.query(query);
   }
 
   type CreateResetPasswordTokenInput = {
