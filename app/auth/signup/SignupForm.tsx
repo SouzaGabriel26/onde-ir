@@ -84,6 +84,14 @@ export function SignupForm() {
           message: state?.error?.message,
         })}
       />
+
+      <Input
+        type="file"
+        accept="image/png, image/jpg, image/jpeg"
+        name="avatar_file"
+        className="cursor-pointer hover:bg-primary-foreground transition-all"
+      />
+
       <SubmitButton>Cadastrar</SubmitButton>
     </form>
   );
