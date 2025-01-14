@@ -63,13 +63,13 @@ export function Header({ userData }: HeaderProps) {
             <SheetTrigger>
               {/* TODO: search dynamically */}
               <UserAvatar
-                name="Gabriel"
-                imageUrl="https://github.com/souzagabriel26.png"
+                name={userData.name ?? ''}
+                imageUrl={userData?.avatarUrl}
               />
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>Perfil</SheetTitle>
+                <SheetTitle>Perfil de: {userData.name}</SheetTitle>
                 <SheetDescription>Configurações da conta</SheetDescription>
               </SheetHeader>
 
