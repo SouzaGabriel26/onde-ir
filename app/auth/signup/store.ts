@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { Welcome } from '@/components/email-templates/Welcome';
 import { createAuthenticationDataSource } from '@/data/authentication';
+import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
 import {
   type SignUpProps,
   type SignUpResponse,
@@ -21,10 +22,35 @@ export async function signUpAction(
   _prevState: SignUpActionResponse,
   formData: FormData,
 ): Promise<SignUpActionResponse> {
-  const sanitizedData = form.sanitizeData<SignUpProps>(formData);
+  const sanitizedData = form.sanitizeData<
+    SignUpProps & {
+      avatar_file?: File;
+    }
+  >(formData);
+
+  let userAvatarURL = '';
+
+  if (sanitizedData.avatar_file) {
+    try {
+      const { file_url, presigned_url } = await getPresignedURL(
+        sanitizedData.avatar_file,
+      );
+      await uploadFileToS3(presigned_url, sanitizedData.avatar_file!);
+
+      userAvatarURL = file_url;
+    } catch {
+      feedbackMessage.setFeedbackMessage({
+        content: 'Erro ao enviar a imagem',
+        type: 'error',
+      });
+    }
+  }
 
   const authDataSource = createAuthenticationDataSource();
-  const signUpResponse = await auth.signUp(authDataSource, sanitizedData);
+  const signUpResponse = await auth.signUp(authDataSource, {
+    ...sanitizedData,
+    avatarUrl: userAvatarURL ? userAvatarURL : undefined,
+  });
 
   if (signUpResponse.data) {
     const { userName, email, name } = signUpResponse.data;

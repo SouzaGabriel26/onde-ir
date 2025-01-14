@@ -100,6 +100,14 @@ const schema = z.object({
     .min(6, {
       message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
     }),
+  avatarUrl: z
+    .string({
+      required_error: '"avatarUrl" é obrigatório.',
+      invalid_type_error: '"avatarUrl" precisa ser uma string.',
+    })
+    .url({
+      message: '"avatarUrl" precisa ser uma URL válida.',
+    }),
   resetPasswordTokenId: z
     .string({
       required_error: '"resetPasswordTokenId" é obrigatório.',

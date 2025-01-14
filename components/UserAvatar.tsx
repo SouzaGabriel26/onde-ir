@@ -15,7 +15,7 @@ export function UserAvatar({ name, imageUrl }: AvatarProps) {
 
   return (
     <Avatar>
-      <AvatarImage src={imageUrl} alt={name} />
+      {imageUrl && <AvatarImage src={imageUrl} alt={name} />}
       <AvatarFallback>{nameInitials}</AvatarFallback>
     </Avatar>
   );
