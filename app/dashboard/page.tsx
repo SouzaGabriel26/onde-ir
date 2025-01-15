@@ -5,20 +5,26 @@ import { DashboardContent } from './_components/DashboardContent';
 
 type Props = {
   searchParams: Promise<{
-    type: string;
+    type?: string;
+    status?: 'PENDING';
   }>;
 };
 
 export default async function Page({ searchParams }: Props) {
-  const { type } = await searchParams;
+  const { type, status } = await searchParams;
 
   const { error: userNotAuthenticated, data: user } = await verify.loggedUser();
+
+  const userAuthenticated = !!user?.id;
+  const userIsRequestingPendingPosts =
+    userAuthenticated && status === 'PENDING';
 
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     where: {
-      status: 'APPROVED',
+      status: userIsRequestingPendingPosts ? 'PENDING' : 'APPROVED',
       categoryName: type === 'all' ? undefined : type,
+      createdBy: userIsRequestingPendingPosts ? user.id : undefined,
     },
   });
 
