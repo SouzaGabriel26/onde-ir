@@ -1,31 +1,41 @@
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 
 import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 
-import { RedirectType, redirect } from 'next/navigation';
+import { auth } from '@/models/authentication';
 import { constants } from './constants';
+import { env } from './env';
 import { operationResult } from './operationResult';
 
 async function loggedUser() {
-  const userId = (await headers()).get(constants.headerPayloadKey);
+  const token = (await cookies()).get(constants.accessTokenKey)?.value;
+  if (!token)
+    return operationResult.failure({ message: 'Usuário não logado.' });
 
-  if (!userId) {
-    const token = (await cookies()).get(constants.accessTokenKey)?.value;
+  const payload = await auth.verifyToken({
+    secret: env.jwt_secret,
+    token,
+  });
 
-    if (token) {
-      redirect('/dashboard', RedirectType.replace);
-    }
-  }
+  if (!payload)
+    return operationResult.failure({ message: 'Usuário não logado.' });
+
+  const userId = payload.sub;
 
   const userDataSource = createUserDataSource();
   const { data } = await user.findById(userDataSource, {
-    id: userId ?? '',
+    id: userId,
   });
 
-  if (data) return operationResult.success(data);
+  if (!data) {
+    return operationResult.failure({
+      message: 'Usuário não logado.',
+      reason: 'Usuário não encontrado.',
+    });
+  }
 
-  return operationResult.failure({ message: 'Usuário não logado.' });
+  return operationResult.success(data);
 }
 
 export const verify = Object.freeze({

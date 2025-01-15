@@ -10,14 +10,10 @@ export async function middleware(request: NextRequest) {
 
   if (accessToken) {
     try {
-      const { payload } = await jwtVerify(
+      await jwtVerify(
         accessToken,
         new TextEncoder().encode(process.env.JWT_SECRET_KEY!),
       );
-
-      if (payload.sub) {
-        response.headers.set(constants.headerPayloadKey, payload.sub);
-      }
     } catch {
       response.cookies.delete(constants.accessTokenKey);
     }

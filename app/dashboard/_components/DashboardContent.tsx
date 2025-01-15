@@ -7,6 +7,7 @@ import type { Category, FindAllPlacesOutput } from '@/data/place';
 import { Loader2Icon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { getPlacesAction } from '../actions';
 import { PlacesFilters } from './PlacesFilters';
@@ -24,6 +25,9 @@ export function DashboardContent({
   userId,
   userNotAuthenticated,
 }: PlacesListProps) {
+  const searchParams = useSearchParams();
+  const status = searchParams.get('status');
+
   const [filteredPlaces, setFilteredPlaces] = useState<
     FindAllPlacesOutput[] | null
   >(places);
@@ -57,22 +61,52 @@ export function DashboardContent({
           {isLoading && <Loader2Icon className="size-6 animate-spin" />}
         </fieldset>
 
-        <Link
-          href={
-            userNotAuthenticated
-              ? '/auth/signin?redirect_reason=not-authenticated'
-              : '/dashboard/posts/create'
-          }
-        >
-          <Button variant="secondary">
-            {userNotAuthenticated
-              ? 'Faça login para criar uma postagem'
-              : 'Crie sua postagem'}
-          </Button>
-        </Link>
+        <div className="flex gap-4">
+          <Link
+            href={
+              userNotAuthenticated
+                ? '/auth/signin?redirect_reason=not-authenticated'
+                : '/dashboard/posts/create'
+            }
+          >
+            <Button variant="secondary" className="text-xs md:text-base">
+              {userNotAuthenticated
+                ? 'Faça login para criar uma postagem'
+                : 'Crie sua postagem'}
+            </Button>
+          </Link>
+
+          {userId && (
+            <Link
+              className={status === 'PENDING' ? 'pointer-events-none' : ''}
+              href={{
+                href: '/dashboard/',
+                query: {
+                  status: 'PENDING',
+                },
+              }}
+            >
+              <Button
+                variant="secondary"
+                disabled={status === 'PENDING'}
+                className="text-xs md:text-base"
+              >
+                Ver posts pendentes
+              </Button>
+            </Link>
+          )}
+        </div>
       </form>
 
       <PlacesFilters categories={categories} />
+
+      {status === 'PENDING' && (
+        <Link className="w-fit self-end" href="/dashboard/" as="/dashboard/">
+          <Button variant="link" className="text-xs md:text-base">
+            Voltar para posts aprovados
+          </Button>
+        </Link>
+      )}
 
       {!filteredPlaces || !filteredPlaces.length ? (
         <div className="flex flex-1 justify-center items-center">
