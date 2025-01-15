@@ -21,6 +21,7 @@ type FindAllInput = {
     state?: string;
     name?: string;
     categoryName?: string;
+    createdBy?: string;
   };
 };
 
@@ -40,6 +41,7 @@ async function findAll(
       name: input.where?.name,
       status: input.where?.status,
       categoryName: input.where?.categoryName,
+      created_by: input.where?.createdBy,
     },
     {
       limit: 'required',
@@ -49,6 +51,7 @@ async function findAll(
       name: 'optional',
       status: 'optional',
       categoryName: 'optional',
+      created_by: 'optional',
     },
   );
 

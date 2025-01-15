@@ -64,6 +64,7 @@ export function createPlaceDataSource() {
       state?: string;
       name?: string;
       categoryName?: string;
+      createdBy?: string;
     };
   };
 
@@ -149,6 +150,11 @@ export function createPlaceDataSource() {
       if (where?.categoryName) {
         whereClauses.push(sql`categories.name = `.concat(`$${++index}`));
         query.values.push(where.categoryName);
+      }
+
+      if (where?.createdBy) {
+        whereClauses.push(sql`created_by = `.concat(`$${++index}`));
+        query.values.push(where.createdBy);
       }
 
       let whereClauseText = '';
