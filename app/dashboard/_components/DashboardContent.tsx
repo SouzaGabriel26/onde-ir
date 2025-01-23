@@ -49,7 +49,7 @@ export function DashboardContent({
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-full flex-col gap-4 w-full">
       <form className="px-6 flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
         <fieldset className="flex gap-2 w-full justify-center md:justify-start items-center">
           <DebouncedInput
@@ -78,20 +78,22 @@ export function DashboardContent({
 
           {userId && (
             <Link
-              className={status === 'PENDING' ? 'pointer-events-none' : ''}
+              className={
+                status === 'user-pendings' ? 'pointer-events-none' : ''
+              }
               href={{
                 href: '/dashboard/',
                 query: {
-                  status: 'PENDING',
+                  status: 'user-pendings',
                 },
               }}
             >
               <Button
                 variant="secondary"
-                disabled={status === 'PENDING'}
+                disabled={status === 'user-pendings'}
                 className="text-xs md:text-base"
               >
-                Ver posts pendentes
+                Ver seus posts pendentes
               </Button>
             </Link>
           )}
@@ -100,7 +102,7 @@ export function DashboardContent({
 
       <PlacesFilters categories={categories} />
 
-      {status === 'PENDING' && (
+      {status === 'user-pendings' && (
         <Link className="w-fit self-end" href="/dashboard/" as="/dashboard/">
           <Button variant="link" className="text-xs md:text-base">
             Voltar para posts aprovados

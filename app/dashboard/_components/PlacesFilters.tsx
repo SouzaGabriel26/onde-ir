@@ -25,9 +25,7 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
               },
             }}
             className={sanitizeClassName(
-              !currentFilter || currentFilter === 'all'
-                ? 'border-b-2 border-primary'
-                : '',
+              currentFilter === 'all' ? 'border-b-2 border-primary' : '',
             )}
           >
             Todos
