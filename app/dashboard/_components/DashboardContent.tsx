@@ -61,7 +61,7 @@ export function DashboardContent({
           {isLoading && <Loader2Icon className="size-6 animate-spin" />}
         </fieldset>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-col items-center md:flex-row">
           <Link
             href={
               userNotAuthenticated
