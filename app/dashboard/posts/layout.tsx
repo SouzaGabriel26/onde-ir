@@ -11,7 +11,7 @@ type Props = {
 
 export default async function Layout({ children }: Props) {
   return (
-    <section className="flex h-full flex-col space-y-10">
+    <section className="flex h-full flex-col space-y-10 flex-1">
       <div>
         <Link href="/dashboard" title="Voltar">
           <Button variant="outline">

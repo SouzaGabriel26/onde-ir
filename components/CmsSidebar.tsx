@@ -1,8 +1,10 @@
 'use client';
 
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
-import { Check, ListTodo, MenuIcon } from 'lucide-react';
+import { ListTodo, MenuIcon, SquareX } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
 import { type JSX, useEffect, useState } from 'react';
 import { Button } from './ui/Button';
 import {
@@ -16,6 +18,9 @@ import {
 export type CmsSidebarProps = JSX.IntrinsicElements['aside'];
 
 export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
+  const searchParams = useSearchParams();
+  const currentStatusFilter = searchParams.get('status');
+
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -40,20 +45,23 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
 
   if (isMobile) {
     return (
-      <div className="mt-16 p-4">
+      <div
+        className="px-2 py-4 absolute bottom-2 left-0"
+        title="Gerenciamento de conteúdo"
+      >
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button
               variant="outline"
-              className="px-2"
+              className="px-1"
               onClick={() => setIsSheetOpen(true)}
             >
               <MenuIcon />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent side="left" className="p-2 md:p-4">
             <SheetHeader className="space-y-8">
-              <SheetTitle>Gerenciamento de conteúdo</SheetTitle>
+              <SheetTitle>Gerenciamento de conteúdo para ADMINS</SheetTitle>
               <SidebarItems />
             </SheetHeader>
           </SheetContent>
@@ -70,7 +78,7 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
       )}
       {...props}
     >
-      <span>Gerenciamento de conteúdo</span>
+      <span>Gerenciamento de conteúdo para ADMINS</span>
 
       <SidebarItems />
     </aside>
@@ -79,7 +87,7 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
   function SidebarItems() {
     return (
       <ul className="text-secondary-foreground text-sm space-y-2">
-        <ListItem>
+        <ListItem isSelected={currentStatusFilter === 'admin-pendings'}>
           <Link
             href={{
               href: '/dashboard',
@@ -93,23 +101,32 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
         </ListItem>
 
         <ListItem>
-          {/* TODO: Implement this */}
           <Link
-            href="/dashboard/"
-            as="/dashboard/"
+            href="/dashboard"
+            as="/dashboard"
             className="flex gap-2 items-center flex-1 "
           >
-            <Check />
-            <span>Posts aprovados por você</span>
+            <SquareX />
+            <span>Limpar filtros</span>
           </Link>
         </ListItem>
       </ul>
     );
   }
 
-  function ListItem({ children }: { children: JSX.Element }) {
+  type ListItemProps = {
+    children: JSX.Element;
+    isSelected?: boolean;
+  };
+
+  function ListItem({ children, isSelected }: ListItemProps) {
     return (
-      <li>
+      <li
+        className={sanitizeClassName(
+          'transition-all',
+          isSelected && 'bg-accent text-blue-600 rounded',
+        )}
+      >
         <Button
           onClick={isMobile ? toggleSheetState : undefined}
           variant="ghost"
