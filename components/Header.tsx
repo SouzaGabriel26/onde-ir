@@ -1,34 +1,14 @@
-import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/Sheet';
 import type { User } from '@/types';
-import { constants } from '@/utils/constants';
 
 import { NavButton } from './NavButton';
-import { UserAvatar } from './UserAvatar';
-import { Button } from './ui/Button';
+import { UserOptions } from './UserOptions';
 
 type HeaderProps = {
   userData?: Partial<User> | null;
 };
-
-async function signOut() {
-  'use server';
-
-  (await cookies()).delete(constants.accessTokenKey);
-
-  return redirect('/auth/signin');
-}
 
 export function Header({ userData }: HeaderProps) {
   return (
@@ -58,29 +38,7 @@ export function Header({ userData }: HeaderProps) {
 
         <ThemeSwitcher />
 
-        {userData && (
-          <Sheet>
-            <SheetTrigger>
-              {/* TODO: search dynamically */}
-              <UserAvatar
-                name={userData.name ?? ''}
-                imageUrl={userData?.avatarUrl}
-              />
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Perfil de: {userData.name}</SheetTitle>
-                <SheetDescription>Configurações da conta</SheetDescription>
-              </SheetHeader>
-
-              <div className="mt-4 flex flex-col gap-2">
-                <form action={signOut}>
-                  <Button type="submit">Sair</Button>
-                </form>
-              </div>
-            </SheetContent>
-          </Sheet>
-        )}
+        {userData && <UserOptions user={userData} />}
       </nav>
     </header>
   );
