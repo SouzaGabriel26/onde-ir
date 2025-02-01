@@ -10,6 +10,7 @@ export const place = Object.freeze({
   create,
   createImages,
   findCategories,
+  update,
 });
 
 type FindAllInput = {
@@ -217,4 +218,76 @@ async function findCategories(
   const categories = await placeDataSource.findCategories(input);
 
   return operationResult.success(categories);
+}
+
+export type UpdateInput = {
+  placeId: ValidationSchema['place_id'];
+  reviewedBy: ValidationSchema['userId'];
+  status: ValidationSchema['status'];
+};
+
+async function update(
+  userDataSource: UserDataSource,
+  placeDataSource: PlaceDataSource,
+  input: UpdateInput,
+) {
+  const validationResult = validator(
+    {
+      place_id: input.placeId,
+      userId: input.reviewedBy,
+      status: input.status,
+    },
+    {
+      place_id: 'required',
+      userId: 'required',
+      status: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { place_id, status, userId: reviewedBy } = validationResult.data;
+
+  const place = await placeDataSource.findById(place_id);
+
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  const adminUserExists = await userDataSource.findById({
+    id: reviewedBy,
+    select: ['userRole'],
+  });
+
+  if (!adminUserExists) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['user_id'],
+    });
+  }
+
+  if (adminUserExists.userRole !== 'ADMIN') {
+    return operationResult.failure({
+      message: 'Você não tem permissão para alterar o status do local.',
+      fields: ['user_id'],
+    });
+  }
+
+  if (place.created_by === reviewedBy) {
+    return operationResult.failure({
+      message: 'Você não pode alterar o status do seu próprio local.',
+      fields: ['user_id'],
+    });
+  }
+
+  await placeDataSource.update({
+    placeId: place_id,
+    status,
+    reviewedBy,
+  });
+
+  return operationResult.success({});
 }

@@ -3,6 +3,7 @@ import type {
   CreatePlaceImagesInput,
   CreatePlaceInput,
   FindCategoriesInput,
+  UpdateInput,
 } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
 
@@ -53,6 +54,7 @@ export function createPlaceDataSource() {
     createImages,
     findCategories,
     findById,
+    update,
   });
 
   type FindAllInput = {
@@ -316,5 +318,22 @@ export function createPlaceDataSource() {
         );
       }
     }
+  }
+
+  async function update(input: UpdateInput) {
+    const query = {
+      text: sql`
+        UPDATE places
+        SET
+          status = $1,
+          reviewed_by = $2,
+          updated_at = NOW() AT TIME ZONE 'utc'
+        WHERE
+          id = $3
+      `,
+      values: [input.status, input.reviewedBy, input.placeId],
+    };
+
+    await placePool.query(query);
   }
 }
