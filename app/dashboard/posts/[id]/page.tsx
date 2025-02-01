@@ -7,6 +7,7 @@ import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
 import Image from 'next/image';
 import { RedirectType, redirect } from 'next/navigation';
+import { approvePlaceAction, rejectPlaceAction } from './actions';
 
 type PageProps = {
   params: Promise<{
@@ -60,12 +61,35 @@ export default async function Page(props: PageProps) {
       <div className="w-full flex flex-col md:flex-row gap-4 justify-between">
         <h2 className="text-3xl md:text-center">Foto(s) de {postFound.name}</h2>
 
-        {loggedUser?.userRole === 'ADMIN' && postFound.status === 'PENDING' && (
-          <div className="space-x-2">
-            <Button>Aprovar</Button>
+        {isAdmin && postFound.status === 'PENDING' && (
+          <form className="space-x-2">
+            <Button
+              formAction={async () => {
+                'use server';
 
-            <Button variant="destructive">Rejeitar</Button>
-          </div>
+                await approvePlaceAction({
+                  placeId: postFound.id,
+                  reviewedBy: loggedUser.id!,
+                });
+              }}
+            >
+              Aprovar
+            </Button>
+
+            <Button
+              variant="destructive"
+              formAction={async () => {
+                'use server';
+
+                await rejectPlaceAction({
+                  placeId: postFound.id,
+                  reviewedBy: loggedUser.id!,
+                });
+              }}
+            >
+              Rejeitar
+            </Button>
+          </form>
         )}
       </div>
 
