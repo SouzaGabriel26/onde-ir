@@ -93,6 +93,7 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
               href: '/dashboard',
               query: { status: 'admin-pendings' },
             }}
+            as="/dashboard?status=admin-pendings"
             className="flex gap-2 items-center flex-1 "
           >
             <ListTodo />
