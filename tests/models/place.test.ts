@@ -881,8 +881,78 @@ describe('> models/place', () => {
       });
     });
 
-    // TODO: test when reviewedBy is not an admin
-    // TODO: test when reviewedBy is the same user that created the place
+    test('Providing a "reviewedBy" that exists but is not a ADMIN', async () => {
+      await orchestrator.resetDatabase();
+
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: places } = await place.findAll(placeDataSource, {
+        limit: 1,
+        where: { status: 'PENDING' },
+      });
+
+      const pendingPlace = places![0];
+
+      const normalUser = await getNormalUserId();
+
+      const result = await place.update(userDataSource, placeDataSource, {
+        placeId: pendingPlace.id,
+        reviewedBy: normalUser,
+        status: 'APPROVED',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Você não tem permissão para alterar o status do local.',
+          fields: ['user_id'],
+        },
+      });
+    });
+
+    test('Providing a "reviewedBy" that is the same user that created the place', async () => {
+      await orchestrator.resetDatabase();
+
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: categories } = await place.findCategories(placeDataSource, {
+        where: { is_active: true },
+      });
+
+      const adminUser = await getAdminUserId();
+
+      const { data: createdPlace } = await place.create(
+        userDataSource,
+        placeDataSource,
+        {
+          category_id: categories[0].id,
+          city: 'Vila Velha',
+          country: 'Brasil',
+          created_by: adminUser,
+          name: 'Bar do Zé',
+          state: 'ES',
+          street: 'Av. Hugo Musso',
+        },
+      );
+
+      expect(createdPlace?.id).toBeDefined();
+
+      const result = await place.update(userDataSource, placeDataSource, {
+        placeId: createdPlace!.id,
+        reviewedBy: adminUser,
+        status: 'APPROVED',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Você não pode alterar o status do seu próprio local.',
+          fields: ['user_id'],
+        },
+      });
+    });
 
     async function getAdminUserId() {
       const client = database.getClient();
@@ -891,6 +961,15 @@ describe('> models/place', () => {
       `);
       const adminUser = queryResult!.rows[0].id as string;
       return adminUser;
+    }
+
+    async function getNormalUserId() {
+      const client = database.getClient();
+      const queryResult = await client.query(sql`
+        SELECT id FROM users WHERE user_role = 'USER' LIMIT 1;
+      `);
+      const normalUser = queryResult!.rows[0].id as string;
+      return normalUser;
     }
   });
 });
