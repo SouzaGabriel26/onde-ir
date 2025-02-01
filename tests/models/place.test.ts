@@ -792,6 +792,107 @@ describe('> models/place', () => {
       });
     });
   });
+
+  describe('Invoking "update" method', () => {
+    test('Providing valid input', async () => {
+      await orchestrator.resetDatabase();
+
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: places } = await place.findAll(placeDataSource, {
+        limit: 1,
+        where: { status: 'PENDING' },
+      });
+
+      const pendingPlace = places![0];
+
+      expect(pendingPlace.status).toBe('PENDING');
+
+      const adminUser = await getAdminUserId();
+
+      const result = await place.update(userDataSource, placeDataSource, {
+        placeId: pendingPlace.id,
+        reviewedBy: adminUser,
+        status: 'APPROVED',
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const approvedPlace = await place.findById(
+        placeDataSource,
+        pendingPlace.id,
+      );
+
+      expect(approvedPlace.data?.status).toBe('APPROVED');
+    });
+
+    test('Providing a "placeId" that does not exists', async () => {
+      await orchestrator.resetDatabase();
+
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const adminUser = await getAdminUserId();
+
+      const result = await place.update(userDataSource, placeDataSource, {
+        placeId: randomUUID(),
+        reviewedBy: adminUser,
+        status: 'APPROVED',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Local não encontrado.',
+          fields: ['place_id'],
+        },
+      });
+    });
+
+    test('Providing a "reviewedBy" that does not exists', async () => {
+      await orchestrator.resetDatabase();
+
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: places } = await place.findAll(placeDataSource, {
+        limit: 1,
+        where: { status: 'PENDING' },
+      });
+
+      const pendingPlace = places![0];
+
+      const result = await place.update(userDataSource, placeDataSource, {
+        placeId: pendingPlace.id,
+        reviewedBy: randomUUID(),
+        status: 'APPROVED',
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Usuário não encontrado.',
+          fields: ['user_id'],
+        },
+      });
+    });
+
+    // TODO: test when reviewedBy is not an admin
+    // TODO: test when reviewedBy is the same user that created the place
+
+    async function getAdminUserId() {
+      const client = database.getClient();
+      const queryResult = await client.query(sql`
+        SELECT id FROM users WHERE user_role = 'ADMIN' LIMIT 1;
+      `);
+      const adminUser = queryResult!.rows[0].id as string;
+      return adminUser;
+    }
+  });
 });
 
 async function getUserId() {
