@@ -16,3 +16,29 @@ export async function getPlacesAction(searchTerm: string) {
     places: places ?? null,
   };
 }
+
+type loadPlacesActionInput = {
+  page: number;
+  limit: number;
+  postCategory?: string;
+};
+
+export async function loadPlacesAction({
+  page,
+  limit,
+  postCategory,
+}: loadPlacesActionInput) {
+  const placeDataSource = createPlaceDataSource();
+  const { data: places } = await place.findAll(placeDataSource, {
+    limit,
+    page,
+    where: {
+      status: 'APPROVED',
+      categoryName: postCategory,
+    },
+  });
+
+  return {
+    places: places ?? [],
+  };
+}
