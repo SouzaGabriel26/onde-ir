@@ -8,8 +8,9 @@ import { Loader2Icon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { getPlacesAction } from '../actions';
+import { useCallback, useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { getPlacesAction, loadPlacesAction } from '../actions';
 import { PlacesFilters } from './PlacesFilters';
 
 type PlacesListProps = {
@@ -27,11 +28,18 @@ export function DashboardContent({
 }: PlacesListProps) {
   const searchParams = useSearchParams();
   const status = searchParams.get('status');
+  const postCategory = searchParams.get('type');
+
+  const { ref, inView } = useInView();
 
   const [filteredPlaces, setFilteredPlaces] = useState<
     FindAllPlacesOutput[] | null
   >(places);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMorePlaces, setIsLoadingPlaces] = useState(false);
+  const [isToFetchMorePlaces, setIsToFetchMorePlaces] = useState(true);
+
+  const [page, setPage] = useState(1);
 
   async function handleSearch(value: string) {
     setIsLoading(true);
@@ -47,6 +55,34 @@ export function DashboardContent({
     setFilteredPlaces(filteredPlaces);
     setIsLoading(false);
   }
+
+  const loadMoreUsers = useCallback(async () => {
+    setIsLoadingPlaces(true);
+    const nextPage = page + 1;
+    const { places: newPlaces } = await loadPlacesAction({
+      page: nextPage,
+      limit: 10,
+      postCategory: postCategory ?? undefined,
+    });
+
+    if (newPlaces.length === 0) {
+      setIsToFetchMorePlaces(false);
+    }
+
+    setPage(nextPage);
+    setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
+    setIsLoadingPlaces(false);
+  }, [page, postCategory]);
+
+  useEffect(() => {
+    if (inView && isToFetchMorePlaces) {
+      loadMoreUsers();
+    }
+
+    if (!inView) {
+      setIsToFetchMorePlaces(true);
+    }
+  }, [inView, loadMoreUsers, isToFetchMorePlaces]);
 
   return (
     <div className="flex h-full flex-col gap-4 w-full">
@@ -144,6 +180,17 @@ export function DashboardContent({
               />
             );
           })}
+
+          <div className="grid w-full place-items-center" ref={ref}>
+            <div className="flex gap-2 text-muted-foreground">
+              {isLoadingMorePlaces && (
+                <>
+                  Carregando mais lugares...
+                  <Loader2Icon className="size-6 animate-spin" />
+                </>
+              )}
+            </div>
+          </div>
         </section>
       )}
     </div>
