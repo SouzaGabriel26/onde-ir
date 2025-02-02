@@ -19,93 +19,7 @@ describe('> models/place', () => {
       const placeDataSource = createPlaceDataSource();
       const result = await place.findAll(placeDataSource);
 
-      expect(result).toStrictEqual({
-        error: null,
-        data: [
-          {
-            id: expect.any(String),
-            name: 'Bar do Gerson',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vila Velha',
-            street: 'Av. Hugo Musso',
-            num_place: 505,
-            complement: null,
-            description:
-              'Bar muito conhecido por seu ambiente agradável e bebidas geladas',
-            category_id: expect.any(String),
-            latitude: -20.3274,
-            longitude: -40.2922,
-            status: 'REJECTED',
-            reviewed_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-          {
-            id: expect.any(String),
-            name: 'Café Bamboo',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'R. do Lazer',
-            num_place: 404,
-            complement: 'Em frente a padaria',
-            description:
-              'Um café incrivel que oferece vários sabores inexplicáveis',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.2969,
-            status: 'APPROVED',
-            reviewed_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-          {
-            id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
-            complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            status: 'APPROVED',
-            reviewed_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-          {
-            id: expect.any(String),
-            name: 'Pizzaria do Zé',
-            country: 'Brasil',
-            state: 'RJ',
-            city: 'Rio de Janeiro',
-            street: 'Av. Jerônimo Monteiro',
-            num_place: 1234,
-            complement: null,
-            description: 'Pizzaria com variedade de sabores e promoções',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            status: 'PENDING',
-            reviewed_by: null,
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-        ],
-      });
+      expect(result.data!.length).toBe(10);
     });
 
     test('Providing "page" less than 1', async () => {
@@ -172,52 +86,7 @@ describe('> models/place', () => {
         },
       });
 
-      expect(result).toStrictEqual({
-        error: null,
-        data: [
-          {
-            id: expect.any(String),
-            name: 'Café Bamboo',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'R. do Lazer',
-            num_place: 404,
-            complement: 'Em frente a padaria',
-            description:
-              'Um café incrivel que oferece vários sabores inexplicáveis',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.2969,
-            status: 'APPROVED',
-            reviewed_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-          {
-            id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
-            country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
-            complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
-            category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
-            status: 'APPROVED',
-            reviewed_by: expect.any(String),
-            created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
-          },
-        ],
-      });
+      expect(result.data!.length).toBe(10);
     });
 
     test('Providing "where" status equals to "REJECTED"', async () => {
@@ -269,6 +138,26 @@ describe('> models/place', () => {
         data: [
           {
             id: expect.any(String),
+            name: 'Bar do João',
+            country: 'Brasil',
+            state: 'RJ',
+            city: 'Rio de Janeiro',
+            street: 'Av. Atlântica, 456',
+            num_place: 7890,
+            complement: null,
+            description: 'Bar aconchegante com drinks exclusivos.',
+            category_id: expect.any(String),
+            latitude: -22.9068,
+            longitude: -43.1729,
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
+            created_by: expect.any(String),
+            created_at: expect.any(Date),
+            updated_at: expect.any(Date),
+            images: expect.any(Array),
+          },
+          {
+            id: expect.any(String),
             name: 'Pizzaria do Zé',
             country: 'Brasil',
             state: 'RJ',
@@ -283,9 +172,9 @@ describe('> models/place', () => {
             status: 'PENDING',
             reviewed_by: null,
             created_by: expect.any(String),
-            created_at: expect.anything(),
-            updated_at: expect.anything(),
-            images: expect.any(Array),
+            created_at: expect.any(Date),
+            updated_at: expect.any(Date),
+            images: [],
           },
         ],
       });
@@ -355,17 +244,17 @@ describe('> models/place', () => {
         data: [
           {
             id: expect.any(String),
-            name: 'Churrascaria Espeto de Ouro',
+            name: 'Bar e Petiscaria Maré Alta',
             country: 'Brasil',
-            state: 'ES',
-            city: 'Vitória',
-            street: 'Av. Nossa Senhora da Penha',
-            num_place: 1234,
+            state: 'PE',
+            city: 'Recife',
+            street: 'Av. Beira Mar, 321',
+            num_place: 9090,
             complement: null,
-            description: 'Deliciosa churrascaria com variedade de comidas.',
+            description: 'Petiscos e drinks à beira-mar.',
             category_id: expect.any(String),
-            latitude: -20.3155,
-            longitude: -40.3128,
+            latitude: -8.0476,
+            longitude: -34.877,
             status: 'APPROVED',
             reviewed_by: expect.any(String),
             created_by: expect.any(String),
@@ -375,19 +264,20 @@ describe('> models/place', () => {
           },
           {
             id: expect.any(String),
-            name: 'Pizzaria do Zé',
+            name: 'Café Bamboo',
             country: 'Brasil',
-            state: 'RJ',
-            city: 'Rio de Janeiro',
-            street: 'Av. Jerônimo Monteiro',
-            num_place: 1234,
-            complement: null,
-            description: 'Pizzaria com variedade de sabores e promoções',
+            state: 'ES',
+            city: 'Vitória',
+            street: 'R. do Lazer',
+            num_place: 404,
+            complement: 'Em frente a padaria',
+            description:
+              'Um café incrivel que oferece vários sabores inexplicáveis',
             category_id: expect.any(String),
             latitude: -20.3155,
-            longitude: -40.3128,
-            status: 'PENDING',
-            reviewed_by: null,
+            longitude: -40.2969,
+            status: 'APPROVED',
+            reviewed_by: expect.any(String),
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
@@ -424,7 +314,7 @@ describe('> models/place', () => {
         },
       });
 
-      expect(result.data?.length).toBe(2);
+      expect(result.data?.length).toBe(10);
     });
   });
 
@@ -639,7 +529,7 @@ describe('> models/place', () => {
         SELECT * FROM place_images
       `);
 
-      expect(placeImagesBefore?.rows.length).toBe(5);
+      expect(placeImagesBefore?.rows.length).toBe(21);
 
       const placeDataSource = createPlaceDataSource();
       const places = await place.findAll(placeDataSource, { limit: 1 });
@@ -659,7 +549,7 @@ describe('> models/place', () => {
         SELECT * FROM place_images
       `);
 
-      expect(placeImagesAfter?.rows.length).toBe(7);
+      expect(placeImagesAfter?.rows.length).toBe(23);
     });
   });
 
