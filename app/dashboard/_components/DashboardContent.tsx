@@ -18,8 +18,8 @@ type PlacesListProps = {
   categories: Category[];
   userId: string;
   userNotAuthenticated: boolean;
-  userIsRequestindPendingPosts: boolean;
-  adminIsRequestindPendingPosts: boolean;
+  userIsRequestingPendingPosts: boolean;
+  adminIsRequestingPendingPosts: boolean;
 };
 
 export function DashboardContent({
@@ -27,8 +27,8 @@ export function DashboardContent({
   categories,
   userId,
   userNotAuthenticated,
-  userIsRequestindPendingPosts,
-  adminIsRequestindPendingPosts,
+  userIsRequestingPendingPosts,
+  adminIsRequestingPendingPosts,
 }: PlacesListProps) {
   const searchParams = useSearchParams();
   const status = searchParams.get('status');
@@ -70,10 +70,10 @@ export function DashboardContent({
         limit: 10,
         postCategory: postCategory ?? undefined,
         status:
-          userIsRequestindPendingPosts || adminIsRequestindPendingPosts
+          userIsRequestingPendingPosts || adminIsRequestingPendingPosts
             ? 'PENDING'
             : 'APPROVED',
-        userId: userIsRequestindPendingPosts ? userId : undefined,
+        userId: userIsRequestingPendingPosts ? userId : undefined,
       });
 
       if (newPlaces.length === 0) {
@@ -87,8 +87,8 @@ export function DashboardContent({
   }, [
     page,
     postCategory,
-    userIsRequestindPendingPosts,
-    adminIsRequestindPendingPosts,
+    userIsRequestingPendingPosts,
+    adminIsRequestingPendingPosts,
     userId,
   ]);
 

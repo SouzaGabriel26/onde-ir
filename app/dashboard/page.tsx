@@ -47,8 +47,8 @@ export default async function Page({ searchParams }: Props) {
       places={places}
       userId={user?.id ?? ''}
       userNotAuthenticated={!!userNotAuthenticated}
-      userIsRequestindPendingPosts={userIsRequestingPendingPosts}
-      adminIsRequestindPendingPosts={adminIsRequestingPendingPosts}
+      userIsRequestingPendingPosts={userIsRequestingPendingPosts}
+      adminIsRequestingPendingPosts={adminIsRequestingPendingPosts}
     />
   );
 }
