@@ -18,6 +18,8 @@ type PlacesListProps = {
   categories: Category[];
   userId: string;
   userNotAuthenticated: boolean;
+  userIsRequestingPendingPosts: boolean;
+  adminIsRequestingPendingPosts: boolean;
 };
 
 export function DashboardContent({
@@ -25,6 +27,8 @@ export function DashboardContent({
   categories,
   userId,
   userNotAuthenticated,
+  userIsRequestingPendingPosts,
+  adminIsRequestingPendingPosts,
 }: PlacesListProps) {
   const searchParams = useSearchParams();
   const status = searchParams.get('status');
@@ -59,20 +63,34 @@ export function DashboardContent({
   const loadMoreUsers = useCallback(async () => {
     setIsLoadingPlaces(true);
     const nextPage = page + 1;
-    const { places: newPlaces } = await loadPlacesAction({
-      page: nextPage,
-      limit: 10,
-      postCategory: postCategory ?? undefined,
-    });
 
-    if (newPlaces.length === 0) {
-      setIsToFetchMorePlaces(false);
-    }
+    setTimeout(async () => {
+      const { places: newPlaces } = await loadPlacesAction({
+        page: nextPage,
+        limit: 10,
+        postCategory: postCategory ?? undefined,
+        status:
+          userIsRequestingPendingPosts || adminIsRequestingPendingPosts
+            ? 'PENDING'
+            : 'APPROVED',
+        userId: userIsRequestingPendingPosts ? userId : undefined,
+      });
 
-    setPage(nextPage);
-    setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
-    setIsLoadingPlaces(false);
-  }, [page, postCategory]);
+      if (newPlaces.length === 0) {
+        setIsToFetchMorePlaces(false);
+      }
+
+      setPage(nextPage);
+      setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
+      setIsLoadingPlaces(false);
+    }, 500);
+  }, [
+    page,
+    postCategory,
+    userIsRequestingPendingPosts,
+    adminIsRequestingPendingPosts,
+    userId,
+  ]);
 
   useEffect(() => {
     if (inView && isToFetchMorePlaces) {

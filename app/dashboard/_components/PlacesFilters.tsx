@@ -18,14 +18,10 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
       <ul className="flex gap-4">
         <li className="cursor-pointer">
           <Link
-            href={{
-              href: '/dashboard/',
-              query: {
-                type: 'all',
-              },
-            }}
+            href="/dashboard"
+            as="/dashboard"
             className={sanitizeClassName(
-              currentFilter === 'all' ? 'border-b-2 border-primary' : '',
+              !currentFilter ? 'border-b-2 border-primary' : '',
             )}
           >
             Todos
