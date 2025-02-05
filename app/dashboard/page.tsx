@@ -31,7 +31,7 @@ export default async function Page({ searchParams }: Props) {
         userIsRequestingPendingPosts || adminIsRequestingPendingPosts
           ? 'PENDING'
           : 'APPROVED',
-      categoryName: type === 'all' ? undefined : type,
+      categoryName: type,
       createdBy: userIsRequestingPendingPosts ? user.id : undefined,
     },
   });
@@ -47,6 +47,8 @@ export default async function Page({ searchParams }: Props) {
       places={places}
       userId={user?.id ?? ''}
       userNotAuthenticated={!!userNotAuthenticated}
+      userIsRequestindPendingPosts={userIsRequestingPendingPosts}
+      adminIsRequestindPendingPosts={adminIsRequestingPendingPosts}
     />
   );
 }

@@ -18,6 +18,8 @@ type PlacesListProps = {
   categories: Category[];
   userId: string;
   userNotAuthenticated: boolean;
+  userIsRequestindPendingPosts: boolean;
+  adminIsRequestindPendingPosts: boolean;
 };
 
 export function DashboardContent({
@@ -25,6 +27,8 @@ export function DashboardContent({
   categories,
   userId,
   userNotAuthenticated,
+  userIsRequestindPendingPosts,
+  adminIsRequestindPendingPosts,
 }: PlacesListProps) {
   const searchParams = useSearchParams();
   const status = searchParams.get('status');
@@ -63,6 +67,11 @@ export function DashboardContent({
       page: nextPage,
       limit: 10,
       postCategory: postCategory ?? undefined,
+      status:
+        userIsRequestindPendingPosts || adminIsRequestindPendingPosts
+          ? 'PENDING'
+          : 'APPROVED',
+      userId: userIsRequestindPendingPosts ? userId : undefined,
     });
 
     if (newPlaces.length === 0) {
@@ -72,7 +81,13 @@ export function DashboardContent({
     setPage(nextPage);
     setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
     setIsLoadingPlaces(false);
-  }, [page, postCategory]);
+  }, [
+    page,
+    postCategory,
+    userIsRequestindPendingPosts,
+    adminIsRequestindPendingPosts,
+    userId,
+  ]);
 
   useEffect(() => {
     if (inView && isToFetchMorePlaces) {
