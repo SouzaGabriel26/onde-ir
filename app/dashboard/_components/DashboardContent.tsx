@@ -63,24 +63,27 @@ export function DashboardContent({
   const loadMoreUsers = useCallback(async () => {
     setIsLoadingPlaces(true);
     const nextPage = page + 1;
-    const { places: newPlaces } = await loadPlacesAction({
-      page: nextPage,
-      limit: 10,
-      postCategory: postCategory ?? undefined,
-      status:
-        userIsRequestindPendingPosts || adminIsRequestindPendingPosts
-          ? 'PENDING'
-          : 'APPROVED',
-      userId: userIsRequestindPendingPosts ? userId : undefined,
-    });
 
-    if (newPlaces.length === 0) {
-      setIsToFetchMorePlaces(false);
-    }
+    setTimeout(async () => {
+      const { places: newPlaces } = await loadPlacesAction({
+        page: nextPage,
+        limit: 10,
+        postCategory: postCategory ?? undefined,
+        status:
+          userIsRequestindPendingPosts || adminIsRequestindPendingPosts
+            ? 'PENDING'
+            : 'APPROVED',
+        userId: userIsRequestindPendingPosts ? userId : undefined,
+      });
 
-    setPage(nextPage);
-    setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
-    setIsLoadingPlaces(false);
+      if (newPlaces.length === 0) {
+        setIsToFetchMorePlaces(false);
+      }
+
+      setPage(nextPage);
+      setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
+      setIsLoadingPlaces(false);
+    }, 500);
   }, [
     page,
     postCategory,
