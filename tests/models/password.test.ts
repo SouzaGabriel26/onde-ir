@@ -384,7 +384,7 @@ describe('> models/password', () => {
         email: 'testuser@mail.com',
         password: 'test_user',
         confirmPassword: 'test_user',
-        userName: 'testuser',
+        user_name: 'testuser',
       };
 
       await auth.signUp(authDataSource, userInput);
@@ -533,7 +533,7 @@ describe('> models/password', () => {
         email: 'testing-02@email.com',
         password: 'password123',
         confirmPassword: 'password123',
-        userName: 'testing_02',
+        user_name: 'testing_02',
       };
       await auth.signUp(authDataSource, userInput);
 
@@ -575,7 +575,7 @@ describe('> models/password', () => {
         email: 'randomtest@mail.com',
         password: '123456',
         confirmPassword: '123456',
-        userName: 'user123',
+        user_name: 'user123',
       };
 
       const authDataSource = createAuthenticationDataSource();

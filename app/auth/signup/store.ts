@@ -53,7 +53,7 @@ export async function signUpAction(
   });
 
   if (signUpResponse.data) {
-    const { userName, email, name } = signUpResponse.data;
+    const { user_name, email, name } = signUpResponse.data;
 
     await emailService.sendWelcomeMessage({
       from: 'Onde Ir <onboarding@resend.dev>',
@@ -68,7 +68,7 @@ export async function signUpAction(
       content: 'Usuário cadastrado com sucesso!',
     });
 
-    redirect(`/auth/signin?userName=${userName}`);
+    redirect(`/auth/signin?user_name=${user_name}`);
   }
 
   await feedbackMessage.setFeedbackMessage({
@@ -84,7 +84,7 @@ export async function signUpAction(
       email: sanitizedData.email,
       name: sanitizedData.name,
       password: sanitizedData.password,
-      userName: sanitizedData.userName,
+      user_name: sanitizedData.user_name,
     },
   };
 }

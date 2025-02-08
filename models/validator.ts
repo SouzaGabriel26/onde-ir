@@ -78,12 +78,12 @@ const schema = z.object({
     .email({
       message: '"email" precisa ser um email válido.',
     }),
-  userName: z
+  user_name: z
     .string({
-      required_error: '"userName" é obrigatório.',
-      invalid_type_error: '"userName" precisa ser uma string.',
+      required_error: '"user_name" é obrigatório.',
+      invalid_type_error: '"user_name" precisa ser uma string.',
     })
-    .refine((s) => !s.includes(' '), '"userName" não pode ter espaços.'),
+    .refine((s) => !s.includes(' '), '"user_name" não pode ter espaços.'),
   password: z
     .string({
       required_error: '"password" é obrigatório.',
@@ -158,7 +158,7 @@ const schema = z.object({
             'email',
             'name',
             'password',
-            'userName',
+            'user_name',
             'userRole',
             'createdAt',
             'updatedAt',

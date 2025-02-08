@@ -48,12 +48,12 @@ export function SignupForm() {
       />
       <Input
         required
-        id="userName"
-        defaultValue={state.inputs?.userName}
+        id="user_name"
+        defaultValue={state.inputs?.user_name}
         placeholder="Username*"
-        name="userName"
+        name="user_name"
         autoComplete="off"
-        error={setInputError('userName', {
+        error={setInputError('user_name', {
           fields: state?.error?.fields,
           message: state?.error?.message,
         })}

@@ -23,7 +23,7 @@ export type FailureAuthResponse<T = unknown> = {
 type SuccessAuthSignUpResponse = {
   email: string;
   name: string;
-  userName: string;
+  user_name: string;
 };
 
 type Payload = {
@@ -63,7 +63,7 @@ export const auth = Object.freeze({
 export type SignUpProps = {
   email: ValidationSchema['email'];
   name: ValidationSchema['name'];
-  userName: ValidationSchema['userName'];
+  user_name: ValidationSchema['user_name'];
   password: ValidationSchema['password'];
   confirmPassword: ValidationSchema['confirmPassword'];
   avatarUrl?: ValidationSchema['avatarUrl'];
@@ -85,7 +85,7 @@ async function signUp(
   const insecureInput = {
     email: input.email,
     name: input.name,
-    userName: input.userName,
+    user_name: input.user_name,
     password: input.password,
     confirmPassword: input.confirmPassword,
     avatarUrl: input.avatarUrl,
@@ -94,7 +94,7 @@ async function signUp(
   const { data: secureInput, error } = validator(insecureInput, {
     name: 'required',
     email: 'required',
-    userName: 'required',
+    user_name: 'required',
     password: 'required',
     confirmPassword: 'required',
     avatarUrl: 'optional',
@@ -111,7 +111,7 @@ async function signUp(
     email,
     name,
     password: userPassword,
-    userName,
+    user_name,
     avatarUrl,
   } = secureInput;
 
@@ -124,12 +124,12 @@ async function signUp(
   }
 
   const isUserNameAlreadyInUse = await authDataSource.findUserByUserName({
-    userName,
+    user_name,
   });
   if (isUserNameAlreadyInUse) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'O nome de usuário já está em uso',
-      fields: ['userName'],
+      fields: ['user_name'],
     });
   }
 
@@ -139,11 +139,11 @@ async function signUp(
     email,
     name,
     password: hashedPassword,
-    userName,
+    user_name,
     avatarUrl,
   });
 
-  return operationResult.success({ email, name, userName });
+  return operationResult.success({ email, name, user_name });
 }
 
 export type SignInProps = {

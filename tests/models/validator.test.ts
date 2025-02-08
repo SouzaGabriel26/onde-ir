@@ -322,22 +322,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "userName"', () => {
+  describe('Testing "user_name"', () => {
     test('Providing valid value to optional parameter', () => {
-      const userName = 'testeusername';
+      const user_name = 'testeusername';
 
       const result = validator(
         {
-          userName,
+          user_name,
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userName,
+          user_name,
         },
         error: null,
       });
@@ -346,37 +346,37 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          userName: 123 as unknown as string,
+          user_name: 123 as unknown as string,
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" precisa ser uma string.',
-          fields: ['userName'],
+          message: '"user_name" precisa ser uma string.',
+          fields: ['user_name'],
         },
       });
     });
 
-    test('Providing a invalid userName (with spaces) to optional parameter', () => {
+    test('Providing a invalid user_name (with spaces) to optional parameter', () => {
       const result = validator(
         {
-          userName: 'user name',
+          user_name: 'user name',
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" não pode ter espaços.',
-          fields: ['userName'],
+          message: '"user_name" não pode ter espaços.',
+          fields: ['user_name'],
         },
       });
     });
@@ -384,56 +384,56 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          userName: 123 as unknown as string,
+          user_name: 123 as unknown as string,
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" precisa ser uma string.',
-          fields: ['userName'],
+          message: '"user_name" precisa ser uma string.',
+          fields: ['user_name'],
         },
       });
     });
 
-    test('Providing a invalid userName (with spaces) to required parameter', () => {
+    test('Providing a invalid user_name (with spaces) to required parameter', () => {
       const result = validator(
         {
-          userName: 'user name',
+          user_name: 'user name',
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" não pode ter espaços.',
-          fields: ['userName'],
+          message: '"user_name" não pode ter espaços.',
+          fields: ['user_name'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const userName = 'testeusername';
+      const user_name = 'testeusername';
 
       const result = validator(
         {
-          userName,
+          user_name,
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userName,
+          user_name,
         },
         error: null,
       });
@@ -1232,7 +1232,7 @@ describe('> models/validator', () => {
     test('Providing valid value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName'],
+          selectUserFields: ['name', 'email', 'user_name'],
         },
         {
           selectUserFields: 'optional',
@@ -1241,7 +1241,7 @@ describe('> models/validator', () => {
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'userName'],
+          selectUserFields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1266,7 +1266,7 @@ describe('> models/validator', () => {
     test('Providing a invalid property to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+          selectUserFields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
           selectUserFields: 'optional',
@@ -1305,7 +1305,7 @@ describe('> models/validator', () => {
     test('Providing valid value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName'],
+          selectUserFields: ['name', 'email', 'user_name'],
         },
         {
           selectUserFields: 'required',
@@ -1314,7 +1314,7 @@ describe('> models/validator', () => {
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'userName'],
+          selectUserFields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1342,7 +1342,7 @@ describe('> models/validator', () => {
     test('Providing a invalid property to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+          selectUserFields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
           selectUserFields: 'required',

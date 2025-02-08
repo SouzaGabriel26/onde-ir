@@ -47,10 +47,10 @@ export function createAuthenticationDataSource() {
   }
 
   type FindByUserNameInput = {
-    userName: string;
+    user_name: string;
   };
 
-  async function findUserByUserName({ userName }: FindByUserNameInput) {
+  async function findUserByUserName({ user_name }: FindByUserNameInput) {
     const result = await authenticationPool.query({
       text: sql`
         SELECT
@@ -60,7 +60,7 @@ export function createAuthenticationDataSource() {
           users
         WHERE
           user_name = $1`,
-      values: [userName],
+      values: [user_name],
     });
 
     return result?.rows[0] as Output | null;
@@ -69,7 +69,7 @@ export function createAuthenticationDataSource() {
   type SignUpInput = Omit<SignUpProps, 'confirmPassword'>;
 
   async function signUp(input: SignUpInput) {
-    const { email, name, password, userName, avatarUrl } = input;
+    const { email, name, password, user_name, avatarUrl } = input;
 
     const query = {
       text: sql`
@@ -78,7 +78,7 @@ export function createAuthenticationDataSource() {
         VALUES
           ($1, $2, $3, $4)
       `,
-      values: [email, name, password, userName],
+      values: [email, name, password, user_name],
     };
 
     if (avatarUrl) {

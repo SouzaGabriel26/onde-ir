@@ -3,7 +3,7 @@ export type User = {
   email: string;
   name: string;
   password: string;
-  userName: string;
+  user_name: string;
   avatarUrl?: string;
   userRole: 'ADMIN' | 'USER';
   createdAt: Date;
