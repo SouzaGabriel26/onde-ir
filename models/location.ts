@@ -21,17 +21,17 @@ async function getStates() {
 async function getCitiesByState(stateId: number) {
   const { data: secureInput, error } = validator(
     {
-      stateId,
+      state_id: stateId,
     },
     {
-      stateId: 'required',
+      state_id: 'required',
     },
   );
 
   if (error) return operationResult.failure(error);
 
   const data = await fetch(
-    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${secureInput.stateId}/municipios`,
+    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${secureInput.state_id}/municipios`,
   );
 
   const cities = (await data.json()) as Array<City>;

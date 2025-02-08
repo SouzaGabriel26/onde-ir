@@ -171,13 +171,13 @@ const schema = z.object({
       required_error: '"select_user_fields" é obrigatório.',
     },
   ),
-  stateId: z
+  state_id: z
     .number({
-      required_error: '"stateId" é obrigatório.',
-      invalid_type_error: '"stateId" precisa ser um número.',
+      required_error: '"state_id" é obrigatório.',
+      invalid_type_error: '"state_id" precisa ser um número.',
     })
     .min(1, {
-      message: '"stateId" precisa ser um número maior que 0.',
+      message: '"state_id" precisa ser um número maior que 0.',
     }),
   page: z
     .number({

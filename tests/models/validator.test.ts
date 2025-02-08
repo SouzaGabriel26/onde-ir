@@ -1379,20 +1379,20 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "stateId"', () => {
+  describe('Testing "state_id"', () => {
     test('Providing valid value to optional parameter', () => {
       const result = validator(
         {
-          stateId: 32,
+          state_id: 32,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          stateId: 32,
+          state_id: 32,
         },
         error: null,
       });
@@ -1401,10 +1401,10 @@ describe('> models/validator', () => {
     test('Providing undefined to optional parameter', () => {
       const result = validator(
         {
-          stateId: undefined,
+          state_id: undefined,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
@@ -1417,37 +1417,37 @@ describe('> models/validator', () => {
     test('Providing invalid type to optional parameter', () => {
       const result = validator(
         {
-          stateId: '32' as unknown as number,
+          state_id: '32' as unknown as number,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número.',
+          fields: ['state_id'],
         },
       });
     });
 
-    test('Providing a "stateId" less than 1 to optional parameter', () => {
+    test('Providing a "state_id" less than 1 to optional parameter', () => {
       const result = validator(
         {
-          stateId: 0,
+          state_id: 0,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número maior que 0.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número maior que 0.',
+          fields: ['state_id'],
         },
       });
     });
@@ -1455,16 +1455,16 @@ describe('> models/validator', () => {
     test('Providing valid value to required parameter', () => {
       const result = validator(
         {
-          stateId: 32,
+          state_id: 32,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          stateId: 32,
+          state_id: 32,
         },
         error: null,
       });
@@ -1473,18 +1473,18 @@ describe('> models/validator', () => {
     test('Providing undefined to required parameter', () => {
       const result = validator(
         {
-          stateId: undefined,
+          state_id: undefined,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" é obrigatório.',
-          fields: ['stateId'],
+          message: '"state_id" é obrigatório.',
+          fields: ['state_id'],
         },
       });
     });
@@ -1492,37 +1492,37 @@ describe('> models/validator', () => {
     test('Providing invalid type to required parameter', () => {
       const result = validator(
         {
-          stateId: '32' as unknown as number,
+          state_id: '32' as unknown as number,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número.',
+          fields: ['state_id'],
         },
       });
     });
 
-    test('Providing a "stateId" less than 1 to required parameter', () => {
+    test('Providing a "state_id" less than 1 to required parameter', () => {
       const result = validator(
         {
-          stateId: 0,
+          state_id: 0,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número maior que 0.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número maior que 0.',
+          fields: ['state_id'],
         },
       });
     });
