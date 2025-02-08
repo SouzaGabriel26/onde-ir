@@ -37,7 +37,7 @@ async function findAll(
     {
       page: input.page,
       limit: input.limit,
-      searchTerm: input.where?.searchTerm,
+      search_term: input.where?.searchTerm,
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
@@ -47,7 +47,7 @@ async function findAll(
     {
       limit: 'required',
       page: 'required',
-      searchTerm: 'optional',
+      search_term: 'optional',
       state: 'optional',
       name: 'optional',
       status: 'optional',
