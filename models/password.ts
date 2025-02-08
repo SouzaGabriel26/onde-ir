@@ -74,7 +74,7 @@ async function forgot(
 export type ResetPasswordInput = {
   resetPasswordTokenId: string;
   password: string;
-  confirmPassword: string;
+  confirm_password: string;
 };
 
 async function reset(
@@ -84,12 +84,12 @@ async function reset(
   const insecureInput = {
     resetPasswordTokenId: input.resetPasswordTokenId,
     password: input.password,
-    confirmPassword: input.confirmPassword,
+    confirm_password: input.confirm_password,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
     password: 'required',
-    confirmPassword: 'required',
+    confirm_password: 'required',
     resetPasswordTokenId: 'required',
   });
 
@@ -100,12 +100,12 @@ async function reset(
     });
   }
 
-  const { password, confirmPassword, resetPasswordTokenId } = secureInput;
+  const { password, confirm_password, resetPasswordTokenId } = secureInput;
 
-  if (password !== confirmPassword) {
+  if (password !== confirm_password) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'As senhas precisam ser iguais.',
-      fields: ['password', 'confirmPassword'],
+      fields: ['password', 'confirm_password'],
     });
   }
 

@@ -105,7 +105,7 @@ describe('> models/password', () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await password.reset(authDataSource, {
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
         resetPasswordTokenId: 'invalid_token_id',
       });
 
@@ -122,7 +122,7 @@ describe('> models/password', () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input = {
-        confirmPassword: '123456',
+        confirm_password: '123456',
         resetPasswordTokenId: uuid,
       };
 
@@ -140,7 +140,7 @@ describe('> models/password', () => {
       });
     });
 
-    test('Without providing "confirmPassword" property', async () => {
+    test('Without providing "confirm_password" property', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input = {
@@ -156,8 +156,8 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" é obrigatório.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" é obrigatório.',
+          fields: ['confirm_password'],
         },
       });
     });
@@ -167,7 +167,7 @@ describe('> models/password', () => {
       const result = await password.reset(authDataSource, {
         resetPasswordTokenId: uuid,
         password: '12',
-        confirmPassword: '12',
+        confirm_password: '12',
       });
 
       expect(result).toStrictEqual({
@@ -179,12 +179,12 @@ describe('> models/password', () => {
       });
     });
 
-    test('Providing "password" different from "confirmPassword"', async () => {
+    test('Providing "password" different from "confirm_password"', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const result = await password.reset(authDataSource, {
         password: '123456',
-        confirmPassword: '111222333',
+        confirm_password: '111222333',
         resetPasswordTokenId: uuid,
       });
 
@@ -192,7 +192,7 @@ describe('> models/password', () => {
         data: null,
         error: {
           message: 'As senhas precisam ser iguais.',
-          fields: ['password', 'confirmPassword'],
+          fields: ['password', 'confirm_password'],
         },
       });
     });
@@ -205,7 +205,7 @@ describe('> models/password', () => {
 
       const input: ResetPasswordInput = {
         password: 'gabriel123',
-        confirmPassword: 'gabriel123',
+        confirm_password: 'gabriel123',
         resetPasswordTokenId: data!.resetPasswordTokenId,
       };
 
@@ -247,7 +247,7 @@ describe('> models/password', () => {
 
       const input = {
         password: 'newPassword',
-        confirmPassword: 'newPassword',
+        confirm_password: 'newPassword',
         resetPasswordTokenId: data!.resetPasswordTokenId,
       };
 
@@ -272,7 +272,7 @@ describe('> models/password', () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await password.reset(authDataSource, {
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
         resetPasswordTokenId: uuid,
       });
 
@@ -383,7 +383,7 @@ describe('> models/password', () => {
         name: 'Test user',
         email: 'testuser@mail.com',
         password: 'test_user',
-        confirmPassword: 'test_user',
+        confirm_password: 'test_user',
         user_name: 'testuser',
       };
 
@@ -532,7 +532,7 @@ describe('> models/password', () => {
         name: 'Testing 02',
         email: 'testing-02@email.com',
         password: 'password123',
-        confirmPassword: 'password123',
+        confirm_password: 'password123',
         user_name: 'testing_02',
       };
       await auth.signUp(authDataSource, userInput);
@@ -574,7 +574,7 @@ describe('> models/password', () => {
         name: 'test',
         email: 'randomtest@mail.com',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
         user_name: 'user123',
       };
 

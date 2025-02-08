@@ -58,15 +58,15 @@ export function ResetPasswordForm({ tokenId }: { tokenId: string }) {
       />
       <Input
         required
-        id="confirmPassword"
-        defaultValue={state?.inputs?.confirmPassword}
+        id="confirm_password"
+        defaultValue={state?.inputs?.confirm_password}
         type="password"
-        name="confirmPassword"
+        name="confirm_password"
         placeholder="Confirmação de senha"
-        error={setInputError('confirmPassword', {
+        error={setInputError('confirm_password', {
           fields: state?.error?.fields,
           message: state?.error?.message.replace(
-            'confirmPassword',
+            'confirm_password',
             'confirmação de senha',
           ),
         })}

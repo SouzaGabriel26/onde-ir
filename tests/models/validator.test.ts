@@ -558,22 +558,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "confirmPassword"', () => {
+  describe('Testing "confirm_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const confirmPassword = 'confirmPassword';
+      const confirm_password = 'confirm_password';
 
       const result = validator(
         {
-          confirmPassword,
+          confirm_password,
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmPassword,
+          confirm_password,
         },
         error: null,
       });
@@ -582,56 +582,56 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as unknown as string,
+          confirm_password: 123 as unknown as string,
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ser uma string.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ser uma string.',
+          fields: ['confirm_password'],
         },
       });
     });
 
-    test('Providing a "confirmPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "confirm_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          confirmPassword: 'pass',
+          confirm_password: 'pass',
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const confirmPassword = 'confirmPassword';
+      const confirm_password = 'confirm_password';
 
       const result = validator(
         {
-          confirmPassword,
+          confirm_password,
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmPassword,
+          confirm_password,
         },
         error: null,
       });
@@ -640,37 +640,37 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as unknown as string,
+          confirm_password: 123 as unknown as string,
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ser uma string.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ser uma string.',
+          fields: ['confirm_password'],
         },
       });
     });
 
-    test('Providing a "confirmPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "confirm_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          confirmPassword: 'pass',
+          confirm_password: 'pass',
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_password'],
         },
       });
     });

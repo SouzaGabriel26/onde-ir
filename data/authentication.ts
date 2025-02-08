@@ -66,7 +66,7 @@ export function createAuthenticationDataSource() {
     return result?.rows[0] as Output | null;
   }
 
-  type SignUpInput = Omit<SignUpProps, 'confirmPassword'>;
+  type SignUpInput = Omit<SignUpProps, 'confirm_password'>;
 
   async function signUp(input: SignUpInput) {
     const { email, name, password, user_name, avatarUrl } = input;

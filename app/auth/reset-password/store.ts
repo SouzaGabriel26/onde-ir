@@ -35,7 +35,7 @@ export async function resetPasswordAction(
       error: responseMessage.error,
       inputs: {
         resetPasswordTokenId: data.resetPasswordTokenId,
-        confirmPassword: data.confirmPassword,
+        confirm_password: data.confirm_password,
         password: data.password,
       },
     };

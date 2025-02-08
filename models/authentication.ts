@@ -65,7 +65,7 @@ export type SignUpProps = {
   name: ValidationSchema['name'];
   user_name: ValidationSchema['user_name'];
   password: ValidationSchema['password'];
-  confirmPassword: ValidationSchema['confirmPassword'];
+  confirm_password: ValidationSchema['confirm_password'];
   avatarUrl?: ValidationSchema['avatarUrl'];
 };
 
@@ -73,12 +73,12 @@ async function signUp(
   authDataSource: AuthenticationDataSource,
   input: SignUpProps,
 ): Promise<SignUpResponse> {
-  const isPasswordConfirmationValid = input.password === input.confirmPassword;
+  const isPasswordConfirmationValid = input.password === input.confirm_password;
 
   if (!isPasswordConfirmationValid) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'As senhas precisam ser iguais',
-      fields: ['password', 'confirmPassword'],
+      fields: ['password', 'confirm_password'],
     });
   }
 
@@ -87,7 +87,7 @@ async function signUp(
     name: input.name,
     user_name: input.user_name,
     password: input.password,
-    confirmPassword: input.confirmPassword,
+    confirm_password: input.confirm_password,
     avatarUrl: input.avatarUrl,
   };
 
@@ -96,7 +96,7 @@ async function signUp(
     email: 'required',
     user_name: 'required',
     password: 'required',
-    confirmPassword: 'required',
+    confirm_password: 'required',
     avatarUrl: 'optional',
   });
 

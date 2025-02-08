@@ -25,7 +25,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -40,7 +40,7 @@ describe('> models/authentication', () => {
       });
     });
 
-    test('Passing "password" different from "confirmPassword"', async () => {
+    test('Passing "password" different from "confirm_password"', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input: SignUpProps = {
@@ -48,7 +48,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '1234567',
+        confirm_password: '1234567',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -57,7 +57,7 @@ describe('> models/authentication', () => {
         data: null,
         error: {
           message: 'As senhas precisam ser iguais',
-          fields: ['password', 'confirmPassword'],
+          fields: ['password', 'confirm_password'],
         },
       });
     });
@@ -70,7 +70,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -92,7 +92,7 @@ describe('> models/authentication', () => {
         name: 'ga',
         user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -114,7 +114,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel 26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -135,7 +135,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel26',
         password: '1234',
-        confirmPassword: '1234',
+        confirm_password: '1234',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -168,7 +168,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input as SignUpProps);
@@ -190,7 +190,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'gabrielNovo',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -212,7 +212,7 @@ describe('> models/authentication', () => {
         name: 'Gabriel',
         user_name: 'normal_user',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);

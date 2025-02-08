@@ -73,13 +73,13 @@ export function SignupForm() {
       />
       <Input
         required
-        id="confirmPassword"
-        defaultValue={state.inputs?.confirmPassword}
+        id="confirm_password"
+        defaultValue={state.inputs?.confirm_password}
         placeholder="Confirmar Senha*"
         type="password"
-        name="confirmPassword"
+        name="confirm_password"
         autoComplete="off"
-        error={setInputError('confirmPassword', {
+        error={setInputError('confirm_password', {
           fields: state?.error?.fields,
           message: state?.error?.message,
         })}

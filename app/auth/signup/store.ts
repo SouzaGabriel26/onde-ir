@@ -80,7 +80,7 @@ export async function signUpAction(
     data: signUpResponse.data,
     error: signUpResponse.error,
     inputs: {
-      confirmPassword: sanitizedData.confirmPassword,
+      confirm_password: sanitizedData.confirm_password,
       email: sanitizedData.email,
       name: sanitizedData.name,
       password: sanitizedData.password,
