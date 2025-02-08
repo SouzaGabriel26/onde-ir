@@ -290,7 +290,7 @@ describe('> models/password', () => {
     test('Providing invalid format "user_id" property', async () => {
       const input = {
         user_id: 'invalid_id',
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123456',
         confirmNewPassword: '123456',
       };
@@ -310,7 +310,7 @@ describe('> models/password', () => {
 
     test('Without providing "user_id" property', async () => {
       const input = {
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123456',
         confirmNewPassword: '123456',
       };
@@ -335,7 +335,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123456',
         confirmNewPassword: '123456',
       };
@@ -352,7 +352,7 @@ describe('> models/password', () => {
       });
     });
 
-    test('Without providing "currentPassword" property', async () => {
+    test('Without providing "current_password" property', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
@@ -370,13 +370,13 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"currentPassword" é obrigatório.',
-          fields: ['currentPassword'],
+          message: '"current_password" é obrigatório.',
+          fields: ['current_password'],
         },
       });
     });
 
-    test('Providing an invalid "currentPassword" property', async () => {
+    test('Providing an invalid "current_password" property', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const userInput = {
@@ -394,7 +394,7 @@ describe('> models/password', () => {
       });
 
       const result = await password.change(authDataSource, {
-        currentPassword: 'invalid_password',
+        current_password: 'invalid_password',
         newPassword: '123456',
         confirmNewPassword: '123456',
         user_id: createdUser!.id,
@@ -404,7 +404,7 @@ describe('> models/password', () => {
         data: null,
         error: {
           message: 'Senha atual inválida',
-          fields: ['currentPassword'],
+          fields: ['current_password'],
         },
       });
     });
@@ -414,7 +414,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         confirmNewPassword: '123456',
       };
 
@@ -438,7 +438,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123',
         confirmNewPassword: '123456',
       };
@@ -460,7 +460,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123456',
       };
 
@@ -484,7 +484,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '123456',
         confirmNewPassword: '123',
       };
@@ -506,7 +506,7 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        currentPassword: '123123',
+        current_password: '123123',
         newPassword: '1234567',
         confirmNewPassword: '123456',
       };
@@ -543,7 +543,7 @@ describe('> models/password', () => {
 
       const result = await password.change(authDataSource, {
         user_id: createdUser!.id,
-        currentPassword: userInput.password,
+        current_password: userInput.password,
         confirmNewPassword: 'newPassword123',
         newPassword: 'newPassword123',
       });
@@ -589,7 +589,7 @@ describe('> models/password', () => {
 
       const result = await password.change(authDataSource, {
         user_id: createdUser!.id,
-        currentPassword: input.password,
+        current_password: input.password,
         newPassword: newPassword,
         confirmNewPassword: newPassword,
       });

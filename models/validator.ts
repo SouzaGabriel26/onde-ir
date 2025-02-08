@@ -124,9 +124,9 @@ const schema = z.object({
     .uuid({
       message: '"user_id" precisa ser um UUID válido.',
     }),
-  currentPassword: z.string({
-    required_error: '"currentPassword" é obrigatório.',
-    invalid_type_error: '"currentPassword" precisa ser uma string.',
+  current_password: z.string({
+    required_error: '"current_password" é obrigatório.',
+    invalid_type_error: '"current_password" precisa ser uma string.',
   }),
   newPassword: z
     .string({

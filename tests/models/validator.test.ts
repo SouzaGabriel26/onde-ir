@@ -912,22 +912,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "currentPassword"', () => {
+  describe('Testing "current_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const currentPassword = 'password';
+      const current_password = 'password';
 
       const result = validator(
         {
-          currentPassword,
+          current_password,
         },
         {
-          currentPassword: 'optional',
+          current_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          currentPassword,
+          current_password,
         },
         error: null,
       });
@@ -936,37 +936,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as unknown as string,
+          current_password: 123 as unknown as string,
         },
         {
-          currentPassword: 'optional',
+          current_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"currentPassword" precisa ser uma string.',
-          fields: ['currentPassword'],
+          message: '"current_password" precisa ser uma string.',
+          fields: ['current_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const currentPassword = 'password';
+      const current_password = 'password';
 
       const result = validator(
         {
-          currentPassword,
+          current_password,
         },
         {
-          currentPassword: 'required',
+          current_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          currentPassword,
+          current_password,
         },
         error: null,
       });
@@ -975,18 +975,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as unknown as string,
+          current_password: 123 as unknown as string,
         },
         {
-          currentPassword: 'required',
+          current_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"currentPassword" precisa ser uma string.',
-          fields: ['currentPassword'],
+          message: '"current_password" precisa ser uma string.',
+          fields: ['current_password'],
         },
       });
     });
