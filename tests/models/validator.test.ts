@@ -992,22 +992,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "newPassword"', () => {
+  describe('Testing "new_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const newPassword = 'new_password';
+      const new_password = 'new_password';
 
       const result = validator(
         {
-          newPassword,
+          new_password,
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          newPassword,
+          new_password,
         },
         error: null,
       });
@@ -1016,56 +1016,56 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as unknown as string,
+          new_password: 123 as unknown as string,
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ser uma string.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ser uma string.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Providing a "newPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "new_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          newPassword: 'pass',
+          new_password: 'pass',
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['new_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const newPassword = 'new_password';
+      const new_password = 'new_password';
 
       const result = validator(
         {
-          newPassword,
+          new_password,
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          newPassword,
+          new_password,
         },
         error: null,
       });
@@ -1074,58 +1074,58 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as unknown as string,
+          new_password: 123 as unknown as string,
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ser uma string.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ser uma string.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Providing a "newPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "new_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          newPassword: 'pass',
+          new_password: 'pass',
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['new_password'],
         },
       });
     });
   });
 
-  describe('Testing "confirmNewPassword"', () => {
+  describe('Testing "confirm_new_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const confirmNewPassword = 'new_password';
+      const confirm_new_password = 'new_password';
 
       const result = validator(
         {
-          confirmNewPassword,
+          confirm_new_password,
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmNewPassword,
+          confirm_new_password,
         },
         error: null,
       });
@@ -1134,56 +1134,56 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as unknown as string,
+          confirm_new_password: 123 as unknown as string,
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ser uma string.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ser uma string.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing a "confirmNewPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "confirm_new_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 'pass',
+          confirm_new_password: 'pass',
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const confirmNewPassword = 'new_password';
+      const confirm_new_password = 'new_password';
 
       const result = validator(
         {
-          confirmNewPassword,
+          confirm_new_password,
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmNewPassword,
+          confirm_new_password,
         },
         error: null,
       });
@@ -1192,37 +1192,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as unknown as string,
+          confirm_new_password: 123 as unknown as string,
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ser uma string.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ser uma string.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing a "confirmNewPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "confirm_new_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 'pass',
+          confirm_new_password: 'pass',
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_new_password'],
         },
       });
     });

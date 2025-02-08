@@ -246,8 +246,8 @@ describe('> models/password', () => {
       });
 
       const input = {
-        password: 'newPassword',
-        confirm_password: 'newPassword',
+        password: 'new_password',
+        confirm_password: 'new_password',
         reset_password_token_id: data!.reset_password_token_id,
       };
 
@@ -291,8 +291,8 @@ describe('> models/password', () => {
       const input = {
         user_id: 'invalid_id',
         current_password: '123123',
-        newPassword: '123456',
-        confirmNewPassword: '123456',
+        new_password: '123456',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -311,8 +311,8 @@ describe('> models/password', () => {
     test('Without providing "user_id" property', async () => {
       const input = {
         current_password: '123123',
-        newPassword: '123456',
-        confirmNewPassword: '123456',
+        new_password: '123456',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -336,8 +336,8 @@ describe('> models/password', () => {
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        newPassword: '123456',
-        confirmNewPassword: '123456',
+        new_password: '123456',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -357,8 +357,8 @@ describe('> models/password', () => {
 
       const input = {
         user_id: fakeUserId,
-        newPassword: '123456',
-        confirmNewPassword: '123456',
+        new_password: '123456',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -395,8 +395,8 @@ describe('> models/password', () => {
 
       const result = await password.change(authDataSource, {
         current_password: 'invalid_password',
-        newPassword: '123456',
-        confirmNewPassword: '123456',
+        new_password: '123456',
+        confirm_new_password: '123456',
         user_id: createdUser!.id,
       });
 
@@ -409,13 +409,13 @@ describe('> models/password', () => {
       });
     });
 
-    test('Without providing "newPassword" property', async () => {
+    test('Without providing "new_password" property', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        confirmNewPassword: '123456',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -427,20 +427,20 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" é obrigatório.',
-          fields: ['newPassword'],
+          message: '"new_password" é obrigatório.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Providing "newPassword" with less than 6 characters', async () => {
+    test('Providing "new_password" with less than 6 characters', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        newPassword: '123',
-        confirmNewPassword: '123456',
+        new_password: '123',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -449,19 +449,19 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Without providing "confirmNewPassword" property', async () => {
+    test('Without providing "confirm_new_password" property', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        newPassword: '123456',
+        new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -473,20 +473,20 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" é obrigatório.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" é obrigatório.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing "confirmNewPassword" with less than 6 characters', async () => {
+    test('Providing "confirm_new_password" with less than 6 characters', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        newPassword: '123456',
-        confirmNewPassword: '123',
+        new_password: '123456',
+        confirm_new_password: '123',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -495,20 +495,20 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing "newPassword" different from "confirmNewPassword"', async () => {
+    test('Providing "new_password" different from "confirm_new_password"', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
         user_id: fakeUserId,
         current_password: '123123',
-        newPassword: '1234567',
-        confirmNewPassword: '123456',
+        new_password: '1234567',
+        confirm_new_password: '123456',
       };
 
       const authDataSource = createAuthenticationDataSource();
@@ -518,7 +518,7 @@ describe('> models/password', () => {
         data: null,
         error: {
           message: 'As novas senhas precisam ser iguais',
-          fields: ['newPassword', 'confirmNewPassword'],
+          fields: ['new_password', 'confirm_new_password'],
         },
       });
     });
@@ -544,8 +544,8 @@ describe('> models/password', () => {
       const result = await password.change(authDataSource, {
         user_id: createdUser!.id,
         current_password: userInput.password,
-        confirmNewPassword: 'newPassword123',
-        newPassword: 'newPassword123',
+        confirm_new_password: 'new_password123',
+        new_password: 'new_password123',
       });
 
       expect(result).toStrictEqual({
@@ -585,13 +585,13 @@ describe('> models/password', () => {
         email: input.email,
       });
 
-      const newPassword = 'newPassword';
+      const new_password = 'new_password';
 
       const result = await password.change(authDataSource, {
         user_id: createdUser!.id,
         current_password: input.password,
-        newPassword: newPassword,
-        confirmNewPassword: newPassword,
+        new_password: new_password,
+        confirm_new_password: new_password,
       });
 
       expect(result).toStrictEqual({
@@ -601,7 +601,7 @@ describe('> models/password', () => {
 
       const signInWithNewPassword = await auth.signIn(authDataSource, {
         email: input.email,
-        password: newPassword,
+        password: new_password,
       });
 
       expect(signInWithNewPassword).toStrictEqual({

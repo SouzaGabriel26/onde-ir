@@ -128,21 +128,21 @@ const schema = z.object({
     required_error: '"current_password" é obrigatório.',
     invalid_type_error: '"current_password" precisa ser uma string.',
   }),
-  newPassword: z
+  new_password: z
     .string({
-      required_error: '"newPassword" é obrigatório.',
-      invalid_type_error: '"newPassword" precisa ser uma string.',
+      required_error: '"new_password" é obrigatório.',
+      invalid_type_error: '"new_password" precisa ser uma string.',
     })
     .min(6, {
-      message: '"newPassword" precisa ter no mínimo 6 caracteres.',
+      message: '"new_password" precisa ter no mínimo 6 caracteres.',
     }),
-  confirmNewPassword: z
+  confirm_new_password: z
     .string({
-      required_error: '"confirmNewPassword" é obrigatório.',
-      invalid_type_error: '"confirmNewPassword" precisa ser uma string.',
+      required_error: '"confirm_new_password" é obrigatório.',
+      invalid_type_error: '"confirm_new_password" precisa ser uma string.',
     })
     .min(6, {
-      message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
+      message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
     }),
   selectUserFields: z.array(
     z

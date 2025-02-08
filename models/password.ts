@@ -153,8 +153,8 @@ async function reset(
 export type ChangePasswordInput = {
   user_id: string;
   current_password: string;
-  newPassword: string;
-  confirmNewPassword: string;
+  new_password: string;
+  confirm_new_password: string;
 };
 
 async function change(
@@ -164,29 +164,29 @@ async function change(
   const insecureInput = {
     user_id: input.user_id,
     current_password: input.current_password,
-    newPassword: input.newPassword,
-    confirmNewPassword: input.confirmNewPassword,
+    new_password: input.new_password,
+    confirm_new_password: input.confirm_new_password,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
     user_id: 'required',
     current_password: 'required',
-    newPassword: 'required',
-    confirmNewPassword: 'required',
+    new_password: 'required',
+    confirm_new_password: 'required',
   });
 
   if (error) {
     return operationResult.failure(error);
   }
 
-  const { user_id, current_password, newPassword, confirmNewPassword } =
+  const { user_id, current_password, new_password, confirm_new_password } =
     secureInput;
 
-  const areNewPasswordsEqual = newPassword === confirmNewPassword;
+  const areNewPasswordsEqual = new_password === confirm_new_password;
   if (!areNewPasswordsEqual) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'As novas senhas precisam ser iguais',
-      fields: ['newPassword', 'confirmNewPassword'],
+      fields: ['new_password', 'confirm_new_password'],
     });
   }
 
@@ -211,7 +211,7 @@ async function change(
     });
   }
 
-  const hashedPassword = hash(newPassword);
+  const hashedPassword = hash(new_password);
 
   await authDataSource.resetPassword({
     password: hashedPassword,
