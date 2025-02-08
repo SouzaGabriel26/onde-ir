@@ -49,7 +49,7 @@ export async function signUpAction(
   const authDataSource = createAuthenticationDataSource();
   const signUpResponse = await auth.signUp(authDataSource, {
     ...sanitizedData,
-    avatarUrl: userAvatarURL ? userAvatarURL : undefined,
+    avatar_url: userAvatarURL ? userAvatarURL : undefined,
   });
 
   if (signUpResponse.data) {

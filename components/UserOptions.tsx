@@ -24,7 +24,7 @@ export function UserOptions({ user }: UserOptionsProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button className="w-fit p-0 rounded-full" variant="ghost">
-          <UserAvatar name={user.name ?? ''} imageUrl={user?.avatarUrl} />
+          <UserAvatar name={user.name ?? ''} imageUrl={user?.avatar_url} />
         </Button>
       </PopoverTrigger>
       <PopoverContent>

@@ -66,7 +66,7 @@ export type SignUpProps = {
   user_name: ValidationSchema['user_name'];
   password: ValidationSchema['password'];
   confirm_password: ValidationSchema['confirm_password'];
-  avatarUrl?: ValidationSchema['avatarUrl'];
+  avatar_url?: ValidationSchema['avatar_url'];
 };
 
 async function signUp(
@@ -88,7 +88,7 @@ async function signUp(
     user_name: input.user_name,
     password: input.password,
     confirm_password: input.confirm_password,
-    avatarUrl: input.avatarUrl,
+    avatar_url: input.avatar_url,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
@@ -97,7 +97,7 @@ async function signUp(
     user_name: 'required',
     password: 'required',
     confirm_password: 'required',
-    avatarUrl: 'optional',
+    avatar_url: 'optional',
   });
 
   if (error) {
@@ -112,7 +112,7 @@ async function signUp(
     name,
     password: userPassword,
     user_name,
-    avatarUrl,
+    avatar_url,
   } = secureInput;
 
   const isEmailAlreadyInUse = await authDataSource.findUserByEmail({ email });
@@ -140,7 +140,7 @@ async function signUp(
     name,
     password: hashedPassword,
     user_name,
-    avatarUrl,
+    avatar_url,
   });
 
   return operationResult.success({ email, name, user_name });

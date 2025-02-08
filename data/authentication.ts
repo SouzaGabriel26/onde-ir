@@ -69,7 +69,7 @@ export function createAuthenticationDataSource() {
   type SignUpInput = Omit<SignUpProps, 'confirm_password'>;
 
   async function signUp(input: SignUpInput) {
-    const { email, name, password, user_name, avatarUrl } = input;
+    const { email, name, password, user_name, avatar_url } = input;
 
     const query = {
       text: sql`
@@ -81,14 +81,14 @@ export function createAuthenticationDataSource() {
       values: [email, name, password, user_name],
     };
 
-    if (avatarUrl) {
+    if (avatar_url) {
       query.text = sql`
         INSERT INTO users
           (email, name, password, user_name, avatar_url)
         VALUES
           ($1, $2, $3, $4, $5)
       `;
-      query.values.push(avatarUrl);
+      query.values.push(avatar_url);
     }
 
     await authenticationPool.query(query);
