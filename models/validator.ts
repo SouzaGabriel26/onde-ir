@@ -344,13 +344,13 @@ const schema = z.object({
     .min(1, {
       message: '"search_term" precisa ter no mínimo 1 caractere.',
     }),
-  categoryName: z
+  category_name: z
     .string({
-      invalid_type_error: '"categoryName" precisa ser uma string.',
-      required_error: '"categoryName" é obrigatório.',
+      invalid_type_error: '"category_name" precisa ser uma string.',
+      required_error: '"category_name" é obrigatório.',
     })
     .trim()
     .min(1, {
-      message: '"categoryName" precisa ter no mínimo 1 caractere.',
+      message: '"category_name" precisa ter no mínimo 1 caractere.',
     }),
 });

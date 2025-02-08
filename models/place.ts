@@ -41,7 +41,7 @@ async function findAll(
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
-      categoryName: input.where?.categoryName,
+      category_name: input.where?.categoryName,
       created_by: input.where?.createdBy,
     },
     {
@@ -51,7 +51,7 @@ async function findAll(
       state: 'optional',
       name: 'optional',
       status: 'optional',
-      categoryName: 'optional',
+      category_name: 'optional',
       created_by: 'optional',
     },
   );
