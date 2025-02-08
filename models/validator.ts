@@ -78,12 +78,12 @@ const schema = z.object({
     .email({
       message: '"email" precisa ser um email válido.',
     }),
-  userName: z
+  user_name: z
     .string({
-      required_error: '"userName" é obrigatório.',
-      invalid_type_error: '"userName" precisa ser uma string.',
+      required_error: '"user_name" é obrigatório.',
+      invalid_type_error: '"user_name" precisa ser uma string.',
     })
-    .refine((s) => !s.includes(' '), '"userName" não pode ter espaços.'),
+    .refine((s) => !s.includes(' '), '"user_name" não pode ter espaços.'),
   password: z
     .string({
       required_error: '"password" é obrigatório.',
@@ -92,64 +92,64 @@ const schema = z.object({
     .min(6, {
       message: '"password" precisa ter no mínimo 6 caracteres.',
     }),
-  confirmPassword: z
+  confirm_password: z
     .string({
-      required_error: '"confirmPassword" é obrigatório.',
-      invalid_type_error: '"confirmPassword" precisa ser uma string.',
+      required_error: '"confirm_password" é obrigatório.',
+      invalid_type_error: '"confirm_password" precisa ser uma string.',
     })
     .min(6, {
-      message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
+      message: '"confirm_password" precisa ter no mínimo 6 caracteres.',
     }),
-  avatarUrl: z
+  avatar_url: z
     .string({
-      required_error: '"avatarUrl" é obrigatório.',
-      invalid_type_error: '"avatarUrl" precisa ser uma string.',
+      required_error: '"avatar_url" é obrigatório.',
+      invalid_type_error: '"avatar_url" precisa ser uma string.',
     })
     .url({
-      message: '"avatarUrl" precisa ser uma URL válida.',
+      message: '"avatar_url" precisa ser uma URL válida.',
     }),
-  resetPasswordTokenId: z
+  reset_password_token_id: z
     .string({
-      required_error: '"resetPasswordTokenId" é obrigatório.',
-      invalid_type_error: '"resetPasswordTokenId" precisa ser uma string.',
+      required_error: '"reset_password_token_id" é obrigatório.',
+      invalid_type_error: '"reset_password_token_id" precisa ser uma string.',
     })
     .uuid({
-      message: '"resetPasswordTokenId" precisa ser um UUID válido.',
+      message: '"reset_password_token_id" precisa ser um UUID válido.',
     }),
-  userId: z
+  user_id: z
     .string({
-      required_error: '"userId" é obrigatório.',
-      invalid_type_error: '"userId" precisa ser uma string.',
+      required_error: '"user_id" é obrigatório.',
+      invalid_type_error: '"user_id" precisa ser uma string.',
     })
     .uuid({
-      message: '"userId" precisa ser um UUID válido.',
+      message: '"user_id" precisa ser um UUID válido.',
     }),
-  currentPassword: z.string({
-    required_error: '"currentPassword" é obrigatório.',
-    invalid_type_error: '"currentPassword" precisa ser uma string.',
+  current_password: z.string({
+    required_error: '"current_password" é obrigatório.',
+    invalid_type_error: '"current_password" precisa ser uma string.',
   }),
-  newPassword: z
+  new_password: z
     .string({
-      required_error: '"newPassword" é obrigatório.',
-      invalid_type_error: '"newPassword" precisa ser uma string.',
+      required_error: '"new_password" é obrigatório.',
+      invalid_type_error: '"new_password" precisa ser uma string.',
     })
     .min(6, {
-      message: '"newPassword" precisa ter no mínimo 6 caracteres.',
+      message: '"new_password" precisa ter no mínimo 6 caracteres.',
     }),
-  confirmNewPassword: z
+  confirm_new_password: z
     .string({
-      required_error: '"confirmNewPassword" é obrigatório.',
-      invalid_type_error: '"confirmNewPassword" precisa ser uma string.',
+      required_error: '"confirm_new_password" é obrigatório.',
+      invalid_type_error: '"confirm_new_password" precisa ser uma string.',
     })
     .min(6, {
-      message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
+      message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
     }),
-  selectUserFields: z.array(
+  select_user_fields: z.array(
     z
       .string({
         invalid_type_error:
-          '"selectUserFields" precisa ser um array de strings.',
-        required_error: '"selectUserFields" é obrigatório.',
+          '"select_user_fields" precisa ser um array de strings.',
+        required_error: '"select_user_fields" é obrigatório.',
       })
       .refine(
         (field) =>
@@ -158,25 +158,26 @@ const schema = z.object({
             'email',
             'name',
             'password',
-            'userName',
+            'user_name',
             'userRole',
             'createdAt',
             'updatedAt',
           ].includes(field),
-        '"selectUserFields" precisa conter apenas propriedades válidas.',
+        '"select_user_fields" precisa conter apenas propriedades válidas.',
       ),
     {
-      invalid_type_error: '"selectUserFields" precisa ser um array de strings.',
-      required_error: '"selectUserFields" é obrigatório.',
+      invalid_type_error:
+        '"select_user_fields" precisa ser um array de strings.',
+      required_error: '"select_user_fields" é obrigatório.',
     },
   ),
-  stateId: z
+  state_id: z
     .number({
-      required_error: '"stateId" é obrigatório.',
-      invalid_type_error: '"stateId" precisa ser um número.',
+      required_error: '"state_id" é obrigatório.',
+      invalid_type_error: '"state_id" precisa ser um número.',
     })
     .min(1, {
-      message: '"stateId" precisa ser um número maior que 0.',
+      message: '"state_id" precisa ser um número maior que 0.',
     }),
   page: z
     .number({
@@ -334,22 +335,22 @@ const schema = z.object({
       return error;
     },
   }),
-  searchTerm: z
+  search_term: z
     .string({
-      invalid_type_error: '"searchTerm" precisa ser uma string.',
-      required_error: '"searchTerm" é obrigatório.',
+      invalid_type_error: '"search_term" precisa ser uma string.',
+      required_error: '"search_term" é obrigatório.',
     })
     .trim()
     .min(1, {
-      message: '"searchTerm" precisa ter no mínimo 1 caractere.',
+      message: '"search_term" precisa ter no mínimo 1 caractere.',
     }),
-  categoryName: z
+  category_name: z
     .string({
-      invalid_type_error: '"categoryName" precisa ser uma string.',
-      required_error: '"categoryName" é obrigatório.',
+      invalid_type_error: '"category_name" precisa ser uma string.',
+      required_error: '"category_name" é obrigatório.',
     })
     .trim()
     .min(1, {
-      message: '"categoryName" precisa ter no mínimo 1 caractere.',
+      message: '"category_name" precisa ter no mínimo 1 caractere.',
     }),
 });

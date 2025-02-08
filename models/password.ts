@@ -59,22 +59,22 @@ async function forgot(
     expiresIn: '5min',
   });
 
-  const { resetPasswordTokenId } =
+  const { reset_password_token_id } =
     await authDataSource.createResetPasswordToken({
-      userId: userFoundByEmail.id,
+      user_id: userFoundByEmail.id,
       resetPasswordToken: forgetPasswordToken,
     });
 
   return operationResult.success({
-    resetPasswordTokenId,
+    reset_password_token_id,
     name: userFoundByEmail.name,
   });
 }
 
 export type ResetPasswordInput = {
-  resetPasswordTokenId: string;
+  reset_password_token_id: string;
   password: string;
-  confirmPassword: string;
+  confirm_password: string;
 };
 
 async function reset(
@@ -82,15 +82,15 @@ async function reset(
   input: ResetPasswordInput,
 ) {
   const insecureInput = {
-    resetPasswordTokenId: input.resetPasswordTokenId,
+    reset_password_token_id: input.reset_password_token_id,
     password: input.password,
-    confirmPassword: input.confirmPassword,
+    confirm_password: input.confirm_password,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
     password: 'required',
-    confirmPassword: 'required',
-    resetPasswordTokenId: 'required',
+    confirm_password: 'required',
+    reset_password_token_id: 'required',
   });
 
   if (error) {
@@ -100,18 +100,18 @@ async function reset(
     });
   }
 
-  const { password, confirmPassword, resetPasswordTokenId } = secureInput;
+  const { password, confirm_password, reset_password_token_id } = secureInput;
 
-  if (password !== confirmPassword) {
+  if (password !== confirm_password) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'As senhas precisam ser iguais.',
-      fields: ['password', 'confirmPassword'],
+      fields: ['password', 'confirm_password'],
     });
   }
 
   const resetTokenFoundFromId = await authDataSource.findResetPasswordToken({
     where: {
-      id: resetPasswordTokenId,
+      id: reset_password_token_id,
     },
   });
 
@@ -140,21 +140,21 @@ async function reset(
 
   await authDataSource.resetPassword({
     password: hashedPassword,
-    userId: tokenPayload.sub,
+    user_id: tokenPayload.sub,
   });
 
   await authDataSource.invalidateResetPasswordToken({
-    id: input.resetPasswordTokenId,
+    id: input.reset_password_token_id,
   });
 
   return operationResult.success({});
 }
 
 export type ChangePasswordInput = {
-  userId: string;
-  currentPassword: string;
-  newPassword: string;
-  confirmNewPassword: string;
+  user_id: string;
+  current_password: string;
+  new_password: string;
+  confirm_new_password: string;
 };
 
 async function change(
@@ -162,37 +162,37 @@ async function change(
   input: ChangePasswordInput,
 ) {
   const insecureInput = {
-    userId: input.userId,
-    currentPassword: input.currentPassword,
-    newPassword: input.newPassword,
-    confirmNewPassword: input.confirmNewPassword,
+    user_id: input.user_id,
+    current_password: input.current_password,
+    new_password: input.new_password,
+    confirm_new_password: input.confirm_new_password,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
-    userId: 'required',
-    currentPassword: 'required',
-    newPassword: 'required',
-    confirmNewPassword: 'required',
+    user_id: 'required',
+    current_password: 'required',
+    new_password: 'required',
+    confirm_new_password: 'required',
   });
 
   if (error) {
     return operationResult.failure(error);
   }
 
-  const { userId, currentPassword, newPassword, confirmNewPassword } =
+  const { user_id, current_password, new_password, confirm_new_password } =
     secureInput;
 
-  const areNewPasswordsEqual = newPassword === confirmNewPassword;
+  const areNewPasswordsEqual = new_password === confirm_new_password;
   if (!areNewPasswordsEqual) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'As novas senhas precisam ser iguais',
-      fields: ['newPassword', 'confirmNewPassword'],
+      fields: ['new_password', 'confirm_new_password'],
     });
   }
 
   const userDataSource = createUserDataSource();
   const user = await userDataSource.findById({
-    id: userId,
+    id: user_id,
     select: ['password'],
   });
 
@@ -203,19 +203,19 @@ async function change(
     });
   }
 
-  const isPasswordValid = compare(currentPassword, user.password!);
+  const isPasswordValid = compare(current_password, user.password!);
   if (!isPasswordValid) {
     return operationResult.failure<PasswordErrorResponse>({
       message: 'Senha atual inválida',
-      fields: ['currentPassword'],
+      fields: ['current_password'],
     });
   }
 
-  const hashedPassword = hash(newPassword);
+  const hashedPassword = hash(new_password);
 
   await authDataSource.resetPassword({
     password: hashedPassword,
-    userId,
+    user_id,
   });
 
   return operationResult.success({});

@@ -4,7 +4,7 @@ import { SigninForm } from './SigninForm';
 
 type Props = {
   searchParams: Promise<{
-    userName?: string;
+    user_name?: string;
     redirect_reason?: string;
   }>;
 };
@@ -12,11 +12,11 @@ type Props = {
 export default async function Page(props: Props) {
   const searchParams = await props.searchParams;
 
-  const { userName, redirect_reason } = searchParams;
+  const { user_name, redirect_reason } = searchParams;
 
   return (
     <div className="space-y-4 md:w-80">
-      {userName && <p>Faça login para o usuário {userName}</p>}
+      {user_name && <p>Faça login para o usuário {user_name}</p>}
       {redirect_reason === 'not-authenticated' && (
         <p className="text-center">
           Faça login para conseguir utilizar os recursos completos

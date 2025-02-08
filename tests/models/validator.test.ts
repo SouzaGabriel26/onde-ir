@@ -322,22 +322,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "userName"', () => {
+  describe('Testing "user_name"', () => {
     test('Providing valid value to optional parameter', () => {
-      const userName = 'testeusername';
+      const user_name = 'testeusername';
 
       const result = validator(
         {
-          userName,
+          user_name,
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userName,
+          user_name,
         },
         error: null,
       });
@@ -346,37 +346,37 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          userName: 123 as unknown as string,
+          user_name: 123 as unknown as string,
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" precisa ser uma string.',
-          fields: ['userName'],
+          message: '"user_name" precisa ser uma string.',
+          fields: ['user_name'],
         },
       });
     });
 
-    test('Providing a invalid userName (with spaces) to optional parameter', () => {
+    test('Providing a invalid user_name (with spaces) to optional parameter', () => {
       const result = validator(
         {
-          userName: 'user name',
+          user_name: 'user name',
         },
         {
-          userName: 'optional',
+          user_name: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" não pode ter espaços.',
-          fields: ['userName'],
+          message: '"user_name" não pode ter espaços.',
+          fields: ['user_name'],
         },
       });
     });
@@ -384,56 +384,56 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          userName: 123 as unknown as string,
+          user_name: 123 as unknown as string,
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" precisa ser uma string.',
-          fields: ['userName'],
+          message: '"user_name" precisa ser uma string.',
+          fields: ['user_name'],
         },
       });
     });
 
-    test('Providing a invalid userName (with spaces) to required parameter', () => {
+    test('Providing a invalid user_name (with spaces) to required parameter', () => {
       const result = validator(
         {
-          userName: 'user name',
+          user_name: 'user name',
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" não pode ter espaços.',
-          fields: ['userName'],
+          message: '"user_name" não pode ter espaços.',
+          fields: ['user_name'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const userName = 'testeusername';
+      const user_name = 'testeusername';
 
       const result = validator(
         {
-          userName,
+          user_name,
         },
         {
-          userName: 'required',
+          user_name: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userName,
+          user_name,
         },
         error: null,
       });
@@ -558,22 +558,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "confirmPassword"', () => {
+  describe('Testing "confirm_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const confirmPassword = 'confirmPassword';
+      const confirm_password = 'confirm_password';
 
       const result = validator(
         {
-          confirmPassword,
+          confirm_password,
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmPassword,
+          confirm_password,
         },
         error: null,
       });
@@ -582,56 +582,56 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as unknown as string,
+          confirm_password: 123 as unknown as string,
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ser uma string.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ser uma string.',
+          fields: ['confirm_password'],
         },
       });
     });
 
-    test('Providing a "confirmPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "confirm_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          confirmPassword: 'pass',
+          confirm_password: 'pass',
         },
         {
-          confirmPassword: 'optional',
+          confirm_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const confirmPassword = 'confirmPassword';
+      const confirm_password = 'confirm_password';
 
       const result = validator(
         {
-          confirmPassword,
+          confirm_password,
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmPassword,
+          confirm_password,
         },
         error: null,
       });
@@ -640,58 +640,58 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter', () => {
       const result = validator(
         {
-          confirmPassword: 123 as unknown as string,
+          confirm_password: 123 as unknown as string,
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ser uma string.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ser uma string.',
+          fields: ['confirm_password'],
         },
       });
     });
 
-    test('Providing a "confirmPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "confirm_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          confirmPassword: 'pass',
+          confirm_password: 'pass',
         },
         {
-          confirmPassword: 'required',
+          confirm_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmPassword'],
+          message: '"confirm_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_password'],
         },
       });
     });
   });
 
-  describe('Testing "resetPasswordTokenId"', () => {
+  describe('Testing "reset_password_token_id"', () => {
     test('Providing valid value to optional parameter', () => {
-      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+      const reset_password_token_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         error: null,
       });
@@ -700,18 +700,18 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as unknown as string,
+          reset_password_token_id: 123 as unknown as string,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser uma string.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser uma string.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
@@ -719,37 +719,37 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as unknown as string,
+          reset_password_token_id: '123' as unknown as string,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser um UUID válido.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+      const reset_password_token_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         error: null,
       });
@@ -758,18 +758,18 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as unknown as string,
+          reset_password_token_id: 123 as unknown as string,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser uma string.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser uma string.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
@@ -777,39 +777,39 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as unknown as string,
+          reset_password_token_id: '123' as unknown as string,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser um UUID válido.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
   });
 
-  describe('Testing "userId"', () => {
+  describe('Testing "user_id"', () => {
     test('Providing valid value to optional parameter', () => {
-      const userId = '00000000-0000-0000-0000-000000000000';
+      const user_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          userId,
+          user_id,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userId,
+          user_id,
         },
         error: null,
       });
@@ -818,18 +818,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          userId: 123 as unknown as string,
+          user_id: 123 as unknown as string,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -837,37 +837,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to optional parameter', () => {
       const result = validator(
         {
-          userId: '123' as unknown as string,
+          user_id: '123' as unknown as string,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const userId = '00000000-0000-0000-0000-000000000000';
+      const user_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          userId,
+          user_id,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userId,
+          user_id,
         },
         error: null,
       });
@@ -876,18 +876,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          userId: 123 as unknown as string,
+          user_id: 123 as unknown as string,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -895,39 +895,39 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to required parameter', () => {
       const result = validator(
         {
-          userId: '123' as unknown as string,
+          user_id: '123' as unknown as string,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
   });
 
-  describe('Testing "currentPassword"', () => {
+  describe('Testing "current_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const currentPassword = 'password';
+      const current_password = 'password';
 
       const result = validator(
         {
-          currentPassword,
+          current_password,
         },
         {
-          currentPassword: 'optional',
+          current_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          currentPassword,
+          current_password,
         },
         error: null,
       });
@@ -936,37 +936,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as unknown as string,
+          current_password: 123 as unknown as string,
         },
         {
-          currentPassword: 'optional',
+          current_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"currentPassword" precisa ser uma string.',
-          fields: ['currentPassword'],
+          message: '"current_password" precisa ser uma string.',
+          fields: ['current_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const currentPassword = 'password';
+      const current_password = 'password';
 
       const result = validator(
         {
-          currentPassword,
+          current_password,
         },
         {
-          currentPassword: 'required',
+          current_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          currentPassword,
+          current_password,
         },
         error: null,
       });
@@ -975,39 +975,39 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          currentPassword: 123 as unknown as string,
+          current_password: 123 as unknown as string,
         },
         {
-          currentPassword: 'required',
+          current_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"currentPassword" precisa ser uma string.',
-          fields: ['currentPassword'],
+          message: '"current_password" precisa ser uma string.',
+          fields: ['current_password'],
         },
       });
     });
   });
 
-  describe('Testing "newPassword"', () => {
+  describe('Testing "new_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const newPassword = 'new_password';
+      const new_password = 'new_password';
 
       const result = validator(
         {
-          newPassword,
+          new_password,
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          newPassword,
+          new_password,
         },
         error: null,
       });
@@ -1016,56 +1016,56 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as unknown as string,
+          new_password: 123 as unknown as string,
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ser uma string.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ser uma string.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Providing a "newPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "new_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          newPassword: 'pass',
+          new_password: 'pass',
         },
         {
-          newPassword: 'optional',
+          new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['new_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const newPassword = 'new_password';
+      const new_password = 'new_password';
 
       const result = validator(
         {
-          newPassword,
+          new_password,
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          newPassword,
+          new_password,
         },
         error: null,
       });
@@ -1074,58 +1074,58 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          newPassword: 123 as unknown as string,
+          new_password: 123 as unknown as string,
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ser uma string.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ser uma string.',
+          fields: ['new_password'],
         },
       });
     });
 
-    test('Providing a "newPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "new_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          newPassword: 'pass',
+          new_password: 'pass',
         },
         {
-          newPassword: 'required',
+          new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"newPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['newPassword'],
+          message: '"new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['new_password'],
         },
       });
     });
   });
 
-  describe('Testing "confirmNewPassword"', () => {
+  describe('Testing "confirm_new_password"', () => {
     test('Providing valid value to optional parameter', () => {
-      const confirmNewPassword = 'new_password';
+      const confirm_new_password = 'new_password';
 
       const result = validator(
         {
-          confirmNewPassword,
+          confirm_new_password,
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmNewPassword,
+          confirm_new_password,
         },
         error: null,
       });
@@ -1134,56 +1134,56 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as unknown as string,
+          confirm_new_password: 123 as unknown as string,
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ser uma string.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ser uma string.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing a "confirmNewPassword" with less than 6 characters to optional parameter', () => {
+    test('Providing a "confirm_new_password" with less than 6 characters to optional parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 'pass',
+          confirm_new_password: 'pass',
         },
         {
-          confirmNewPassword: 'optional',
+          confirm_new_password: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const confirmNewPassword = 'new_password';
+      const confirm_new_password = 'new_password';
 
       const result = validator(
         {
-          confirmNewPassword,
+          confirm_new_password,
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          confirmNewPassword,
+          confirm_new_password,
         },
         error: null,
       });
@@ -1192,56 +1192,56 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 123 as unknown as string,
+          confirm_new_password: 123 as unknown as string,
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ser uma string.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ser uma string.',
+          fields: ['confirm_new_password'],
         },
       });
     });
 
-    test('Providing a "confirmNewPassword" with less than 6 characters to required parameter', () => {
+    test('Providing a "confirm_new_password" with less than 6 characters to required parameter', () => {
       const result = validator(
         {
-          confirmNewPassword: 'pass',
+          confirm_new_password: 'pass',
         },
         {
-          confirmNewPassword: 'required',
+          confirm_new_password: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"confirmNewPassword" precisa ter no mínimo 6 caracteres.',
-          fields: ['confirmNewPassword'],
+          message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
+          fields: ['confirm_new_password'],
         },
       });
     });
   });
 
-  describe('Testing "selectUserFields"', () => {
+  describe('Testing "select_user_fields"', () => {
     test('Providing valid value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'userName'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1250,10 +1250,10 @@ describe('> models/validator', () => {
     test('Providing undefined to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: undefined,
+          select_user_fields: undefined,
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
@@ -1266,10 +1266,10 @@ describe('> models/validator', () => {
     test('Providing a invalid property to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+          select_user_fields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
@@ -1277,8 +1277,8 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1286,18 +1286,18 @@ describe('> models/validator', () => {
     test('Providing invalid type value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as unknown as string[],
+          select_user_fields: 123 as unknown as string[],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" precisa ser um array de strings.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" precisa ser um array de strings.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1305,16 +1305,16 @@ describe('> models/validator', () => {
     test('Providing valid value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'userName'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1323,18 +1323,18 @@ describe('> models/validator', () => {
     test('Providing undefined to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: undefined,
+          select_user_fields: undefined,
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" é obrigatório.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" é obrigatório.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1342,10 +1342,10 @@ describe('> models/validator', () => {
     test('Providing a invalid property to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'userName', 'invalid'],
+          select_user_fields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
@@ -1353,8 +1353,8 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1362,37 +1362,37 @@ describe('> models/validator', () => {
     test('Providing invalid type value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as unknown as string[],
+          select_user_fields: 123 as unknown as string[],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" precisa ser um array de strings.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" precisa ser um array de strings.',
+          fields: ['select_user_fields'],
         },
       });
     });
   });
 
-  describe('Testing "stateId"', () => {
+  describe('Testing "state_id"', () => {
     test('Providing valid value to optional parameter', () => {
       const result = validator(
         {
-          stateId: 32,
+          state_id: 32,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          stateId: 32,
+          state_id: 32,
         },
         error: null,
       });
@@ -1401,10 +1401,10 @@ describe('> models/validator', () => {
     test('Providing undefined to optional parameter', () => {
       const result = validator(
         {
-          stateId: undefined,
+          state_id: undefined,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
@@ -1417,37 +1417,37 @@ describe('> models/validator', () => {
     test('Providing invalid type to optional parameter', () => {
       const result = validator(
         {
-          stateId: '32' as unknown as number,
+          state_id: '32' as unknown as number,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número.',
+          fields: ['state_id'],
         },
       });
     });
 
-    test('Providing a "stateId" less than 1 to optional parameter', () => {
+    test('Providing a "state_id" less than 1 to optional parameter', () => {
       const result = validator(
         {
-          stateId: 0,
+          state_id: 0,
         },
         {
-          stateId: 'optional',
+          state_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número maior que 0.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número maior que 0.',
+          fields: ['state_id'],
         },
       });
     });
@@ -1455,16 +1455,16 @@ describe('> models/validator', () => {
     test('Providing valid value to required parameter', () => {
       const result = validator(
         {
-          stateId: 32,
+          state_id: 32,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          stateId: 32,
+          state_id: 32,
         },
         error: null,
       });
@@ -1473,18 +1473,18 @@ describe('> models/validator', () => {
     test('Providing undefined to required parameter', () => {
       const result = validator(
         {
-          stateId: undefined,
+          state_id: undefined,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" é obrigatório.',
-          fields: ['stateId'],
+          message: '"state_id" é obrigatório.',
+          fields: ['state_id'],
         },
       });
     });
@@ -1492,37 +1492,37 @@ describe('> models/validator', () => {
     test('Providing invalid type to required parameter', () => {
       const result = validator(
         {
-          stateId: '32' as unknown as number,
+          state_id: '32' as unknown as number,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número.',
+          fields: ['state_id'],
         },
       });
     });
 
-    test('Providing a "stateId" less than 1 to required parameter', () => {
+    test('Providing a "state_id" less than 1 to required parameter', () => {
       const result = validator(
         {
-          stateId: 0,
+          state_id: 0,
         },
         {
-          stateId: 'required',
+          state_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"stateId" precisa ser um número maior que 0.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número maior que 0.',
+          fields: ['state_id'],
         },
       });
     });

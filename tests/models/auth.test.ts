@@ -23,9 +23,9 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'gabriel+1@email.com',
         name: 'Gabriel',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -35,20 +35,20 @@ describe('> models/authentication', () => {
         data: {
           email: 'gabriel+1@email.com',
           name: 'Gabriel',
-          userName: 'gabriel26',
+          user_name: 'gabriel26',
         },
       });
     });
 
-    test('Passing "password" different from "confirmPassword"', async () => {
+    test('Passing "password" different from "confirm_password"', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input: SignUpProps = {
         email: 'gabriel@mail.com',
         name: 'Gabriel',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '1234567',
+        confirm_password: '1234567',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -57,7 +57,7 @@ describe('> models/authentication', () => {
         data: null,
         error: {
           message: 'As senhas precisam ser iguais',
-          fields: ['password', 'confirmPassword'],
+          fields: ['password', 'confirm_password'],
         },
       });
     });
@@ -68,9 +68,9 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'gabrielmail.com',
         name: 'Gabriel',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -90,9 +90,9 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'gabriel@mail.com',
         name: 'ga',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -106,23 +106,23 @@ describe('> models/authentication', () => {
       });
     });
 
-    test('Passing "userName" with spaces', async () => {
+    test('Passing "user_name" with spaces', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input: SignUpProps = {
         email: 'gabriel@mail.com',
         name: 'Gabriel',
-        userName: 'gabriel 26',
+        user_name: 'gabriel 26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userName" não pode ter espaços.',
-          fields: ['userName'],
+          message: '"user_name" não pode ter espaços.',
+          fields: ['user_name'],
         },
       });
     });
@@ -133,9 +133,9 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'gabriel@mail.com',
         name: 'Gabriel',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '1234',
-        confirmPassword: '1234',
+        confirm_password: '1234',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -166,9 +166,9 @@ describe('> models/authentication', () => {
 
       const input = {
         name: 'Gabriel',
-        userName: 'gabriel26',
+        user_name: 'gabriel26',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input as SignUpProps);
@@ -188,9 +188,9 @@ describe('> models/authentication', () => {
       const input: SignUpProps = {
         email: 'user@email.com',
         name: 'Gabriel',
-        userName: 'gabrielNovo',
+        user_name: 'gabrielNovo',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -204,15 +204,15 @@ describe('> models/authentication', () => {
       });
     });
 
-    test('Trying to sign up a user with an existant userName', async () => {
+    test('Trying to sign up a user with an existant user_name', async () => {
       const authDataSource = createAuthenticationDataSource();
 
       const input: SignUpProps = {
         email: 'gabrie+1@email.com',
         name: 'Gabriel',
-        userName: 'normal_user',
+        user_name: 'normal_user',
         password: '123456',
-        confirmPassword: '123456',
+        confirm_password: '123456',
       };
 
       const result = await auth.signUp(authDataSource, input);
@@ -221,7 +221,7 @@ describe('> models/authentication', () => {
         data: null,
         error: {
           message: 'O nome de usuário já está em uso',
-          fields: ['userName'],
+          fields: ['user_name'],
         },
       });
     });
@@ -350,4 +350,4 @@ describe('> models/authentication', () => {
 // testar o método findResetPasswordToken
 
 // refatorar os métodos de fundUser para um só, podendo ser flexível quanto aos
-// inputs: id, email, userName
+// inputs: id, email, user_name

@@ -16,12 +16,12 @@ export type FindByIdInput = {
 async function findById(userDataSource: UserDataSource, input: FindByIdInput) {
   const { data: secureInput, error } = validator(
     {
-      userId: input.id,
-      selectUserFields: input.select,
+      user_id: input.id,
+      select_user_fields: input.select,
     },
     {
-      userId: 'required',
-      selectUserFields: 'optional',
+      user_id: 'required',
+      select_user_fields: 'optional',
     },
   );
 
@@ -29,11 +29,11 @@ async function findById(userDataSource: UserDataSource, input: FindByIdInput) {
     return operationResult.failure(error);
   }
 
-  const { userId, selectUserFields } = secureInput;
+  const { user_id, select_user_fields } = secureInput;
 
   const foundUser = await userDataSource.findById({
-    id: userId,
-    select: selectUserFields ?? [],
+    id: user_id,
+    select: select_user_fields ?? [],
   });
 
   return operationResult.success(foundUser);

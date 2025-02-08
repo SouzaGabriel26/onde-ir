@@ -47,10 +47,10 @@ export function createAuthenticationDataSource() {
   }
 
   type FindByUserNameInput = {
-    userName: string;
+    user_name: string;
   };
 
-  async function findUserByUserName({ userName }: FindByUserNameInput) {
+  async function findUserByUserName({ user_name }: FindByUserNameInput) {
     const result = await authenticationPool.query({
       text: sql`
         SELECT
@@ -60,16 +60,16 @@ export function createAuthenticationDataSource() {
           users
         WHERE
           user_name = $1`,
-      values: [userName],
+      values: [user_name],
     });
 
     return result?.rows[0] as Output | null;
   }
 
-  type SignUpInput = Omit<SignUpProps, 'confirmPassword'>;
+  type SignUpInput = Omit<SignUpProps, 'confirm_password'>;
 
   async function signUp(input: SignUpInput) {
-    const { email, name, password, userName, avatarUrl } = input;
+    const { email, name, password, user_name, avatar_url } = input;
 
     const query = {
       text: sql`
@@ -78,24 +78,24 @@ export function createAuthenticationDataSource() {
         VALUES
           ($1, $2, $3, $4)
       `,
-      values: [email, name, password, userName],
+      values: [email, name, password, user_name],
     };
 
-    if (avatarUrl) {
+    if (avatar_url) {
       query.text = sql`
         INSERT INTO users
           (email, name, password, user_name, avatar_url)
         VALUES
           ($1, $2, $3, $4, $5)
       `;
-      query.values.push(avatarUrl);
+      query.values.push(avatar_url);
     }
 
     await authenticationPool.query(query);
   }
 
   type CreateResetPasswordTokenInput = {
-    userId: string;
+    user_id: string;
     resetPasswordToken: string;
   };
 
@@ -111,12 +111,12 @@ export function createAuthenticationDataSource() {
         RETURNING
           id
       `,
-      values: [input.userId, input.resetPasswordToken],
+      values: [input.user_id, input.resetPasswordToken],
     };
 
     const result = await authenticationPool.query(query);
     return {
-      resetPasswordTokenId: String(result?.rows[0].id),
+      reset_password_token_id: String(result?.rows[0].id),
     };
   }
 
@@ -170,7 +170,7 @@ export function createAuthenticationDataSource() {
   }
 
   type ResetPasswordInput = Pick<SignUpProps, 'password'> & {
-    userId: string;
+    user_id: string;
   };
 
   async function resetPassword(input: ResetPasswordInput) {
@@ -184,7 +184,7 @@ export function createAuthenticationDataSource() {
           updated_at = NOW() AT TIME ZONE 'UTC'
         WHERE id = $2
       `,
-      values: [password, input.userId],
+      values: [password, input.user_id],
     });
   }
 }

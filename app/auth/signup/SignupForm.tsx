@@ -48,12 +48,12 @@ export function SignupForm() {
       />
       <Input
         required
-        id="userName"
-        defaultValue={state.inputs?.userName}
+        id="user_name"
+        defaultValue={state.inputs?.user_name}
         placeholder="Username*"
-        name="userName"
+        name="user_name"
         autoComplete="off"
-        error={setInputError('userName', {
+        error={setInputError('user_name', {
           fields: state?.error?.fields,
           message: state?.error?.message,
         })}
@@ -73,13 +73,13 @@ export function SignupForm() {
       />
       <Input
         required
-        id="confirmPassword"
-        defaultValue={state.inputs?.confirmPassword}
+        id="confirm_password"
+        defaultValue={state.inputs?.confirm_password}
         placeholder="Confirmar Senha*"
         type="password"
-        name="confirmPassword"
+        name="confirm_password"
         autoComplete="off"
-        error={setInputError('confirmPassword', {
+        error={setInputError('confirm_password', {
           fields: state?.error?.fields,
           message: state?.error?.message,
         })}

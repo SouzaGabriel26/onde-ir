@@ -37,21 +37,21 @@ async function findAll(
     {
       page: input.page,
       limit: input.limit,
-      searchTerm: input.where?.searchTerm,
+      search_term: input.where?.searchTerm,
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
-      categoryName: input.where?.categoryName,
+      category_name: input.where?.categoryName,
       created_by: input.where?.createdBy,
     },
     {
       limit: 'required',
       page: 'required',
-      searchTerm: 'optional',
+      search_term: 'optional',
       state: 'optional',
       name: 'optional',
       status: 'optional',
-      categoryName: 'optional',
+      category_name: 'optional',
       created_by: 'optional',
     },
   );
@@ -222,7 +222,7 @@ async function findCategories(
 
 export type UpdateInput = {
   placeId: ValidationSchema['place_id'];
-  reviewedBy: ValidationSchema['userId'];
+  reviewedBy: ValidationSchema['user_id'];
   status: ValidationSchema['status'];
 };
 
@@ -234,19 +234,19 @@ async function update(
   const validationResult = validator(
     {
       place_id: input.placeId,
-      userId: input.reviewedBy,
+      user_id: input.reviewedBy,
       status: input.status,
     },
     {
       place_id: 'required',
-      userId: 'required',
+      user_id: 'required',
       status: 'required',
     },
   );
 
   if (validationResult.error) return validationResult;
 
-  const { place_id, status, userId: reviewedBy } = validationResult.data;
+  const { place_id, status, user_id: reviewedBy } = validationResult.data;
 
   const place = await placeDataSource.findById(place_id);
 

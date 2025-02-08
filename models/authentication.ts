@@ -23,7 +23,7 @@ export type FailureAuthResponse<T = unknown> = {
 type SuccessAuthSignUpResponse = {
   email: string;
   name: string;
-  userName: string;
+  user_name: string;
 };
 
 type Payload = {
@@ -63,41 +63,41 @@ export const auth = Object.freeze({
 export type SignUpProps = {
   email: ValidationSchema['email'];
   name: ValidationSchema['name'];
-  userName: ValidationSchema['userName'];
+  user_name: ValidationSchema['user_name'];
   password: ValidationSchema['password'];
-  confirmPassword: ValidationSchema['confirmPassword'];
-  avatarUrl?: ValidationSchema['avatarUrl'];
+  confirm_password: ValidationSchema['confirm_password'];
+  avatar_url?: ValidationSchema['avatar_url'];
 };
 
 async function signUp(
   authDataSource: AuthenticationDataSource,
   input: SignUpProps,
 ): Promise<SignUpResponse> {
-  const isPasswordConfirmationValid = input.password === input.confirmPassword;
+  const isPasswordConfirmationValid = input.password === input.confirm_password;
 
   if (!isPasswordConfirmationValid) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'As senhas precisam ser iguais',
-      fields: ['password', 'confirmPassword'],
+      fields: ['password', 'confirm_password'],
     });
   }
 
   const insecureInput = {
     email: input.email,
     name: input.name,
-    userName: input.userName,
+    user_name: input.user_name,
     password: input.password,
-    confirmPassword: input.confirmPassword,
-    avatarUrl: input.avatarUrl,
+    confirm_password: input.confirm_password,
+    avatar_url: input.avatar_url,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
     name: 'required',
     email: 'required',
-    userName: 'required',
+    user_name: 'required',
     password: 'required',
-    confirmPassword: 'required',
-    avatarUrl: 'optional',
+    confirm_password: 'required',
+    avatar_url: 'optional',
   });
 
   if (error) {
@@ -111,8 +111,8 @@ async function signUp(
     email,
     name,
     password: userPassword,
-    userName,
-    avatarUrl,
+    user_name,
+    avatar_url,
   } = secureInput;
 
   const isEmailAlreadyInUse = await authDataSource.findUserByEmail({ email });
@@ -124,12 +124,12 @@ async function signUp(
   }
 
   const isUserNameAlreadyInUse = await authDataSource.findUserByUserName({
-    userName,
+    user_name,
   });
   if (isUserNameAlreadyInUse) {
     return operationResult.failure<FailureAuthResponse>({
       message: 'O nome de usuário já está em uso',
-      fields: ['userName'],
+      fields: ['user_name'],
     });
   }
 
@@ -139,11 +139,11 @@ async function signUp(
     email,
     name,
     password: hashedPassword,
-    userName,
-    avatarUrl,
+    user_name,
+    avatar_url,
   });
 
-  return operationResult.success({ email, name, userName });
+  return operationResult.success({ email, name, user_name });
 }
 
 export type SignInProps = {

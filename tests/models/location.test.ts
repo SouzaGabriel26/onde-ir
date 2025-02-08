@@ -24,9 +24,9 @@ describe('> models/location', () => {
   });
 
   describe('Invoking "getCitiesByState" function', () => {
-    test('Providing a valid "stateId"', async () => {
-      const stateId = 32;
-      const result = await location.getCitiesByState(stateId);
+    test('Providing a valid "state_id"', async () => {
+      const state_id = 32;
+      const result = await location.getCitiesByState(state_id);
 
       expect(result).toStrictEqual({
         error: null,
@@ -38,39 +38,39 @@ describe('> models/location', () => {
       expect(result.data?.[0].nome).toStrictEqual('Afonso Cláudio');
     });
 
-    test('Providing undefined "stateId"', async () => {
+    test('Providing undefined "state_id"', async () => {
       const result = await location.getCitiesByState(
         undefined as unknown as number,
       );
 
       expect(result).toStrictEqual({
         error: {
-          message: '"stateId" é obrigatório.',
-          fields: ['stateId'],
+          message: '"state_id" é obrigatório.',
+          fields: ['state_id'],
         },
         data: null,
       });
     });
 
-    test('Providing an invaid type "stateId"', async () => {
+    test('Providing an invaid type "state_id"', async () => {
       const result = await location.getCitiesByState('32' as unknown as number);
 
       expect(result).toStrictEqual({
         error: {
-          message: '"stateId" precisa ser um número.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número.',
+          fields: ['state_id'],
         },
         data: null,
       });
     });
 
-    test('Providing a "stateId" less than 1', async () => {
+    test('Providing a "state_id" less than 1', async () => {
       const result = await location.getCitiesByState(0);
 
       expect(result).toStrictEqual({
         error: {
-          message: '"stateId" precisa ser um número maior que 0.',
-          fields: ['stateId'],
+          message: '"state_id" precisa ser um número maior que 0.',
+          fields: ['state_id'],
         },
         data: null,
       });

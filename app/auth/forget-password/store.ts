@@ -31,14 +31,14 @@ export async function forgetPasswordAction(
   });
 
   if (responseMessage.data) {
-    const { resetPasswordTokenId, name } = responseMessage.data;
+    const { reset_password_token_id, name } = responseMessage.data;
 
     await emailService.sendResetPasswordEmail({
       from: 'Onde Ir <onboarding@resend.dev>',
       to: email,
       content: ForgetPasswordEmail({
         userFirstname: name,
-        resetPasswordTokenId,
+        reset_password_token_id,
       }),
     });
 

@@ -3,8 +3,8 @@ export type User = {
   email: string;
   name: string;
   password: string;
-  userName: string;
-  avatarUrl?: string;
+  user_name: string;
+  avatar_url?: string;
   userRole: 'ADMIN' | 'USER';
   createdAt: Date;
   updatedAt: Date;

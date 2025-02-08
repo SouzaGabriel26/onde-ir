@@ -25,8 +25,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
@@ -60,8 +60,8 @@ describe('> models/user', () => {
           id: userIdFromDatabase,
           email: 'user@email.com',
           name: 'Normal user',
-          userName: 'normal_user',
-          avatarUrl: null,
+          user_name: 'normal_user',
+          avatar_url: null,
           userRole: 'USER',
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
@@ -80,8 +80,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -94,8 +94,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" é obrigatório.',
-          fields: ['userId'],
+          message: '"user_id" é obrigatório.',
+          fields: ['user_id'],
         },
       });
     });
@@ -115,8 +115,8 @@ describe('> models/user', () => {
           id: userIdFromDatabase,
           email: 'user@email.com',
           name: 'Normal user',
-          userName: 'normal_user',
-          avatarUrl: null,
+          user_name: 'normal_user',
+          avatar_url: null,
           userRole: 'USER',
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
@@ -158,8 +158,8 @@ describe('> models/user', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });
