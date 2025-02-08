@@ -676,22 +676,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "resetPasswordTokenId"', () => {
+  describe('Testing "reset_password_token_id"', () => {
     test('Providing valid value to optional parameter', () => {
-      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+      const reset_password_token_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         error: null,
       });
@@ -700,18 +700,18 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as unknown as string,
+          reset_password_token_id: 123 as unknown as string,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser uma string.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser uma string.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
@@ -719,37 +719,37 @@ describe('> models/validator', () => {
     test('Providing a invalid type to optional parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as unknown as string,
+          reset_password_token_id: '123' as unknown as string,
         },
         {
-          resetPasswordTokenId: 'optional',
+          reset_password_token_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser um UUID válido.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const resetPasswordTokenId = '00000000-0000-0000-0000-000000000000';
+      const reset_password_token_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          resetPasswordTokenId,
+          reset_password_token_id,
         },
         error: null,
       });
@@ -758,18 +758,18 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (number)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: 123 as unknown as string,
+          reset_password_token_id: 123 as unknown as string,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser uma string.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser uma string.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
@@ -777,18 +777,18 @@ describe('> models/validator', () => {
     test('Providing a invalid type to required parameter (not UUID)', () => {
       const result = validator(
         {
-          resetPasswordTokenId: '123' as unknown as string,
+          reset_password_token_id: '123' as unknown as string,
         },
         {
-          resetPasswordTokenId: 'required',
+          reset_password_token_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser um UUID válido.',
+          fields: ['reset_password_token_id'],
         },
       });
     });

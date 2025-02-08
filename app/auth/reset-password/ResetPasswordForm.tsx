@@ -71,7 +71,7 @@ export function ResetPasswordForm({ tokenId }: { tokenId: string }) {
           ),
         })}
       />
-      <input type="hidden" value={tokenId} name="resetPasswordTokenId" />
+      <input type="hidden" value={tokenId} name="reset_password_token_id" />
       <SubmitButton>Enviar</SubmitButton>
     </form>
   );

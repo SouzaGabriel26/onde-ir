@@ -108,13 +108,13 @@ const schema = z.object({
     .url({
       message: '"avatar_url" precisa ser uma URL válida.',
     }),
-  resetPasswordTokenId: z
+  reset_password_token_id: z
     .string({
-      required_error: '"resetPasswordTokenId" é obrigatório.',
-      invalid_type_error: '"resetPasswordTokenId" precisa ser uma string.',
+      required_error: '"reset_password_token_id" é obrigatório.',
+      invalid_type_error: '"reset_password_token_id" precisa ser uma string.',
     })
     .uuid({
-      message: '"resetPasswordTokenId" precisa ser um UUID válido.',
+      message: '"reset_password_token_id" precisa ser um UUID válido.',
     }),
   userId: z
     .string({

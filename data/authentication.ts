@@ -116,7 +116,7 @@ export function createAuthenticationDataSource() {
 
     const result = await authenticationPool.query(query);
     return {
-      resetPasswordTokenId: String(result?.rows[0].id),
+      reset_password_token_id: String(result?.rows[0].id),
     };
   }
 

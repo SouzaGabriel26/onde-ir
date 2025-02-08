@@ -59,20 +59,20 @@ async function forgot(
     expiresIn: '5min',
   });
 
-  const { resetPasswordTokenId } =
+  const { reset_password_token_id } =
     await authDataSource.createResetPasswordToken({
       userId: userFoundByEmail.id,
       resetPasswordToken: forgetPasswordToken,
     });
 
   return operationResult.success({
-    resetPasswordTokenId,
+    reset_password_token_id,
     name: userFoundByEmail.name,
   });
 }
 
 export type ResetPasswordInput = {
-  resetPasswordTokenId: string;
+  reset_password_token_id: string;
   password: string;
   confirm_password: string;
 };
@@ -82,7 +82,7 @@ async function reset(
   input: ResetPasswordInput,
 ) {
   const insecureInput = {
-    resetPasswordTokenId: input.resetPasswordTokenId,
+    reset_password_token_id: input.reset_password_token_id,
     password: input.password,
     confirm_password: input.confirm_password,
   };
@@ -90,7 +90,7 @@ async function reset(
   const { data: secureInput, error } = validator(insecureInput, {
     password: 'required',
     confirm_password: 'required',
-    resetPasswordTokenId: 'required',
+    reset_password_token_id: 'required',
   });
 
   if (error) {
@@ -100,7 +100,7 @@ async function reset(
     });
   }
 
-  const { password, confirm_password, resetPasswordTokenId } = secureInput;
+  const { password, confirm_password, reset_password_token_id } = secureInput;
 
   if (password !== confirm_password) {
     return operationResult.failure<PasswordErrorResponse>({
@@ -111,7 +111,7 @@ async function reset(
 
   const resetTokenFoundFromId = await authDataSource.findResetPasswordToken({
     where: {
-      id: resetPasswordTokenId,
+      id: reset_password_token_id,
     },
   });
 
@@ -144,7 +144,7 @@ async function reset(
   });
 
   await authDataSource.invalidateResetPasswordToken({
-    id: input.resetPasswordTokenId,
+    id: input.reset_password_token_id,
   });
 
   return operationResult.success({});

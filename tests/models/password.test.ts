@@ -75,7 +75,7 @@ describe('> models/password', () => {
         error: null,
         data: {
           name: 'Admin user',
-          resetPasswordTokenId: expect.any(String),
+          reset_password_token_id: expect.any(String),
         },
       });
     });
@@ -95,25 +95,25 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" é obrigatório.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" é obrigatório.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
 
-    test('Providing invalid "resetPasswordTokenId" property', async () => {
+    test('Providing invalid "reset_password_token_id" property', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await password.reset(authDataSource, {
         password: '123456',
         confirm_password: '123456',
-        resetPasswordTokenId: 'invalid_token_id',
+        reset_password_token_id: 'invalid_token_id',
       });
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"resetPasswordTokenId" precisa ser um UUID válido.',
-          fields: ['resetPasswordTokenId'],
+          message: '"reset_password_token_id" precisa ser um UUID válido.',
+          fields: ['reset_password_token_id'],
         },
       });
     });
@@ -123,7 +123,7 @@ describe('> models/password', () => {
 
       const input = {
         confirm_password: '123456',
-        resetPasswordTokenId: uuid,
+        reset_password_token_id: uuid,
       };
 
       const result = await password.reset(
@@ -145,7 +145,7 @@ describe('> models/password', () => {
 
       const input = {
         password: '123456',
-        resetPasswordTokenId: uuid,
+        reset_password_token_id: uuid,
       };
 
       const result = await password.reset(
@@ -165,7 +165,7 @@ describe('> models/password', () => {
     test('Providing "password" with less than 3 characters', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await password.reset(authDataSource, {
-        resetPasswordTokenId: uuid,
+        reset_password_token_id: uuid,
         password: '12',
         confirm_password: '12',
       });
@@ -185,7 +185,7 @@ describe('> models/password', () => {
       const result = await password.reset(authDataSource, {
         password: '123456',
         confirm_password: '111222333',
-        resetPasswordTokenId: uuid,
+        reset_password_token_id: uuid,
       });
 
       expect(result).toStrictEqual({
@@ -206,7 +206,7 @@ describe('> models/password', () => {
       const input: ResetPasswordInput = {
         password: 'gabriel123',
         confirm_password: 'gabriel123',
-        resetPasswordTokenId: data!.resetPasswordTokenId,
+        reset_password_token_id: data!.reset_password_token_id,
       };
 
       const result = await password.reset(authDataSource, input);
@@ -231,7 +231,7 @@ describe('> models/password', () => {
       const resetPasswordTokenAfterReset =
         await authDataSource.findResetPasswordToken({
           where: {
-            id: data!.resetPasswordTokenId,
+            id: data!.reset_password_token_id,
           },
         });
 
@@ -248,7 +248,7 @@ describe('> models/password', () => {
       const input = {
         password: 'newPassword',
         confirm_password: 'newPassword',
-        resetPasswordTokenId: data!.resetPasswordTokenId,
+        reset_password_token_id: data!.reset_password_token_id,
       };
 
       const result = await password.reset(authDataSource, input);
@@ -268,12 +268,12 @@ describe('> models/password', () => {
       });
     });
 
-    test('Providing invalid "resetPasswordTokenId" property', async () => {
+    test('Providing invalid "reset_password_token_id" property', async () => {
       const authDataSource = createAuthenticationDataSource();
       const result = await password.reset(authDataSource, {
         password: '123456',
         confirm_password: '123456',
-        resetPasswordTokenId: uuid,
+        reset_password_token_id: uuid,
       });
 
       expect(result).toStrictEqual({
