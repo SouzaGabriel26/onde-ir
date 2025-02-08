@@ -158,8 +158,8 @@ describe('> models/user', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });

@@ -1228,20 +1228,20 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "selectUserFields"', () => {
+  describe('Testing "select_user_fields"', () => {
     test('Providing valid value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'user_name'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'user_name'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1250,10 +1250,10 @@ describe('> models/validator', () => {
     test('Providing undefined to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: undefined,
+          select_user_fields: undefined,
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
@@ -1266,10 +1266,10 @@ describe('> models/validator', () => {
     test('Providing a invalid property to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'user_name', 'invalid'],
+          select_user_fields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
@@ -1277,8 +1277,8 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1286,18 +1286,18 @@ describe('> models/validator', () => {
     test('Providing invalid type value to optional parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as unknown as string[],
+          select_user_fields: 123 as unknown as string[],
         },
         {
-          selectUserFields: 'optional',
+          select_user_fields: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" precisa ser um array de strings.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" precisa ser um array de strings.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1305,16 +1305,16 @@ describe('> models/validator', () => {
     test('Providing valid value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'user_name'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          selectUserFields: ['name', 'email', 'user_name'],
+          select_user_fields: ['name', 'email', 'user_name'],
         },
         error: null,
       });
@@ -1323,18 +1323,18 @@ describe('> models/validator', () => {
     test('Providing undefined to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: undefined,
+          select_user_fields: undefined,
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" é obrigatório.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" é obrigatório.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1342,10 +1342,10 @@ describe('> models/validator', () => {
     test('Providing a invalid property to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: ['name', 'email', 'user_name', 'invalid'],
+          select_user_fields: ['name', 'email', 'user_name', 'invalid'],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
@@ -1353,8 +1353,8 @@ describe('> models/validator', () => {
         data: null,
         error: {
           message:
-            '"selectUserFields" precisa conter apenas propriedades válidas.',
-          fields: ['selectUserFields'],
+            '"select_user_fields" precisa conter apenas propriedades válidas.',
+          fields: ['select_user_fields'],
         },
       });
     });
@@ -1362,18 +1362,18 @@ describe('> models/validator', () => {
     test('Providing invalid type value to required parameter', () => {
       const result = validator(
         {
-          selectUserFields: 123 as unknown as string[],
+          select_user_fields: 123 as unknown as string[],
         },
         {
-          selectUserFields: 'required',
+          select_user_fields: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"selectUserFields" precisa ser um array de strings.',
-          fields: ['selectUserFields'],
+          message: '"select_user_fields" precisa ser um array de strings.',
+          fields: ['select_user_fields'],
         },
       });
     });

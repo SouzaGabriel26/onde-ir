@@ -144,12 +144,12 @@ const schema = z.object({
     .min(6, {
       message: '"confirm_new_password" precisa ter no mínimo 6 caracteres.',
     }),
-  selectUserFields: z.array(
+  select_user_fields: z.array(
     z
       .string({
         invalid_type_error:
-          '"selectUserFields" precisa ser um array de strings.',
-        required_error: '"selectUserFields" é obrigatório.',
+          '"select_user_fields" precisa ser um array de strings.',
+        required_error: '"select_user_fields" é obrigatório.',
       })
       .refine(
         (field) =>
@@ -163,11 +163,12 @@ const schema = z.object({
             'createdAt',
             'updatedAt',
           ].includes(field),
-        '"selectUserFields" precisa conter apenas propriedades válidas.',
+        '"select_user_fields" precisa conter apenas propriedades válidas.',
       ),
     {
-      invalid_type_error: '"selectUserFields" precisa ser um array de strings.',
-      required_error: '"selectUserFields" é obrigatório.',
+      invalid_type_error:
+        '"select_user_fields" precisa ser um array de strings.',
+      required_error: '"select_user_fields" é obrigatório.',
     },
   ),
   stateId: z
