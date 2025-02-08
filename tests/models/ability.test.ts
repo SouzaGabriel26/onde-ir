@@ -18,8 +18,8 @@ describe('models/ability', () => {
     });
 
     expect(result).toStrictEqual({
-      message: '"userId" precisa ser um UUID válido.',
-      fields: ['userId'],
+      message: '"user_id" precisa ser um UUID válido.',
+      fields: ['user_id'],
     });
   });
 

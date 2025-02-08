@@ -61,7 +61,7 @@ async function forgot(
 
   const { reset_password_token_id } =
     await authDataSource.createResetPasswordToken({
-      userId: userFoundByEmail.id,
+      user_id: userFoundByEmail.id,
       resetPasswordToken: forgetPasswordToken,
     });
 
@@ -140,7 +140,7 @@ async function reset(
 
   await authDataSource.resetPassword({
     password: hashedPassword,
-    userId: tokenPayload.sub,
+    user_id: tokenPayload.sub,
   });
 
   await authDataSource.invalidateResetPasswordToken({
@@ -151,7 +151,7 @@ async function reset(
 }
 
 export type ChangePasswordInput = {
-  userId: string;
+  user_id: string;
   currentPassword: string;
   newPassword: string;
   confirmNewPassword: string;
@@ -162,14 +162,14 @@ async function change(
   input: ChangePasswordInput,
 ) {
   const insecureInput = {
-    userId: input.userId,
+    user_id: input.user_id,
     currentPassword: input.currentPassword,
     newPassword: input.newPassword,
     confirmNewPassword: input.confirmNewPassword,
   };
 
   const { data: secureInput, error } = validator(insecureInput, {
-    userId: 'required',
+    user_id: 'required',
     currentPassword: 'required',
     newPassword: 'required',
     confirmNewPassword: 'required',
@@ -179,7 +179,7 @@ async function change(
     return operationResult.failure(error);
   }
 
-  const { userId, currentPassword, newPassword, confirmNewPassword } =
+  const { user_id, currentPassword, newPassword, confirmNewPassword } =
     secureInput;
 
   const areNewPasswordsEqual = newPassword === confirmNewPassword;
@@ -192,7 +192,7 @@ async function change(
 
   const userDataSource = createUserDataSource();
   const user = await userDataSource.findById({
-    id: userId,
+    id: user_id,
     select: ['password'],
   });
 
@@ -215,7 +215,7 @@ async function change(
 
   await authDataSource.resetPassword({
     password: hashedPassword,
-    userId,
+    user_id,
   });
 
   return operationResult.success({});

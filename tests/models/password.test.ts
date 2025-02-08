@@ -287,9 +287,9 @@ describe('> models/password', () => {
   });
 
   describe('Invoking "change" method', () => {
-    test('Providing invalid format "userId" property', async () => {
+    test('Providing invalid format "user_id" property', async () => {
       const input = {
-        userId: 'invalid_id',
+        user_id: 'invalid_id',
         currentPassword: '123123',
         newPassword: '123456',
         confirmNewPassword: '123456',
@@ -302,13 +302,13 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
 
-    test('Without providing "userId" property', async () => {
+    test('Without providing "user_id" property', async () => {
       const input = {
         currentPassword: '123123',
         newPassword: '123456',
@@ -324,17 +324,17 @@ describe('> models/password', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" é obrigatório.',
-          fields: ['userId'],
+          message: '"user_id" é obrigatório.',
+          fields: ['user_id'],
         },
       });
     });
 
-    test('Providing a non-existent "userId" property', async () => {
+    test('Providing a non-existent "user_id" property', async () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         newPassword: '123456',
         confirmNewPassword: '123456',
@@ -356,7 +356,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         newPassword: '123456',
         confirmNewPassword: '123456',
       };
@@ -397,7 +397,7 @@ describe('> models/password', () => {
         currentPassword: 'invalid_password',
         newPassword: '123456',
         confirmNewPassword: '123456',
-        userId: createdUser!.id,
+        user_id: createdUser!.id,
       });
 
       expect(result).toStrictEqual({
@@ -413,7 +413,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         confirmNewPassword: '123456',
       };
@@ -437,7 +437,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         newPassword: '123',
         confirmNewPassword: '123456',
@@ -459,7 +459,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         newPassword: '123456',
       };
@@ -483,7 +483,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         newPassword: '123456',
         confirmNewPassword: '123',
@@ -505,7 +505,7 @@ describe('> models/password', () => {
       const fakeUserId = '123e4567-e89b-12d3-a456-426614174000';
 
       const input = {
-        userId: fakeUserId,
+        user_id: fakeUserId,
         currentPassword: '123123',
         newPassword: '1234567',
         confirmNewPassword: '123456',
@@ -542,7 +542,7 @@ describe('> models/password', () => {
       });
 
       const result = await password.change(authDataSource, {
-        userId: createdUser!.id,
+        user_id: createdUser!.id,
         currentPassword: userInput.password,
         confirmNewPassword: 'newPassword123',
         newPassword: 'newPassword123',
@@ -588,7 +588,7 @@ describe('> models/password', () => {
       const newPassword = 'newPassword';
 
       const result = await password.change(authDataSource, {
-        userId: createdUser!.id,
+        user_id: createdUser!.id,
         currentPassword: input.password,
         newPassword: newPassword,
         confirmNewPassword: newPassword,

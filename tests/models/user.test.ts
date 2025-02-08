@@ -25,8 +25,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
@@ -80,8 +80,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -94,8 +94,8 @@ describe('> models/user', () => {
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" é obrigatório.',
-          fields: ['userId'],
+          message: '"user_id" é obrigatório.',
+          fields: ['user_id'],
         },
       });
     });

@@ -794,22 +794,22 @@ describe('> models/validator', () => {
     });
   });
 
-  describe('Testing "userId"', () => {
+  describe('Testing "user_id"', () => {
     test('Providing valid value to optional parameter', () => {
-      const userId = '00000000-0000-0000-0000-000000000000';
+      const user_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          userId,
+          user_id,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userId,
+          user_id,
         },
         error: null,
       });
@@ -818,18 +818,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to optional parameter', () => {
       const result = validator(
         {
-          userId: 123 as unknown as string,
+          user_id: 123 as unknown as string,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -837,37 +837,37 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to optional parameter', () => {
       const result = validator(
         {
-          userId: '123' as unknown as string,
+          user_id: '123' as unknown as string,
         },
         {
-          userId: 'optional',
+          user_id: 'optional',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
 
     test('Providing valid value to required parameter', () => {
-      const userId = '00000000-0000-0000-0000-000000000000';
+      const user_id = '00000000-0000-0000-0000-000000000000';
 
       const result = validator(
         {
-          userId,
+          user_id,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: {
-          userId,
+          user_id,
         },
         error: null,
       });
@@ -876,18 +876,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (number) to required parameter', () => {
       const result = validator(
         {
-          userId: 123 as unknown as string,
+          user_id: 123 as unknown as string,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser uma string.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser uma string.',
+          fields: ['user_id'],
         },
       });
     });
@@ -895,18 +895,18 @@ describe('> models/validator', () => {
     test('Providing invalid type (not UUID) to required parameter', () => {
       const result = validator(
         {
-          userId: '123' as unknown as string,
+          user_id: '123' as unknown as string,
         },
         {
-          userId: 'required',
+          user_id: 'required',
         },
       );
 
       expect(result).toStrictEqual({
         data: null,
         error: {
-          message: '"userId" precisa ser um UUID válido.',
-          fields: ['userId'],
+          message: '"user_id" precisa ser um UUID válido.',
+          fields: ['user_id'],
         },
       });
     });
