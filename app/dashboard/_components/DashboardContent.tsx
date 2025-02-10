@@ -190,11 +190,8 @@ export function DashboardContent({
               <ImageCard
                 href={`/dashboard/posts/${place.id}` as Route}
                 key={place.id}
-                title={place.name}
-                alt={`foto de ${place.name}`}
-                src={place.images[0] ?? 'https://via.placeholder.com/300'}
-                description={place.description ?? 'sem descrição'}
                 isOwner={isPostOwner}
+                place={place}
               />
             );
           })}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { ImageCard } from '@/components/ImageCard';
 import { Button } from '@/components/ui/Button';
+import type { FindAllPlacesOutput } from '@/data/place';
 import { verify } from '@/utils/verify';
 
 export default async function Page() {
@@ -69,16 +70,12 @@ export default async function Page() {
         <section className="flex flex-col gap-8 py-4 lg:flex-row">
           <div className="flex flex-col gap-8 first:mt-10">
             {mockedData.firstColumn.map((place, index) => {
-              const description = `${place.country} - ${place.state}`;
-
               return (
                 <ImageCard
+                  clickable={false}
                   className="cursor-default"
                   key={`${index}-${place.name}`}
-                  title={place.name}
-                  description={description}
-                  alt={place.name}
-                  src={place.image_url}
+                  place={place}
                 />
               );
             })}
@@ -86,16 +83,12 @@ export default async function Page() {
 
           <div className="flex flex-col gap-8">
             {mockedData.secondColumn.map((place, index) => {
-              const description = `${place.country} - ${place.state}`;
-
               return (
                 <ImageCard
+                  clickable={false}
                   className="cursor-default"
                   key={`${index}-${place.name}`}
-                  title={place.name}
-                  description={description}
-                  alt={place.name}
-                  src={place.image_url}
+                  place={place}
                 />
               );
             })}
@@ -106,21 +99,39 @@ export default async function Page() {
   );
 }
 
-const mockedData = {
+const mockedData: Record<string, FindAllPlacesOutput[]> = {
   firstColumn: [
     {
       name: 'Café Bamboo',
       country: 'Brasil',
       state: 'ES',
-      image_url:
+      images: [
         'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-03.jpg?raw=true',
+      ],
+      category_id: '1',
+      city: 'Vitória',
+      created_at: new Date(),
+      created_by: '1',
+      id: '1',
+      status: 'APPROVED',
+      street: 'Rua das Flores',
+      updated_at: new Date(),
     },
     {
       name: 'Churrascaria Espeto de Ouro',
       country: 'Brasil',
       state: 'ES',
-      image_url:
+      images: [
         'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-01.jpg?raw=true',
+      ],
+      category_id: '1',
+      city: 'Vitória',
+      created_at: new Date(),
+      created_by: '1',
+      id: '2',
+      status: 'APPROVED',
+      street: 'Rua das Flores',
+      updated_at: new Date(),
     },
   ],
   secondColumn: [
@@ -128,15 +139,33 @@ const mockedData = {
       name: 'Restaurante do Porto',
       country: 'Brasil',
       state: 'ES',
-      image_url:
+      images: [
         'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-02.jpg?raw=true',
+      ],
+      category_id: '1',
+      city: 'Vitória',
+      created_at: new Date(),
+      created_by: '1',
+      id: '3',
+      status: 'APPROVED',
+      street: 'Rua das Flores',
+      updated_at: new Date(),
     },
     {
       name: 'Madero Steak House',
       country: 'Brasil',
       state: 'ES',
-      image_url:
+      images: [
         'https://github.com/SouzaGabriel26/onde-ir/blob/main/assets/photo-restaurant-05.jpg?raw=true',
+      ],
+      category_id: '1',
+      city: 'Vitória',
+      created_at: new Date(),
+      created_by: '1',
+      id: '4',
+      status: 'APPROVED',
+      street: 'Rua das Flores',
+      updated_at: new Date(),
     },
   ],
 };
