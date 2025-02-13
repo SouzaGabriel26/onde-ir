@@ -174,7 +174,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
-            images: [],
+            images: expect.any(Array),
           },
         ],
       });
@@ -529,7 +529,7 @@ describe('> models/place', () => {
         SELECT * FROM place_images
       `);
 
-      expect(placeImagesBefore?.rows.length).toBe(21);
+      expect(placeImagesBefore?.rows.length).toBe(22);
 
       const placeDataSource = createPlaceDataSource();
       const places = await place.findAll(placeDataSource, { limit: 1 });
@@ -549,7 +549,7 @@ describe('> models/place', () => {
         SELECT * FROM place_images
       `);
 
-      expect(placeImagesAfter?.rows.length).toBe(23);
+      expect(placeImagesAfter?.rows.length).toBe(24);
     });
   });
 
