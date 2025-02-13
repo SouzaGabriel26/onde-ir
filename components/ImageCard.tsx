@@ -8,16 +8,9 @@ import type { FindAllPlacesOutput } from '@/data/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { BadgeInfo, MapPin, Star } from 'lucide-react';
 import type { Route } from 'next';
-import Link from 'next/link';
 import { useState } from 'react';
-import { Button } from './ui/Button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/Dialog';
+
+import { PostPreviewModal } from './PostPreviewModal';
 
 type ImageCardProps = {
   place: FindAllPlacesOutput;
@@ -39,8 +32,9 @@ export function ImageCard({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <PostPreviewModal>
+    <>
       <div
+        onClick={() => clickable && setIsModalOpen(true)}
         className={sanitizeClassName(
           'rounded-[20px] shadow w-[258px] md:w-[420px] relative',
           className,
@@ -116,57 +110,12 @@ export function ImageCard({
           </Badge>
         )}
       </div>
-    </PostPreviewModal>
+      <PostPreviewModal
+        place={place}
+        href={href ?? '#'}
+        setIsOpen={setIsModalOpen}
+        isOpen={isModalOpen}
+      />
+    </>
   );
-
-  function PostPreviewModal({ children }: { children: React.ReactNode }) {
-    return (
-      <Dialog
-        open={clickable ? isModalOpen : false}
-        onOpenChange={setIsModalOpen}
-      >
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{place.name}</DialogTitle>
-          </DialogHeader>
-
-          <div className="relative h-64">
-            <Image
-              src={place.images[0]}
-              alt={place.name}
-              fill
-              objectFit="cover"
-            />
-          </div>
-
-          <div className="flex justify-between gap-4 p-6">
-            <div className="space-y-2">
-              <p className="text-muted-foreground flex items-center gap-1 text-sm">
-                <MapPin className="size-4" />
-                {place.city}, {place.state}
-              </p>
-
-              <p className="text-sm text-muted-foreground">{place.street}</p>
-            </div>
-
-            <div className="flex gap-2 items-center text-primary self-start">
-              <Star className="size-4 fill-primary" />
-              <Star className="size-4 fill-primary" />
-              <Star className="size-4 fill-primary" />
-              <Star className="size-4 fill-primary" />
-              <Star className="size-4" />
-              4.5
-            </div>
-          </div>
-
-          <p className="text-sm text-center">{place.description}</p>
-
-          <Link href={href ?? '#'} className="w-full">
-            <Button className="w-full">Ver mais detalhes</Button>
-          </Link>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 }
