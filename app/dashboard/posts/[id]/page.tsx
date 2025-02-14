@@ -1,3 +1,11 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/Carousel';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { type PlaceStatus, createPlaceDataSource } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
@@ -5,6 +13,7 @@ import { place } from '@/models/place';
 import { user } from '@/models/user';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
+import { ExpandIcon, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { RedirectType, redirect } from 'next/navigation';
 import { approvePlaceAction, rejectPlaceAction } from './actions';
@@ -93,71 +102,102 @@ export default async function Page(props: PageProps) {
         )}
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-          placeItems: 'center',
-          gap: '1rem',
-        }}
-      >
-        {postFound.images.map((url, index) => (
-          <div
-            key={`foto-${postFound.name}-${index}`}
-            className={sanitizeClassName(
-              'relative',
-              'h-44 w-64 md:h-64 md:w-96',
-            )}
-          >
-            <Image
-              fill
-              src={url}
-              alt={`Foto ${index + 1} de ${postFound.name}`}
-              sizes="100%"
-              className="rounded-[20px] object-cover"
-            />
-          </div>
-        ))}
+      <div className="flex flex-col items-center">
+        <Carousel className="w-full">
+          <CarouselContent>
+            {postFound.images.map((url, index) => (
+              <CarouselItem
+                key={`foto-${postFound.name}-${index}`}
+                className="flex justify-center"
+              >
+                <div
+                  className={sanitizeClassName(
+                    'relative aspect-video w-full h-full max-h-[600px] max-w-[1300px] rounded-md',
+                  )}
+                >
+                  <Button
+                    title="expandir"
+                    className="absolute top-2 right-2 z-10"
+                    size="sm"
+                    variant="secondary"
+                  >
+                    <ExpandIcon className="size-4" />
+                  </Button>
+
+                  <Image
+                    priority
+                    fill
+                    src={url}
+                    alt={`Foto ${index + 1} de ${postFound.name}`}
+                    sizes="100%"
+                    className="rounded-[20px] object-cover"
+                  />
+
+                  <CarouselPrevious className="left-2 2xl:-left-12" />
+                  <CarouselNext className="right-2 2xl:-right-12" />
+
+                  <Badge
+                    variant="secondary"
+                    className="absolute bottom-2 right-2"
+                  >
+                    {index + 1} / {postFound.images.length}
+                  </Badge>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
 
-      <div className="md:w-fit md:mx-auto">
-        <h2 className="text-3xl md:text-center mb-2">Sobre o local:</h2>
+      <div className="border w-full flex flex-col rounded-md p-4 gap-4">
+        <div className="flex justify-between w-full flex-col md:flex-row gap-2">
+          <div>
+            <h3 className="text-2xl font-bold">{postFound.name}</h3>
 
-        <TextInfo label="Nome" value={postFound.name} />
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="size-4" />
+              <span>
+                {postFound.city}, {postFound.state} - {postFound.country}
+              </span>
+            </div>
+          </div>
 
-        <TextInfo label="País" value={postFound.country} />
+          <PostStatus status={postFound.status} />
+        </div>
 
-        <TextInfo label="Estado" value={postFound.state} />
+        <div className="grid gap-6 md:grid-cols-3 place-items-center">
+          <div>
+            <TextInfo label="Rua" value={postFound.street} />
 
-        <TextInfo label="Cidade" value={postFound.city} />
+            <TextInfo label="Número" value={String(postFound.num_place)} />
 
-        <TextInfo label="Rua" value={postFound.street} />
+            <TextInfo label="Complemento" value={postFound.complement ?? '-'} />
 
-        <TextInfo label="Número" value={String(postFound.num_place)} />
+            <TextInfo label="Descrição" value={postFound.description ?? '-'} />
+          </div>
 
-        <TextInfo label="Complemento" value={postFound.complement ?? '-'} />
+          <div>
+            <TextInfo label="Categoria" value={postCategory?.name ?? '-'} />
 
-        <TextInfo label="Descrição" value={postFound.description ?? '-'} />
+            {postFound.status !== 'PENDING' && (
+              <TextInfo label="Revisado por" value={reviewedBy?.name ?? '-'} />
+            )}
 
-        <TextInfo label="Categoria" value={postCategory?.name ?? '-'} />
+            <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />
+          </div>
 
-        <PostStatus status={postFound.status} />
+          <div>
+            <TextInfo
+              label="Criado em"
+              value={new Date(postFound.created_at).toLocaleDateString()}
+            />
 
-        {postFound.status !== 'PENDING' && (
-          <TextInfo label="Revisado por" value={reviewedBy?.name ?? '-'} />
-        )}
-
-        <TextInfo
-          label="Criado em"
-          value={new Date(postFound.created_at).toLocaleDateString()}
-        />
-
-        <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />
-
-        <TextInfo
-          label="Atualizado em"
-          value={new Date(postFound.updated_at).toLocaleDateString()}
-        />
+            <TextInfo
+              label="Atualizado em"
+              value={new Date(postFound.updated_at).toLocaleDateString()}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -165,8 +205,8 @@ export default async function Page(props: PageProps) {
 
 function TextInfo({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex space-x-2">
-      <span className="text-slate-500">{label}: </span>
+    <div className="flex flex-col">
+      <span className="text-slate-500">{label} </span>
       <span>{value}</span>
     </div>
   );
@@ -186,9 +226,11 @@ function PostStatus({ status }: { status: PlaceStatus }) {
   };
 
   return (
-    <div className="flex space-x-2">
-      <span className="text-slate-500">Status: </span>
-      <span className={StatusStyleEnum[status]}>{StatusEnum[status]}</span>
-    </div>
+    <Badge
+      variant="outline"
+      className={sanitizeClassName('py-1 h-fit', StatusStyleEnum[status])}
+    >
+      {StatusEnum[status]}
+    </Badge>
   );
 }

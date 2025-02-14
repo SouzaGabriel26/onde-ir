@@ -52,7 +52,8 @@ export function PostPreviewModal({
                       src={placeImage}
                       alt={place.name}
                       fill
-                      objectFit="cover"
+                      sizes="100%"
+                      className="object-cover"
                     />
                   </div>
                 </CarouselItem>
