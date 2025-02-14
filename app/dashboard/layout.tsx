@@ -17,7 +17,7 @@ export default async function Layout({ children }: Props) {
 
       <div className="flex h-full justify-between">
         {data?.userRole === 'ADMIN' && <CmsSidebar />}
-        <div className="mt-10 h-full p-10 flex w-full justify-center">
+        <div className="mt-10 h-full p-10 flex w-full justify-center pb-12">
           {children}
         </div>
       </div>
