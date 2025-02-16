@@ -862,6 +862,70 @@ describe('> models/place', () => {
       return normalUser;
     }
   });
+
+  describe('Invoking "findComments" method', () => {
+    test('Providing invalid "placeId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const result = await place.findComments(placeDataSource, '123');
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"place_id" precisa ser um UUID válido.',
+          fields: ['place_id'],
+        },
+      });
+    });
+
+    test('Providing valid "placeId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const { data } = await place.findAll(placeDataSource, {
+        where: {
+          name: 'Churrascaria Espeto de Ouro',
+        },
+      });
+
+      const placeId = data![0].id;
+
+      const result = await place.findComments(placeDataSource, placeId);
+
+      expect(result).toStrictEqual({
+        error: null,
+        data: [
+          {
+            id: expect.any(String),
+            user_id: expect.any(String),
+            place_id: placeId,
+            description: 'Achei interessante este local, frequento bastante!',
+            parent_comment_id: null,
+            created_at: expect.any(Date),
+            updated_at: expect.any(Date),
+          },
+          {
+            id: expect.any(String),
+            user_id: expect.any(String),
+            place_id: placeId,
+            description:
+              'Local muito bonito e aconchegante! Recomendo demais, vou todo mês com minha família.',
+            parent_comment_id: null,
+            created_at: expect.any(Date),
+            updated_at: expect.any(Date),
+            child_comments: [
+              {
+                id: expect.any(String),
+                user_id: expect.any(String),
+                place_id: placeId,
+                description: 'Que legal!',
+                parent_comment_id: expect.any(String),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date),
+              },
+            ],
+          },
+        ],
+      });
+    });
+  });
 });
 
 async function getUserId() {
