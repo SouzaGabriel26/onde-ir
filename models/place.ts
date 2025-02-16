@@ -1,4 +1,4 @@
-import type { PlaceDataSource, PlaceStatus } from '@/data/place';
+import type { PlaceComment, PlaceDataSource, PlaceStatus } from '@/data/place';
 import type { UserDataSource } from '@/data/user';
 import { operationResult } from '@/utils/operationResult';
 
@@ -11,6 +11,7 @@ export const place = Object.freeze({
   createImages,
   findCategories,
   update,
+  findComments,
 });
 
 type FindAllInput = {
@@ -290,4 +291,44 @@ async function update(
   });
 
   return operationResult.success({});
+}
+
+async function findComments(placeDataSource: PlaceDataSource, placeId: string) {
+  const validationResult = validator(
+    { place_id: placeId },
+    { place_id: 'required' },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const comments = await placeDataSource.findComments(placeId);
+
+  type FormattedComment = PlaceComment & {
+    child_comments?: Array<PlaceComment>;
+  };
+
+  const commentsWithoutParent = comments.filter(
+    (comment) => !comment.parent_comment_id,
+  );
+  const commentsWithParent = comments.filter(
+    (comment) => comment.parent_comment_id,
+  );
+
+  const formattedComments: FormattedComment[] = commentsWithoutParent;
+
+  for (const comment of commentsWithParent) {
+    const parentComment = formattedComments.find(
+      (c) => c.id === comment.parent_comment_id,
+    );
+
+    if (parentComment) {
+      if (!parentComment.child_comments) {
+        parentComment.child_comments = [];
+      }
+
+      parentComment.child_comments.push(comment);
+    }
+  }
+
+  return operationResult.success(formattedComments);
 }

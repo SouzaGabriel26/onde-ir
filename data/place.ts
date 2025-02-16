@@ -45,6 +45,16 @@ export type FindAllPlacesOutput = {
   images: string[];
 };
 
+export type PlaceComment = {
+  id: string;
+  place_id: string;
+  user_id: string;
+  description: string;
+  parent_comment_id: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
 export function createPlaceDataSource() {
   const placePool = database.getPool();
 
@@ -55,6 +65,7 @@ export function createPlaceDataSource() {
     findCategories,
     findById,
     update,
+    findComments,
   });
 
   type FindAllInput = {
@@ -335,5 +346,39 @@ export function createPlaceDataSource() {
     };
 
     await placePool.query(query);
+  }
+
+  async function findComments(placeId: string) {
+    const query = {
+      text: sql`
+        SELECT
+          c.id,
+          c.place_id,
+          c.user_id,
+          c.parent_comment_id,
+          c.description,
+          c.created_at,
+          c.updated_at
+        FROM
+          place_comments c
+        WHERE
+          c.place_id = $1
+      `,
+      values: [placeId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    if (!queryResult || !queryResult.rows) return [];
+
+    return queryResult.rows.map<PlaceComment>((comment) => ({
+      id: comment.id,
+      place_id: comment.place_id,
+      user_id: comment.user_id,
+      description: comment.description,
+      parent_comment_id: comment.parent_comment_id,
+      created_at: comment.created_at,
+      updated_at: comment.updated_at,
+    }));
   }
 }
