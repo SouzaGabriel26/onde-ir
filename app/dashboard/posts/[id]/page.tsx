@@ -133,9 +133,6 @@ export default async function Page(props: PageProps) {
                     className="rounded-[20px] object-cover"
                   />
 
-                  <CarouselPrevious className="left-2 2xl:-left-12" />
-                  <CarouselNext className="right-2 2xl:-right-12" />
-
                   <Badge
                     variant="secondary"
                     className="absolute bottom-2 right-2"
@@ -146,6 +143,9 @@ export default async function Page(props: PageProps) {
               </CarouselItem>
             ))}
           </CarouselContent>
+
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
         </Carousel>
       </div>
 
