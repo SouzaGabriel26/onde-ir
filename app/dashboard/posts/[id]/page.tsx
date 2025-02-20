@@ -7,15 +7,15 @@ import {
 } from '@/components/Carousel';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { type PlaceStatus, createPlaceDataSource } from '@/data/place';
-import { createUserDataSource } from '@/data/user';
+import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
-import { user } from '@/models/user';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
-import { ExpandIcon, MapPin } from 'lucide-react';
+import { ExpandIcon } from 'lucide-react';
 import Image from 'next/image';
 import { RedirectType, redirect } from 'next/navigation';
+import { PlaceComments } from './_components/PlaceComments';
+import { PlaceDetails } from './_components/PlaceDetails';
 import { approvePlaceAction, rejectPlaceAction } from './actions';
 
 type PageProps = {
@@ -48,22 +48,7 @@ export default async function Page(props: PageProps) {
     }
   }
 
-  const categories = await placeDataSource.findCategories();
-  const postCategory = categories.find(
-    (category) => category.id === postFound.category_id,
-  );
-
-  const userDataSource = createUserDataSource();
-
-  const { data: reviewedBy } = await user.findById(userDataSource, {
-    id: postFound.reviewed_by!,
-    select: ['name'],
-  });
-
-  const { data: postOwner } = await user.findById(userDataSource, {
-    id: postFound.created_by,
-    select: ['name', 'id'],
-  });
+  const { data: comments } = await place.findComments(placeDataSource, postId);
 
   return (
     <div className="w-full space-y-6 pb-2">
@@ -133,9 +118,6 @@ export default async function Page(props: PageProps) {
                     className="rounded-[20px] object-cover"
                   />
 
-                  <CarouselPrevious className="left-2 2xl:-left-12" />
-                  <CarouselNext className="right-2 2xl:-right-12" />
-
                   <Badge
                     variant="secondary"
                     className="absolute bottom-2 right-2"
@@ -146,91 +128,20 @@ export default async function Page(props: PageProps) {
               </CarouselItem>
             ))}
           </CarouselContent>
+
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
         </Carousel>
       </div>
 
-      <div className="border w-full flex flex-col rounded-md p-4 gap-4">
-        <div className="flex justify-between w-full flex-col md:flex-row gap-2">
-          <div>
-            <h3 className="text-2xl font-bold">{postFound.name}</h3>
+      <PlaceDetails place={postFound} />
 
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="size-4" />
-              <span>
-                {postFound.city}, {postFound.state} - {postFound.country}
-              </span>
-            </div>
-          </div>
-
-          <PostStatus status={postFound.status} />
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3 place-items-center">
-          <div>
-            <TextInfo label="Rua" value={postFound.street} />
-
-            <TextInfo label="Número" value={String(postFound.num_place)} />
-
-            <TextInfo label="Complemento" value={postFound.complement ?? '-'} />
-
-            <TextInfo label="Descrição" value={postFound.description ?? '-'} />
-          </div>
-
-          <div>
-            <TextInfo label="Categoria" value={postCategory?.name ?? '-'} />
-
-            {postFound.status !== 'PENDING' && (
-              <TextInfo label="Revisado por" value={reviewedBy?.name ?? '-'} />
-            )}
-
-            <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />
-          </div>
-
-          <div>
-            <TextInfo
-              label="Criado em"
-              value={new Date(postFound.created_at).toLocaleDateString()}
-            />
-
-            <TextInfo
-              label="Atualizado em"
-              value={new Date(postFound.updated_at).toLocaleDateString()}
-            />
-          </div>
-        </div>
-      </div>
+      <PlaceComments
+        comments={comments ?? []}
+        isAdmin={isAdmin}
+        isPostOwner={isOwner}
+        userId={loggedUser?.id ?? ''}
+      />
     </div>
-  );
-}
-
-function TextInfo({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col">
-      <span className="text-slate-500">{label} </span>
-      <span>{value}</span>
-    </div>
-  );
-}
-
-function PostStatus({ status }: { status: PlaceStatus }) {
-  const StatusEnum = {
-    PENDING: 'Pendente',
-    APPROVED: 'Aprovado',
-    REJECTED: 'Rejeitado',
-  };
-
-  const StatusStyleEnum = {
-    PENDING: 'text-yellow-500',
-    APPROVED: 'text-green-500',
-    REJECTED: 'text-red-500',
-  };
-
-  return (
-    <Badge
-      variant="outline"
-      className={sanitizeClassName('py-1 h-fit', StatusStyleEnum[status])}
-    >
-      {StatusEnum[status]}
-    </Badge>
   );
 }

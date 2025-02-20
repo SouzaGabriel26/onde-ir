@@ -20,7 +20,7 @@ export default async function Layout({ children }: Props) {
         </Link>
       </div>
 
-      <div className="flex flex-grow flex-col overflow-y-auto items-center rounded-md border p-4 space-y-4">
+      <div className="flex flex-grow flex-col overflow-y-auto items-center rounded-md border scroolbar p-4 space-y-4">
         <CreatePostBreadCrumb />
         {children}
       </div>

@@ -53,6 +53,8 @@ export type PlaceComment = {
   parent_comment_id: string;
   created_at: Date;
   updated_at: Date;
+  user_name: string;
+  avatar_url: string;
 };
 
 export function createPlaceDataSource() {
@@ -358,9 +360,12 @@ export function createPlaceDataSource() {
           c.parent_comment_id,
           c.description,
           c.created_at,
-          c.updated_at
+          c.updated_at,
+          u.name as user_name,
+          u.avatar_url
         FROM
           place_comments c
+        INNER JOIN users u ON u.id = c.user_id
         WHERE
           c.place_id = $1
       `,
@@ -379,6 +384,8 @@ export function createPlaceDataSource() {
       parent_comment_id: comment.parent_comment_id,
       created_at: comment.created_at,
       updated_at: comment.updated_at,
+      avatar_url: comment.avatar_url,
+      user_name: comment.user_name,
     }));
   }
 }
