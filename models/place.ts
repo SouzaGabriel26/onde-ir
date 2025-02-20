@@ -27,6 +27,10 @@ type FindAllInput = {
   };
 };
 
+export type FormattedComment = PlaceComment & {
+  child_comments?: Array<PlaceComment>;
+};
+
 async function findAll(
   placeDataSource: PlaceDataSource,
   input: FindAllInput = {},
@@ -302,10 +306,6 @@ async function findComments(placeDataSource: PlaceDataSource, placeId: string) {
   if (validationResult.error) return validationResult;
 
   const comments = await placeDataSource.findComments(placeId);
-
-  type FormattedComment = PlaceComment & {
-    child_comments?: Array<PlaceComment>;
-  };
 
   const commentsWithoutParent = comments.filter(
     (comment) => !comment.parent_comment_id,

@@ -900,6 +900,8 @@ describe('> models/place', () => {
             parent_comment_id: null,
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            avatar_url: null,
+            user_name: 'Admin user',
           },
           {
             id: expect.any(String),
@@ -910,6 +912,8 @@ describe('> models/place', () => {
             parent_comment_id: null,
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            avatar_url: null,
+            user_name: 'Normal user',
             child_comments: [
               {
                 id: expect.any(String),
@@ -919,6 +923,8 @@ describe('> models/place', () => {
                 parent_comment_id: expect.any(String),
                 created_at: expect.any(Date),
                 updated_at: expect.any(Date),
+                avatar_url: null,
+                user_name: 'Admin user',
               },
             ],
           },
