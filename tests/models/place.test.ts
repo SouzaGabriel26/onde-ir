@@ -932,6 +932,154 @@ describe('> models/place', () => {
       });
     });
   });
+
+  describe('Invoking "createComment" method', () => {
+    test('Providing invalid inputs', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          userId: '',
+          placeId: '123',
+          parentCommentId: '123',
+          description: 'knasdjkasdnasj',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"place_id" precisa ser um UUID válido.',
+          fields: ['place_id'],
+        },
+      });
+    });
+
+    test('Providing an unexistent "placeId"', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+      const placeId = randomUUID();
+      const userId = randomUUID();
+      const commentId = randomUUID();
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          placeId,
+          userId,
+          parentCommentId: commentId,
+          description: 'knasdjkasdnasj',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Local não encontrado.',
+          fields: ['place_id'],
+        },
+      });
+    });
+
+    test('Providing an unexistent "userId"', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+      const userId = randomUUID();
+      const commentId = randomUUID();
+
+      const places = await placeDataSource.findAll({
+        limit: 1,
+        offset: 0,
+      });
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          placeId: places[0].id,
+          userId,
+          parentCommentId: commentId,
+          description: 'knasdjkasdnasj',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Usuário não encontrado.',
+          fields: ['user_id'],
+        },
+      });
+    });
+
+    test('Providing an unexistent "parentCommentId"', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+      const userId = await getUserId();
+      const commentId = randomUUID();
+
+      const places = await placeDataSource.findAll({
+        limit: 1,
+        offset: 0,
+      });
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          placeId: places[0].id,
+          userId,
+          parentCommentId: commentId,
+          description: 'knasdjkasdnasj',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Comentário pai não encontrado.',
+          fields: ['parent_comment_id'],
+        },
+      });
+    });
+
+    test('Providing valid properties without "parent_comment_id"', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+      const userId = await getUserId();
+
+      const places = await placeDataSource.findAll({
+        limit: 1,
+        offset: 0,
+      });
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          placeId: places[0].id,
+          userId,
+          description: 'test description',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const comments = await placeDataSource.findComments(places[0].id);
+
+      expect(comments[0].description).toBe('test description');
+      expect(comments[0].parent_comment_id).toBeNull();
+
+      await orchestrator.resetDatabase();
+    });
+  });
 });
 
 async function getUserId() {
