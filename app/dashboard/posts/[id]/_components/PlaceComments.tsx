@@ -2,6 +2,8 @@
 
 import { Button } from '@/components/ui/Button';
 import type { FormattedComment } from '@/models/place';
+import { useActionState } from 'react';
+import { commentAction } from '../actions';
 import { PlaceComment } from './PlaceComment';
 
 type PlaceCommentsProps = {
@@ -9,6 +11,7 @@ type PlaceCommentsProps = {
   isPostOwner: boolean;
   isAdmin: boolean;
   userId: string;
+  placeId: string;
 };
 
 export function PlaceComments({
@@ -16,18 +19,31 @@ export function PlaceComments({
   isAdmin,
   isPostOwner,
   userId,
+  placeId,
 }: PlaceCommentsProps) {
+  const [_state, action, isPending] = useActionState(commentAction, null);
+
   return (
     <div className="border rounded-md space-y-4 p-2">
-      <form className="flex flex-col gap-2">
+      <form action={action} className="flex flex-col gap-2">
         <textarea
+          name="description"
           required
-          placeholder="Compartilhe sua experiência..."
+          placeholder={
+            userId
+              ? 'Compartilhe sua experiência...'
+              : 'Faça login para comentar'
+          }
           className="rounded outline-none w-full bg-slate-200 dark:bg-slate-900 p-3"
           rows={5}
         />
 
-        <Button className="self-end">Publicar comentário</Button>
+        <Button disabled={!userId || isPending} className="self-end">
+          {isPending ? 'Publicar comentário' : 'Publicando comentário...'}
+        </Button>
+
+        <input type="hidden" name="userId" value={userId} />
+        <input type="hidden" name="placeId" value={placeId} />
       </form>
 
       <div className="divide-y">
