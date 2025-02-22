@@ -1,5 +1,6 @@
 import { database } from '@/infra/database';
 import type {
+  CreateCommentInput,
   CreatePlaceImagesInput,
   CreatePlaceInput,
   FindCategoriesInput,
@@ -68,6 +69,8 @@ export function createPlaceDataSource() {
     findById,
     update,
     findComments,
+    createComment,
+    checkCommentById,
   });
 
   type FindAllInput = {
@@ -387,5 +390,53 @@ export function createPlaceDataSource() {
       avatar_url: comment.avatar_url,
       user_name: comment.user_name,
     }));
+  }
+
+  async function createComment(input: CreateCommentInput) {
+    const query = {
+      text: sql`
+        INSERT INTO place_comments (
+          place_id,
+          user_id,
+          description,
+          parent_comment_id
+        )
+        VALUES (
+          $1,
+          $2,
+          $3,
+          $4
+        )
+      `,
+      values: [
+        input.placeId,
+        input.userId,
+        input.description,
+        input.parentCommentId ?? null,
+      ],
+    };
+
+    await placePool.query(query);
+  }
+
+  async function checkCommentById(commentId: string) {
+    const queryText = sql`
+      SELECT
+        id
+      FROM
+        place_comments
+      WHERE
+        id = $1
+      LIMIT 1
+    `;
+
+    const query = {
+      text: queryText,
+      values: [commentId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    return !!queryResult?.rows[0];
   }
 }
