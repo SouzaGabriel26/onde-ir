@@ -2,8 +2,13 @@
 
 import { createPlaceDataSource } from '@/data/place';
 import { createUserDataSource } from '@/data/user';
-import { type UpdateInput as ApprovePlaceInput, place } from '@/models/place';
+import {
+  type UpdateInput as ApprovePlaceInput,
+  type CreateCommentInput,
+  place,
+} from '@/models/place';
 import { feedbackMessage } from '@/utils/feedbackMessage';
+import { form } from '@/utils/form';
 import { revalidatePath } from 'next/cache';
 
 export async function approvePlaceAction(
@@ -59,4 +64,30 @@ export async function rejectPlaceAction(
   });
 
   revalidatePath(`/dashboard/posts/${input.placeId}`);
+}
+export async function commentAction(_prevState: unknown, formData: FormData) {
+  const data = form.sanitizeData<CreateCommentInput>(formData);
+
+  const userDataSource = createUserDataSource();
+  const placeDataSource = createPlaceDataSource();
+
+  const { error } = await place.createComment(
+    userDataSource,
+    placeDataSource,
+    data,
+  );
+
+  if (error) {
+    return await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: error.message,
+    });
+  }
+
+  revalidatePath(`/dashboard/posts/${data.placeId}`);
+
+  return await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Comentário publicado com sucesso!',
+  });
 }

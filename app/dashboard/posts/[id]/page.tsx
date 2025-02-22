@@ -141,6 +141,7 @@ export default async function Page(props: PageProps) {
         isAdmin={isAdmin}
         isPostOwner={isOwner}
         userId={loggedUser?.id ?? ''}
+        placeId={postId}
       />
     </div>
   );

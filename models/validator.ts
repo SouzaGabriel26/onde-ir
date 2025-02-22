@@ -353,4 +353,12 @@ const schema = z.object({
     .min(1, {
       message: '"category_name" precisa ter no mínimo 1 caractere.',
     }),
+  comment_id: z
+    .string({
+      required_error: '"comment_id" é obrigatório.',
+      invalid_type_error: '"comment_id" precisa ser uma string.',
+    })
+    .uuid({
+      message: '"comment_id" precisa ser um UUID válido.',
+    }),
 });

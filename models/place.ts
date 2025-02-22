@@ -12,6 +12,7 @@ export const place = Object.freeze({
   findCategories,
   update,
   findComments,
+  createComment,
 });
 
 type FindAllInput = {
@@ -331,4 +332,78 @@ async function findComments(placeDataSource: PlaceDataSource, placeId: string) {
   }
 
   return operationResult.success(formattedComments);
+}
+
+export type CreateCommentInput = {
+  placeId: ValidationSchema['place_id'];
+  userId: ValidationSchema['user_id'];
+  description: ValidationSchema['description'];
+  parentCommentId?: ValidationSchema['comment_id'];
+};
+
+async function createComment(
+  userDataSource: UserDataSource,
+  placeDataSource: PlaceDataSource,
+  input: CreateCommentInput,
+) {
+  const validationResult = validator(
+    {
+      place_id: input.placeId,
+      user_id: input.userId,
+      description: input.description,
+      comment_id: input.parentCommentId,
+    },
+    {
+      place_id: 'required',
+      user_id: 'required',
+      description: 'required',
+      comment_id: 'optional',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const {
+    place_id,
+    user_id,
+    description,
+    comment_id: parent_comment_id,
+  } = validationResult.data;
+
+  const place = await placeDataSource.findById(place_id);
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  const userExists = await userDataSource.checkById({ id: user_id });
+  if (!userExists) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['user_id'],
+    });
+  }
+
+  if (parent_comment_id) {
+    const parentCommentExists =
+      await placeDataSource.checkCommentById(parent_comment_id);
+
+    if (!parentCommentExists) {
+      return operationResult.failure({
+        message: 'Comentário pai não encontrado.',
+        fields: ['parent_comment_id'],
+      });
+    }
+  }
+
+  await placeDataSource.createComment({
+    placeId: place_id,
+    userId: user_id,
+    description: description,
+    parentCommentId: parent_comment_id,
+  });
+
+  return operationResult.success({});
 }
