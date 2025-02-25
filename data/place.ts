@@ -3,6 +3,7 @@ import type {
   CreateCommentInput,
   CreatePlaceImagesInput,
   CreatePlaceInput,
+  DeleteCommentInput,
   FindCategoriesInput,
   UpdateInput,
 } from '@/models/place';
@@ -71,6 +72,8 @@ export function createPlaceDataSource() {
     findComments,
     createComment,
     checkCommentById,
+    deleteComment,
+    getCommentOwner,
   });
 
   type FindAllInput = {
@@ -438,5 +441,42 @@ export function createPlaceDataSource() {
     const queryResult = await placePool.query(query);
 
     return !!queryResult?.rows[0];
+  }
+
+  async function getCommentOwner(commentId: string) {
+    const queryText = sql`
+      SELECT
+        user_id
+      FROM
+        place_comments
+      WHERE
+        id = $1
+      LIMIT 1
+    `;
+
+    const query = {
+      text: queryText,
+      values: [commentId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    if (!queryResult || !queryResult.rows.length) return null;
+
+    return queryResult.rows[0].user_id as string;
+  }
+
+  async function deleteComment(input: DeleteCommentInput) {
+    const query = sql`
+      DELETE FROM
+        place_comments
+      WHERE
+        id = $1
+    `;
+
+    await placePool.query({
+      text: query,
+      values: [input.commentId],
+    });
   }
 }

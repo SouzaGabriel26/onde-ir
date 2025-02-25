@@ -13,6 +13,7 @@ export const place = Object.freeze({
   update,
   findComments,
   createComment,
+  deleteComment,
 });
 
 type FindAllInput = {
@@ -403,6 +404,74 @@ async function createComment(
     userId: user_id,
     description: description,
     parentCommentId: parent_comment_id,
+  });
+
+  return operationResult.success({});
+}
+
+export type DeleteCommentInput = {
+  placeId: ValidationSchema['place_id'];
+  commentId: ValidationSchema['comment_id'];
+  userId: ValidationSchema['user_id'];
+};
+
+async function deleteComment(
+  userDataSource: UserDataSource,
+  placeDataSource: PlaceDataSource,
+  input: DeleteCommentInput,
+) {
+  const validationResult = validator(
+    {
+      comment_id: input.commentId,
+      user_id: input.userId,
+      place_id: input.placeId,
+    },
+    { comment_id: 'required', user_id: 'required', place_id: 'required' },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { comment_id, user_id, place_id } = validationResult.data;
+
+  const user = await userDataSource.findById({
+    id: user_id,
+    select: ['userRole', 'id'],
+  });
+
+  if (!user) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['user_id'],
+    });
+  }
+
+  const commentOwnerId = await placeDataSource.getCommentOwner(comment_id);
+
+  const place = await placeDataSource.findById(place_id);
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  const isPostOwner = user.id === place.created_by;
+  const isCommentOwner = user.id === commentOwnerId;
+  const isAdmin = user.userRole === 'ADMIN';
+
+  const hasPermissionToDelete = isPostOwner || isAdmin || isCommentOwner;
+
+  if (!hasPermissionToDelete) {
+    return operationResult.failure({
+      message: 'Você não tem permissão para deletar este comentário',
+      fields: ['user_id'],
+    });
+  }
+
+  await placeDataSource.deleteComment({
+    commentId: comment_id,
+    userId: user_id,
+    placeId: place_id,
   });
 
   return operationResult.success({});

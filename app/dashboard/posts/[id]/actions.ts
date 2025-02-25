@@ -5,6 +5,7 @@ import { createUserDataSource } from '@/data/user';
 import {
   type UpdateInput as ApprovePlaceInput,
   type CreateCommentInput,
+  type DeleteCommentInput,
   place,
 } from '@/models/place';
 import { feedbackMessage } from '@/utils/feedbackMessage';
@@ -89,5 +90,33 @@ export async function commentAction(_prevState: unknown, formData: FormData) {
   return await feedbackMessage.setFeedbackMessage({
     type: 'success',
     content: 'Comentário publicado com sucesso!',
+  });
+}
+
+export async function deleteCommentAction(
+  _prevState: unknown,
+  formData: FormData,
+) {
+  const data = form.sanitizeData<DeleteCommentInput>(formData);
+
+  const userDataSource = createUserDataSource();
+  const placeDataSource = createPlaceDataSource();
+
+  const { error } = await place.deleteComment(userDataSource, placeDataSource, {
+    commentId: data.commentId,
+    userId: data.userId,
+    placeId: data.placeId,
+  });
+
+  if (error) {
+    return await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: error.message,
+    });
+  }
+
+  return await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Comentário removido com sucesso!',
   });
 }

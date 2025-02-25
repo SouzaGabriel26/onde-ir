@@ -1080,6 +1080,100 @@ describe('> models/place', () => {
       await orchestrator.resetDatabase();
     });
   });
+
+  describe('Invoking "deleteComment" method', () => {
+    test('Providing invalid "commentId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const result = await place.deleteComment(
+        userDataSource,
+        placeDataSource,
+        {
+          commentId: '123',
+          userId: '123',
+          placeId: '123',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: '"comment_id" precisa ser um UUID válido.',
+          fields: ['comment_id'],
+        },
+      });
+    });
+
+    test('Providing valid "commentId" but a userId with no permission', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: placeWithComments } = await place.findAll(placeDataSource, {
+        where: {
+          name: 'Churrascaria Espeto de Ouro',
+        },
+      });
+
+      const comments = await place.findComments(
+        placeDataSource,
+        placeWithComments![0].id,
+      );
+
+      expect(comments.data).toHaveLength(2);
+
+      const userId = await getNormalUserId();
+
+      const result = await place.deleteComment(
+        userDataSource,
+        placeDataSource,
+        {
+          commentId: comments.data![0].id,
+          userId: userId,
+          placeId: placeWithComments![0].id,
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Você não tem permissão para deletar este comentário',
+          fields: ['user_id'],
+        },
+      });
+    });
+
+    test('Providing valid "commentId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: placeWithComments } = await place.findAll(placeDataSource, {
+        where: {
+          name: 'Churrascaria Espeto de Ouro',
+        },
+      });
+
+      const comments = await place.findComments(
+        placeDataSource,
+        placeWithComments![0].id,
+      );
+
+      expect(comments.data).toHaveLength(2);
+
+      await place.deleteComment(userDataSource, placeDataSource, {
+        commentId: comments.data![1].id,
+        userId: comments.data![1].user_id,
+        placeId: placeWithComments![0].id,
+      });
+
+      const commentsAfterDelete = await place.findComments(
+        placeDataSource,
+        placeWithComments![0].id,
+      );
+
+      expect(commentsAfterDelete.data).toHaveLength(1);
+    });
+  });
 });
 
 async function getUserId() {
@@ -1089,6 +1183,24 @@ async function getUserId() {
     text: sql`
       SELECT id
       FROM users
+      LIMIT 1;
+    `,
+  };
+
+  const queryResult = await client.query(query);
+
+  return queryResult?.rows[0].id;
+}
+
+async function getNormalUserId() {
+  const client = database.getClient();
+
+  const query = {
+    text: sql`
+      SELECT id
+      FROM users
+      WHERE
+        user_role = 'USER'
       LIMIT 1;
     `,
   };
