@@ -54,6 +54,7 @@ export function PlaceComments({
           return (
             <div key={comment.id}>
               <PlaceComment
+                placeId={placeId}
                 comment={comment}
                 isAdmin={isAdmin}
                 isPostOwner={isPostOwner}
@@ -69,6 +70,7 @@ export function PlaceComments({
                       isAdmin={isAdmin}
                       isPostOwner={isPostOwner}
                       userId={userId}
+                      placeId={placeId}
                     />
                   ))}
                 </div>

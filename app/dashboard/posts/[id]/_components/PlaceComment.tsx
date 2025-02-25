@@ -1,11 +1,13 @@
+'use client';
+
 import { UserAvatar } from '@/components/UserAvatar';
 import { Button } from '@/components/ui/Button';
-import type { FormattedComment } from '@/models/place';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@radix-ui/react-popover';
+} from '@/components/ui/Popover';
+import type { FormattedComment } from '@/models/place';
 import {
   Edit,
   Heart,
@@ -13,12 +15,15 @@ import {
   MoreHorizontal,
   Trash,
 } from 'lucide-react';
+import { useActionState } from 'react';
+import { deleteCommentAction } from '../actions';
 
 type PlaceComment = {
   comment: FormattedComment;
   userId: string;
   isPostOwner: boolean;
   isAdmin: boolean;
+  placeId: string;
 };
 
 export function PlaceComment({
@@ -26,11 +31,15 @@ export function PlaceComment({
   userId,
   isAdmin,
   isPostOwner,
+  placeId,
 }: PlaceComment) {
+  const [_state, deleteAction, isPending] = useActionState(
+    deleteCommentAction,
+    null,
+  );
+
   const isCommentOwner = comment.user_id === userId;
   const hasPermissionToDelete = isPostOwner || isAdmin || isCommentOwner;
-
-  const showActions = isCommentOwner || hasPermissionToDelete;
 
   function getFormattedDate(date: Date) {
     return date.toLocaleDateString('pt-br', {
@@ -81,7 +90,7 @@ export function PlaceComment({
         </div>
       </div>
 
-      {showActions && (
+      {hasPermissionToDelete && (
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -93,25 +102,32 @@ export function PlaceComment({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-fit">
-            <Button
-              disabled={!isCommentOwner}
-              variant="ghost"
-              size="sm"
-              className="w-full"
-            >
-              <Edit className="mr-2 size-4" />
-              Editar
-            </Button>
+            <form>
+              <input type="hidden" name="placeId" value={placeId} />
+              <input type="hidden" name="commentId" value={comment.id} />
+              <input type="hidden" name="userId" value={userId} />
 
-            <Button
-              disabled={!hasPermissionToDelete}
-              variant="ghost"
-              size="sm"
-              className="w-full text-red-500 hover:text-red-600"
-            >
-              <Trash className="mr-2 size-4" />
-              Deletar
-            </Button>
+              <Button
+                disabled={!isCommentOwner || isPending}
+                variant="ghost"
+                size="sm"
+                className="w-full"
+              >
+                <Edit className="mr-2 size-4" />
+                Editar
+              </Button>
+
+              <Button
+                formAction={deleteAction}
+                disabled={!hasPermissionToDelete || isPending}
+                variant="ghost"
+                size="sm"
+                className="w-full text-red-500 hover:text-red-600"
+              >
+                <Trash className="mr-2 size-4" />
+                Deletar
+              </Button>
+            </form>
           </PopoverContent>
         </Popover>
       )}
