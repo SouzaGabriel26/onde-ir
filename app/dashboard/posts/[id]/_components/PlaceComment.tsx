@@ -14,9 +14,10 @@ import {
   MessageCircle,
   MoreHorizontal,
   Trash,
+  X,
 } from 'lucide-react';
-import { useActionState } from 'react';
-import { deleteCommentAction } from '../actions';
+import { useActionState, useState } from 'react';
+import { deleteCommentAction, updateCommentAction } from '../actions';
 
 type PlaceComment = {
   comment: FormattedComment;
@@ -33,13 +34,23 @@ export function PlaceComment({
   isPostOwner,
   placeId,
 }: PlaceComment) {
-  const [_state, deleteAction, isPending] = useActionState(
+  const [_deleteState, deleteAction, isPendingDelete] = useActionState(
     deleteCommentAction,
     null,
   );
+  const [_updateState, updateAction, isPendingUpdate] = useActionState(
+    updateCommentAction,
+    null,
+  );
+
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const isCommentOwner = comment.user_id === userId;
   const hasPermissionToDelete = isPostOwner || isAdmin || isCommentOwner;
+
+  function handleToggleEditMode() {
+    setIsEditMode((prevState) => !prevState);
+  }
 
   function getFormattedDate(date: Date) {
     return date.toLocaleDateString('pt-br', {
@@ -65,32 +76,63 @@ export function PlaceComment({
       </div>
 
       <div className="flex flex-col gap-4">
-        <p className="ml-12 text-sm">{comment.description}</p>
+        {userId && isEditMode ? (
+          <form id={`form-comment-${comment.id}`}>
+            <input type="hidden" name="commentId" defaultValue={comment.id} />
+            <input type="hidden" name="userId" defaultValue={userId} />
 
-        <div className="flex gap-4">
-          <Button
-            disabled={!userId}
-            variant="ghost"
-            size="sm"
-            className="w-fit group"
-          >
-            <Heart className="mr-2 size-4 group-hover:fill-red-500" />
-            Curtir
-          </Button>
+            <textarea
+              name="description"
+              required
+              placeholder="Compartilhe sua experiência..."
+              className="rounded outline-none w-full bg-slate-200 dark:bg-slate-900 p-3"
+              rows={3}
+              defaultValue={comment.description}
+            />
+          </form>
+        ) : (
+          <p className="ml-12 text-sm">{comment.description}</p>
+        )}
 
-          <Button
-            disabled={!userId}
-            variant="ghost"
-            size="sm"
-            className="w-fit group"
-          >
-            <MessageCircle className="mr-2 size-4" />
-            Responder
-          </Button>
+        <div className="flex justify-between items-center">
+          <fieldset className="space-x-4">
+            <Button
+              disabled={!userId}
+              variant="ghost"
+              size="sm"
+              className="w-fit group"
+            >
+              <Heart className="mr-2 size-4 group-hover:fill-red-500" />
+              Curtir
+            </Button>
+
+            <Button
+              disabled={!userId}
+              variant="ghost"
+              size="sm"
+              className="w-fit group"
+            >
+              <MessageCircle className="mr-2 size-4" />
+              Responder
+            </Button>
+          </fieldset>
+
+          {isEditMode && (
+            <Button
+              form={`form-comment-${comment.id}`}
+              formAction={(formData: FormData) => {
+                updateAction(formData);
+                setIsEditMode(false);
+              }}
+              disabled={isPendingUpdate}
+            >
+              Salvar
+            </Button>
+          )}
         </div>
       </div>
 
-      {hasPermissionToDelete && (
+      {hasPermissionToDelete && !isEditMode && (
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -108,7 +150,9 @@ export function PlaceComment({
               <input type="hidden" name="userId" value={userId} />
 
               <Button
-                disabled={!isCommentOwner || isPending}
+                onClick={handleToggleEditMode}
+                type="button"
+                disabled={!isCommentOwner || isPendingDelete}
                 variant="ghost"
                 size="sm"
                 className="w-full"
@@ -119,7 +163,7 @@ export function PlaceComment({
 
               <Button
                 formAction={deleteAction}
-                disabled={!hasPermissionToDelete || isPending}
+                disabled={!hasPermissionToDelete || isPendingDelete}
                 variant="ghost"
                 size="sm"
                 className="w-full text-red-500 hover:text-red-600"
@@ -130,6 +174,17 @@ export function PlaceComment({
             </form>
           </PopoverContent>
         </Popover>
+      )}
+
+      {isEditMode && (
+        <Button
+          onClick={handleToggleEditMode}
+          className="absolute right-4 top-2"
+          variant="destructive"
+          title="Sair do modo edição"
+        >
+          <X className="size-4" />
+        </Button>
       )}
     </div>
   );

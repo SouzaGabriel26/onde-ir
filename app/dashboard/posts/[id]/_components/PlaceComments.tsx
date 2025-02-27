@@ -39,7 +39,7 @@ export function PlaceComments({
         />
 
         <Button disabled={!userId || isPending} className="self-end">
-          {isPending ? 'Publicar comentário' : 'Publicando comentário...'}
+          {isPending ? 'Publicando comentário...' : 'Publicar comentário'}
         </Button>
 
         <input type="hidden" name="userId" value={userId} />

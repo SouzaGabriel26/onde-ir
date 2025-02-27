@@ -14,6 +14,7 @@ export const place = Object.freeze({
   findComments,
   createComment,
   deleteComment,
+  updateComment,
 });
 
 type FindAllInput = {
@@ -472,6 +473,58 @@ async function deleteComment(
     commentId: comment_id,
     userId: user_id,
     placeId: place_id,
+  });
+
+  return operationResult.success({});
+}
+
+export type UpdateCommentInput = {
+  commentId: ValidationSchema['comment_id'];
+  userId: ValidationSchema['user_id'];
+  description: ValidationSchema['description'];
+};
+
+async function updateComment(
+  userDataSource: UserDataSource,
+  placeDataSource: PlaceDataSource,
+  input: UpdateCommentInput,
+) {
+  const validationResult = validator(
+    {
+      comment_id: input.commentId,
+      user_id: input.userId,
+      description: input.description,
+    },
+    { comment_id: 'required', user_id: 'required', description: 'required' },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { comment_id, description, user_id } = validationResult.data;
+
+  const user = await userDataSource.findById({
+    id: user_id,
+    select: ['id', 'userRole'],
+  });
+
+  if (!user) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['user_id'],
+    });
+  }
+
+  const commentOwner = await placeDataSource.getCommentOwner(comment_id);
+
+  if (commentOwner !== user.id) {
+    return operationResult.failure({
+      message: 'Você não tem permissão para editar este comentário.',
+    });
+  }
+
+  await placeDataSource.updateComment({
+    commentId: comment_id,
+    description,
   });
 
   return operationResult.success({});
