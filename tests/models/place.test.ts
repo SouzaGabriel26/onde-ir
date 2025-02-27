@@ -1177,6 +1177,8 @@ describe('> models/place', () => {
 
   describe('Invoking "updateComment" method', () => {
     test('Providing valid inputs', async () => {
+      await orchestrator.resetDatabase();
+
       const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
 
