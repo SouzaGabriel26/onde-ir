@@ -1174,6 +1174,57 @@ describe('> models/place', () => {
       expect(commentsAfterDelete.data).toHaveLength(1);
     });
   });
+
+  describe('Invoking "updateComment" method', () => {
+    test('Providing valid inputs', async () => {
+      const userDataSource = createUserDataSource();
+      const placeDataSource = createPlaceDataSource();
+
+      const { data: placeWithComments } = await place.findAll(placeDataSource, {
+        where: {
+          name: 'Churrascaria Espeto de Ouro',
+        },
+      });
+
+      const placeId = placeWithComments![0].id;
+
+      const { data: comments } = await place.findComments(
+        placeDataSource,
+        placeId,
+      );
+
+      expect(comments![0].description).toBe(
+        'Achei interessante este local, frequento bastante!',
+      );
+
+      const result = await place.updateComment(
+        userDataSource,
+        placeDataSource,
+        {
+          userId: comments![0].user_id,
+          commentId: comments![0].id,
+          description: 'Updated comment',
+        },
+      );
+      await placeDataSource.deleteComment({
+        commentId: comments![1].id,
+        placeId: comments![1].place_id,
+        userId: comments![1].user_id,
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const { data: commentsAfterUpdate } = await place.findComments(
+        placeDataSource,
+        placeId,
+      );
+
+      expect(commentsAfterUpdate![0].description).toBe('Updated comment');
+    });
+  });
 });
 
 async function getUserId() {
