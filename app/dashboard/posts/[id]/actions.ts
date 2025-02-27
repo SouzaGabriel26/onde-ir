@@ -6,6 +6,7 @@ import {
   type UpdateInput as ApprovePlaceInput,
   type CreateCommentInput,
   type DeleteCommentInput,
+  type UpdateCommentInput,
   place,
 } from '@/models/place';
 import { feedbackMessage } from '@/utils/feedbackMessage';
@@ -118,5 +119,34 @@ export async function deleteCommentAction(
   return await feedbackMessage.setFeedbackMessage({
     type: 'success',
     content: 'Comentário removido com sucesso!',
+  });
+}
+
+export async function updateCommentAction(
+  _prevState: unknown,
+  formData: FormData,
+) {
+  const { commentId, description, userId } =
+    form.sanitizeData<UpdateCommentInput>(formData);
+
+  const userDataSource = createUserDataSource();
+  const placeDataSource = createPlaceDataSource();
+
+  const result = await place.updateComment(userDataSource, placeDataSource, {
+    commentId,
+    description,
+    userId,
+  });
+
+  if (result.error) {
+    return await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: result.error.message,
+    });
+  }
+
+  return await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Comentário atualizado com sucesso!',
   });
 }
