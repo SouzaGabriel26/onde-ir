@@ -74,6 +74,7 @@ export function createPlaceDataSource() {
     checkCommentById,
     deleteComment,
     getCommentOwner,
+    updateComment,
   });
 
   type FindAllInput = {
@@ -478,5 +479,26 @@ export function createPlaceDataSource() {
       text: query,
       values: [input.commentId],
     });
+  }
+
+  type UpdateCommentInput = {
+    commentId: string;
+    description: string;
+  };
+
+  async function updateComment(input: UpdateCommentInput) {
+    const query = {
+      text: sql`
+        UPDATE place_comments
+        SET
+          description = $1,
+          updated_at = NOW() AT TIME ZONE 'UTC'
+        WHERE
+          id = $2;
+      `,
+      values: [input.description, input.commentId],
+    };
+
+    await placePool.query(query);
   }
 }
