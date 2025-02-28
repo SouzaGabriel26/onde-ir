@@ -17,7 +17,11 @@ import {
   X,
 } from 'lucide-react';
 import { useActionState, useState } from 'react';
-import { deleteCommentAction, updateCommentAction } from '../actions';
+import {
+  commentAction,
+  deleteCommentAction,
+  updateCommentAction,
+} from '../actions';
 
 type PlaceComment = {
   comment: FormattedComment;
@@ -25,6 +29,7 @@ type PlaceComment = {
   isPostOwner: boolean;
   isAdmin: boolean;
   placeId: string;
+  isChildComment?: boolean;
 };
 
 export function PlaceComment({
@@ -33,6 +38,7 @@ export function PlaceComment({
   isAdmin,
   isPostOwner,
   placeId,
+  isChildComment = false,
 }: PlaceComment) {
   const [_deleteState, deleteAction, isPendingDelete] = useActionState(
     deleteCommentAction,
@@ -42,8 +48,13 @@ export function PlaceComment({
     updateCommentAction,
     null,
   );
+  const [_createState, createCommentAction, isPendingCreate] = useActionState(
+    commentAction,
+    null,
+  );
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isAnswering, setIsAnswering] = useState(false);
 
   const isCommentOwner = comment.user_id === userId;
   const hasPermissionToDelete = isPostOwner || isAdmin || isCommentOwner;
@@ -75,7 +86,7 @@ export function PlaceComment({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
         {userId && isEditMode ? (
           <form id={`form-comment-${comment.id}`}>
             <input type="hidden" name="commentId" defaultValue={comment.id} />
@@ -94,42 +105,46 @@ export function PlaceComment({
           <p className="ml-12 text-sm">{comment.description}</p>
         )}
 
-        <div className="flex justify-between items-center">
-          <fieldset className="space-x-4">
-            <Button
-              disabled={!userId}
-              variant="ghost"
-              size="sm"
-              className="w-fit group"
-            >
-              <Heart className="mr-2 size-4 group-hover:fill-red-500" />
-              Curtir
-            </Button>
+        {!isChildComment && (
+          <div className="flex justify-between items-center">
+            <fieldset className="flex flex-col md:flex-row">
+              <Button
+                disabled={!userId}
+                variant="ghost"
+                size="sm"
+                className="w-fit group"
+              >
+                <Heart className="mr-2 size-4 group-hover:fill-red-500" />
+                Curtir
+              </Button>
 
-            <Button
-              disabled={!userId}
-              variant="ghost"
-              size="sm"
-              className="w-fit group"
-            >
-              <MessageCircle className="mr-2 size-4" />
-              Responder
-            </Button>
-          </fieldset>
+              <Button
+                onClick={() => setIsAnswering((prevState) => !prevState)}
+                disabled={!userId}
+                variant="ghost"
+                size="sm"
+                className="w-fit group ml-0"
+              >
+                <MessageCircle className="mr-2 size-4" />
+                Responder
+              </Button>
+            </fieldset>
+          </div>
+        )}
 
-          {isEditMode && (
-            <Button
-              form={`form-comment-${comment.id}`}
-              formAction={(formData: FormData) => {
-                updateAction(formData);
-                setIsEditMode(false);
-              }}
-              disabled={isPendingUpdate}
-            >
-              Salvar
-            </Button>
-          )}
-        </div>
+        {isEditMode && (
+          <Button
+            className="w-fit self-end"
+            form={`form-comment-${comment.id}`}
+            formAction={(formData: FormData) => {
+              updateAction(formData);
+              setIsEditMode(false);
+            }}
+            disabled={isPendingUpdate}
+          >
+            Salvar
+          </Button>
+        )}
       </div>
 
       {hasPermissionToDelete && !isEditMode && (
@@ -185,6 +200,36 @@ export function PlaceComment({
         >
           <X className="size-4" />
         </Button>
+      )}
+
+      {isAnswering && (
+        <form
+          action={async (formData: FormData) => {
+            createCommentAction(formData);
+            setIsAnswering(false);
+          }}
+          className="ml-10 md:ml-24 flex flex-col gap-2"
+        >
+          <input type="hidden" name="placeId" defaultValue={placeId} />
+          <input type="hidden" name="userId" defaultValue={userId} />
+          <input
+            type="hidden"
+            name="parentCommentId"
+            defaultValue={comment.id}
+          />
+
+          <textarea
+            name="description"
+            required
+            placeholder="Responda o comentário..."
+            className="rounded outline-none w-full bg-slate-200 dark:bg-slate-900 p-3"
+            rows={3}
+          />
+
+          <Button className="self-end" disabled={isPendingCreate}>
+            Salvar
+          </Button>
+        </form>
       )}
     </div>
   );

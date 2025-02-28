@@ -375,6 +375,8 @@ export function createPlaceDataSource() {
         INNER JOIN users u ON u.id = c.user_id
         WHERE
           c.place_id = $1
+        ORDER BY
+          c.created_at ASC
       `,
       values: [placeId],
     };
