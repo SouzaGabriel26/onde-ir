@@ -62,7 +62,7 @@ export function PlaceComments({
               />
 
               {hasChildComments && (
-                <div className="ml-7 border-l my-2">
+                <div className="ml-10 md:ml-24 border-l my-2 max-h-48 overflow-y-auto scroolbar divide-y">
                   {comment.child_comments?.map((childComment) => (
                     <PlaceComment
                       key={childComment.id}
@@ -71,6 +71,7 @@ export function PlaceComments({
                       isPostOwner={isPostOwner}
                       userId={userId}
                       placeId={placeId}
+                      isChildComment
                     />
                   ))}
                 </div>
