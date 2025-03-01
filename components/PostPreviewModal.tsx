@@ -90,7 +90,7 @@ export function PostPreviewModal({
           </div>
         </div>
 
-        <Link href={href ?? '#'} className="w-full">
+        <Link href={href ?? '#'} prefetch className="w-full">
           <Button className="w-full">Ver mais detalhes</Button>
         </Link>
       </DialogContent>

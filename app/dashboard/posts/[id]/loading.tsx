@@ -8,19 +8,21 @@ export default function Loading() {
         <Skeleton className="h-7 w-32 md:w-80 mt-1" />
       </div>
 
-      <div className="flex flex-col md:flex-row px-4 gap-4 items-center md:items-baseline">
-        <Skeleton className="h-44 w-64 md:h-64 md:w-96 rounded-[20px]" />
-        <Skeleton className="h-44 w-64 md:h-64 md:w-96 rounded-[20px]" />
+      <div className="px-4 gap-4 items-center md:items-baseline flex justify-center">
+        <Skeleton className="h-[300px] w-[300px] md:h-[600px] md:w-[1300px] rounded-[20px]" />
       </div>
 
       <div className="md:w-fit md:mx-auto space-y-4">
         <h2 className="text-3xl md:text-center mb-2">Sobre o local:</h2>
-        <Skeleton className="h-4 w-52" />
-        <Skeleton className="h-4 w-52" />
-        <Skeleton className="h-4 w-52" />
-        <Skeleton className="h-4 w-52" />
-        <Skeleton className="h-4 w-52" />
-        <Skeleton className="h-4 w-52" />
+
+        <div className="grid grid-cols-1 place-items-center md:grid-cols-3 gap-4">
+          <Skeleton className="h-4 w-52" />
+          <Skeleton className="h-4 w-52" />
+          <Skeleton className="h-4 w-52" />
+          <Skeleton className="h-4 w-52" />
+          <Skeleton className="h-4 w-52" />
+          <Skeleton className="h-4 w-52" />
+        </div>
       </div>
     </div>
   );
