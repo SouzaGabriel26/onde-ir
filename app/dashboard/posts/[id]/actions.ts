@@ -150,3 +150,9 @@ export async function updateCommentAction(
     content: 'Comentário atualizado com sucesso!',
   });
 }
+
+export async function ratePlaceAction(formData: FormData) {
+  const data = form.sanitizeData(formData);
+
+  console.log(data);
+}

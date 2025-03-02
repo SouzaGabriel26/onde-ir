@@ -5,6 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/Carousel';
+import { RatingModal } from '@/components/RatingModal';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { createPlaceDataSource } from '@/data/place';
@@ -16,7 +17,11 @@ import Image from 'next/image';
 import { RedirectType, redirect } from 'next/navigation';
 import { PlaceComments } from './_components/PlaceComments';
 import { PlaceDetails } from './_components/PlaceDetails';
-import { approvePlaceAction, rejectPlaceAction } from './actions';
+import {
+  approvePlaceAction,
+  ratePlaceAction,
+  rejectPlaceAction,
+} from './actions';
 
 type PageProps = {
   params: Promise<{
@@ -52,6 +57,11 @@ export default async function Page(props: PageProps) {
 
   return (
     <div className="w-full space-y-6 pb-2">
+      <RatingModal
+        action={ratePlaceAction}
+        className="top-0 right-2 absolute"
+      />
+
       <div className="w-full flex flex-col md:flex-row gap-4 justify-between">
         <h2 className="text-3xl md:text-center">Foto(s) de {postFound.name}</h2>
 
