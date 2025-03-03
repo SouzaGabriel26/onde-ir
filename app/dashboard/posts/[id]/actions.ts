@@ -6,6 +6,7 @@ import {
   type UpdateInput as ApprovePlaceInput,
   type CreateCommentInput,
   type DeleteCommentInput,
+  type EvaluateInput,
   type UpdateCommentInput,
   place,
 } from '@/models/place';
@@ -152,7 +153,22 @@ export async function updateCommentAction(
 }
 
 export async function ratePlaceAction(formData: FormData) {
-  const data = form.sanitizeData(formData);
+  const data = form.sanitizeData<EvaluateInput>(formData);
 
-  console.log(data);
+  const placeDataSource = createPlaceDataSource();
+
+  const result = await place.evaluate(placeDataSource, data);
+
+  if (result.error) {
+    return await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: result.error.message,
+    });
+  }
+
+  revalidatePath(`/dashboard/posts/${data.placeId}`);
+  return await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Local avaliado com sucesso!',
+  });
 }
