@@ -58,6 +58,8 @@ export default async function Page(props: PageProps) {
   return (
     <div className="w-full space-y-6 pb-2">
       <RatingModal
+        placeId={postId}
+        userId={loggedUser?.id ?? ''}
         action={ratePlaceAction}
         className="top-0 right-2 absolute"
       />

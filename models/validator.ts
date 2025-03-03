@@ -361,4 +361,15 @@ const schema = z.object({
     .uuid({
       message: '"comment_id" precisa ser um UUID válido.',
     }),
+  evaluation: z.coerce
+    .number({
+      required_error: '"evaluation" é obrigatório.',
+      invalid_type_error: '"evaluation" precisa ser um número.',
+    })
+    .min(1, {
+      message: '"evaluation" precisa ser um número maior que 0.',
+    })
+    .max(5, {
+      message: '"evaluation" precisa ser um número menor que 6.',
+    }),
 });

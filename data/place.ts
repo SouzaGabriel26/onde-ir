@@ -4,6 +4,7 @@ import type {
   CreatePlaceImagesInput,
   CreatePlaceInput,
   DeleteCommentInput,
+  EvaluateInput,
   FindCategoriesInput,
   UpdateInput,
 } from '@/models/place';
@@ -75,6 +76,7 @@ export function createPlaceDataSource() {
     deleteComment,
     getCommentOwner,
     updateComment,
+    evaluate,
   });
 
   type FindAllInput = {
@@ -499,6 +501,26 @@ export function createPlaceDataSource() {
           id = $2;
       `,
       values: [input.description, input.commentId],
+    };
+
+    await placePool.query(query);
+  }
+
+  async function evaluate(input: EvaluateInput) {
+    const query = {
+      text: sql`
+        INSERT INTO place_ratings (
+          place_id,
+          user_id,
+          rating
+        )
+        VALUES (
+          $1,
+          $2,
+          $3
+        )
+      `,
+      values: [input.placeId, input.userId, input.evaluation],
     };
 
     await placePool.query(query);
