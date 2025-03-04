@@ -1227,6 +1227,52 @@ describe('> models/place', () => {
       expect(commentsAfterUpdate![0].description).toBe('Updated comment');
     });
   });
+
+  describe('Invoking "evaluate" and "findUserRating" method', () => {
+    test('Providing valid inputs', async () => {
+      const placeDataSource = createPlaceDataSource();
+
+      const { data } = await place.findAll(placeDataSource, {
+        limit: 1,
+        where: { status: 'APPROVED' },
+      });
+
+      const placeId = data![0].id;
+
+      const userId = await getNormalUserId();
+
+      const { data: userRating } = await place.findUserRating(placeDataSource, {
+        placeId,
+        userId,
+      });
+
+      expect(userRating).toBeNull();
+
+      const result = await place.evaluate(placeDataSource, {
+        placeId,
+        userId,
+        evaluation: 4,
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const { data: userRatingAfterEvaluate } = await place.findUserRating(
+        placeDataSource,
+        {
+          placeId,
+          userId,
+        },
+      );
+
+      expect(userRatingAfterEvaluate).toStrictEqual({
+        id: expect.any(String),
+        rating: 4,
+      });
+    });
+  });
 });
 
 async function getUserId() {
