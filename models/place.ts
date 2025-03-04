@@ -16,6 +16,7 @@ export const place = Object.freeze({
   deleteComment,
   updateComment,
   evaluate,
+  findUserRating,
 });
 
 type FindAllInput = {
@@ -573,4 +574,50 @@ async function evaluate(
   });
 
   return operationResult.success({});
+}
+
+export type FindUserRatingInput = {
+  placeId: ValidationSchema['place_id'];
+  userId: ValidationSchema['user_id'];
+};
+
+async function findUserRating(
+  placeDataSource: PlaceDataSource,
+  input: FindUserRatingInput,
+) {
+  const validationResult = validator(
+    {
+      place_id: input.placeId,
+      user_id: input.userId,
+    },
+    {
+      place_id: 'required',
+      user_id: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { place_id, user_id } = validationResult.data;
+
+  const place = await placeDataSource.findById(place_id);
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  const userRating = await placeDataSource.findUserRating({
+    placeId: place_id,
+    userId: user_id,
+  });
+
+  if (!userRating) {
+    return operationResult.failure({
+      message: 'Avaliação não encontrada.',
+    });
+  }
+
+  return operationResult.success(userRating);
 }
