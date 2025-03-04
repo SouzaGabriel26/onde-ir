@@ -119,6 +119,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.anything(),
             updated_at: expect.anything(),
+            average_rating: 0,
             images: expect.any(Array),
           },
         ],
@@ -154,6 +155,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            average_rating: 0,
             images: expect.any(Array),
           },
           {
@@ -174,6 +176,7 @@ describe('> models/place', () => {
             created_by: expect.any(String),
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            average_rating: 0,
             images: expect.any(Array),
           },
         ],
@@ -209,6 +212,7 @@ describe('> models/place', () => {
         data: [
           {
             id: expect.any(String),
+            average_rating: 0,
             name: 'Bar do Gerson',
             country: 'Brasil',
             state: 'ES',
@@ -261,6 +265,7 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
+            average_rating: 0,
           },
           {
             id: expect.any(String),
@@ -282,6 +287,7 @@ describe('> models/place', () => {
             created_at: expect.anything(),
             updated_at: expect.anything(),
             images: expect.any(Array),
+            average_rating: 3.5,
           },
         ],
       });
@@ -599,6 +605,7 @@ describe('> models/place', () => {
           created_at: expect.any(Date),
           updated_at: expect.any(Date),
           images: [],
+          average_rating: 0,
         },
       });
     });
