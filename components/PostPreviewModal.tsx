@@ -64,7 +64,7 @@ export function PostPreviewModal({
           </Carousel>
         </div>
 
-        <p className="text-end text-muted-foreground">
+        <p className="text-end text-muted-foreground px-6">
           {place.images.length > 1
             ? `${place.images.length} fotos`
             : `${place.images.length} foto`}
@@ -80,13 +80,15 @@ export function PostPreviewModal({
             <p className="text-sm text-muted-foreground">{place.street}</p>
           </div>
 
-          <div className="flex gap-2 items-center text-primary self-start">
-            <Star className="size-4 fill-primary" />
-            <Star className="size-4 fill-primary" />
-            <Star className="size-4 fill-primary" />
-            <Star className="size-4 fill-primary" />
-            <Star className="size-4" />
-            4.5
+          <div className="text-[#123952] flex items-center gap-1 self-end">
+            {place.average_rating ? (
+              <>
+                <Star className="size-4 fill-primary text-primary" />
+                <p className="text-primary">{place.average_rating}</p>
+              </>
+            ) : (
+              <span className="text-muted-foreground">Sem avaliações</span>
+            )}
           </div>
         </div>
 
