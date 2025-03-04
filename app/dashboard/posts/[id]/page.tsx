@@ -54,16 +54,34 @@ export default async function Page(props: PageProps) {
   }
 
   const { data: comments } = await place.findComments(placeDataSource, postId);
+  const { data: userAlreadyEvaluated } = await place.findUserRating(
+    placeDataSource,
+    {
+      placeId: postId,
+      userId: loggedUser?.id ?? '',
+    },
+  );
 
   return (
     <div className="w-full space-y-6 pb-2">
-      <RatingModal
-        key={Date.now()}
-        placeId={postId}
-        userId={loggedUser?.id ?? ''}
-        action={ratePlaceAction}
-        className="top-0 right-2 absolute"
-      />
+      {loggedUser && !userAlreadyEvaluated && (
+        <RatingModal
+          key={Date.now()}
+          placeId={postId}
+          userId={loggedUser?.id ?? ''}
+          action={ratePlaceAction}
+          className="top-0 right-2 absolute"
+        />
+      )}
+
+      {userAlreadyEvaluated && (
+        <div className="w-full flex justify-center">
+          <Badge variant="outline">
+            Você já avaliou este local com score de{' '}
+            {userAlreadyEvaluated.rating}
+          </Badge>
+        </div>
+      )}
 
       <div className="w-full flex flex-col md:flex-row gap-4 justify-between">
         <h2 className="text-3xl md:text-center">Foto(s) de {postFound.name}</h2>

@@ -6,6 +6,7 @@ import type {
   DeleteCommentInput,
   EvaluateInput,
   FindCategoriesInput,
+  FindUserRatingInput,
   UpdateInput,
 } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
@@ -77,6 +78,7 @@ export function createPlaceDataSource() {
     getCommentOwner,
     updateComment,
     evaluate,
+    findUserRating,
   });
 
   type FindAllInput = {
@@ -524,5 +526,30 @@ export function createPlaceDataSource() {
     };
 
     await placePool.query(query);
+  }
+
+  async function findUserRating(input: FindUserRatingInput) {
+    const query = {
+      text: sql`
+        SELECT
+          id,
+          rating
+        FROM
+          place_ratings
+        WHERE
+          place_id = $1
+          AND user_id = $2
+      `,
+      values: [input.placeId, input.userId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    if (!queryResult || !queryResult.rows.length) return null;
+
+    return {
+      id: String(queryResult.rows[0].id),
+      rating: Number(queryResult.rows[0].rating),
+    };
   }
 }
