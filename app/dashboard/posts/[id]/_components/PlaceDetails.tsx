@@ -7,7 +7,7 @@ import {
 import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
-import { MapPin } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import { TextInfo } from './TextInfo';
 
 export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
@@ -77,6 +77,27 @@ export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
             label="Atualizado em"
             value={new Date(place.updated_at).toLocaleDateString()}
           />
+
+          <div className="flex flex-col">
+            <span className="text-slate-500">Avaliações </span>
+            <div className="flex items-center gap-1">
+              {!place.average_rating || place.average_rating === 0 ? (
+                <span className="text-muted-foreground">Sem avaliações</span>
+              ) : (
+                <>
+                  <span>{place.average_rating}</span>
+                  <span className="flex gap-1">
+                    {Array.from(
+                      { length: Math.floor(place.average_rating) },
+                      (_, index) => (
+                        <Star key={index} className="size-4 fill-primary" />
+                      ),
+                    )}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

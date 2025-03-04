@@ -6,7 +6,7 @@ import { CustomTooltip } from '@/components/CustomTooltip';
 import { Badge } from '@/components/ui/Badge';
 import type { FindAllPlacesOutput } from '@/data/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
-import { BadgeInfo, MapPin, Star } from 'lucide-react';
+import { BadgeInfo, MapPin } from 'lucide-react';
 import type { Route } from 'next';
 import { useState } from 'react';
 
@@ -92,11 +92,6 @@ export function ImageCard({
                   <MapPin className="size-4" />
                   {place.city}, {place.state}
                 </p>
-              </div>
-
-              <div className="text-[#123952] flex items-center gap-1 self-end">
-                <Star fill="#123952" className="size-4" />
-                4.5
               </div>
             </div>
           </div>
