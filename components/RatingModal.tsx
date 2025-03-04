@@ -7,11 +7,18 @@ import { Button } from './ui/Button';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/Dialog';
 
 type RatingModalProps = {
+  placeId: string;
+  userId: string;
   className?: string;
   action: (formData: FormData) => void;
 };
 
-export function RatingModal({ className, action }: RatingModalProps) {
+export function RatingModal({
+  className,
+  placeId,
+  userId,
+  action,
+}: RatingModalProps) {
   const [hoverIndex, setHoverIndex] = useState<number>(0);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
@@ -57,7 +64,9 @@ export function RatingModal({ className, action }: RatingModalProps) {
               );
             })}
           </div>
-          <input type="hidden" defaultValue={selectedIndex} name="rateIndex" />
+          <input type="hidden" defaultValue={selectedIndex} name="evaluation" />
+          <input type="hidden" defaultValue={placeId} name="placeId" />
+          <input type="hidden" defaultValue={userId} name="userId" />
 
           <Button className="w-full mt-4" disabled={selectedIndex === 0}>
             Enviar
