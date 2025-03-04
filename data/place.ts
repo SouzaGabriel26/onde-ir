@@ -46,6 +46,7 @@ export type FindAllPlacesOutput = {
   created_by: string;
   created_at: Date;
   updated_at: Date;
+  average_rating?: number;
   images: string[];
 };
 
@@ -98,16 +99,26 @@ export function createPlaceDataSource() {
     const { limit, offset, where } = input;
 
     const queryText = sql`
+      WITH places_average_rating AS (
+        SELECT
+          places.id,
+          COALESCE(AVG(place_ratings.rating)::FLOAT, 0) AS average_rating
+        FROM places
+        LEFT JOIN place_ratings ON place_ratings.place_id = places.id
+        GROUP BY places.id
+      )
       SELECT
         places.*,
-        array_remove(ARRAY_AGG(place_images.url), NULL) AS images
+        array_remove(ARRAY_AGG(place_images.url), NULL) AS images,
+        places_average_rating.average_rating
       FROM
         places
         LEFT JOIN place_images ON place_images.place_id = places.id
+        LEFT JOIN places_average_rating ON places_average_rating.id = places.id
         $joinClause
         $whereClause
       GROUP BY
-        places.id
+        places.id, places_average_rating.average_rating
       ORDER BY
         places.name
       LIMIT $1
@@ -195,16 +206,26 @@ export function createPlaceDataSource() {
   async function findById(id: string) {
     const query = {
       text: sql`
+        WITH places_average_rating AS (
+          SELECT
+            places.id,
+            COALESCE(AVG(place_ratings.rating)::FLOAT, 0) AS average_rating
+          FROM places
+          LEFT JOIN place_ratings ON place_ratings.place_id = places.id
+          GROUP BY places.id
+        )
         SELECT
           places.*,
-          array_remove(ARRAY_AGG(place_images.url), NULL) AS images
+          array_remove(ARRAY_AGG(place_images.url), NULL) AS images,
+          places_average_rating.average_rating
         FROM
           places
-          LEFT JOIN place_images ON place_images.place_id = places.id
-          WHERE
-            places.id = $1
+        LEFT JOIN place_images ON place_images.place_id = places.id
+        INNER JOIN places_average_rating ON places_average_rating.id = places.id
+        WHERE
+          places.id = $1
         GROUP BY
-          places.id
+          places.id, places_average_rating.average_rating;
       `,
       values: [id],
     };
