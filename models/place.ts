@@ -15,6 +15,7 @@ export const place = Object.freeze({
   createComment,
   deleteComment,
   updateComment,
+  evaluate,
 });
 
 type FindAllInput = {
@@ -525,6 +526,50 @@ async function updateComment(
   await placeDataSource.updateComment({
     commentId: comment_id,
     description,
+  });
+
+  return operationResult.success({});
+}
+
+export type EvaluateInput = {
+  placeId: ValidationSchema['place_id'];
+  userId: ValidationSchema['user_id'];
+  evaluation: ValidationSchema['evaluation'];
+};
+
+async function evaluate(
+  placeDataSource: PlaceDataSource,
+  input: EvaluateInput,
+) {
+  const validationResult = validator(
+    {
+      place_id: input.placeId,
+      user_id: input.userId,
+      evaluation: input.evaluation,
+    },
+    {
+      place_id: 'required',
+      user_id: 'required',
+      evaluation: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { place_id, user_id, evaluation } = validationResult.data;
+
+  const place = await placeDataSource.findById(place_id);
+  if (!place) {
+    return operationResult.failure({
+      message: 'Local não encontrado.',
+      fields: ['place_id'],
+    });
+  }
+
+  await placeDataSource.evaluate({
+    evaluation,
+    placeId: place_id,
+    userId: user_id,
   });
 
   return operationResult.success({});
