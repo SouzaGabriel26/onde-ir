@@ -567,6 +567,13 @@ async function evaluate(
     });
   }
 
+  if (place.status !== 'APPROVED') {
+    return operationResult.failure({
+      message: 'Você não pode avaliar um local que não foi aprovado.',
+      fields: ['place_id'],
+    });
+  }
+
   await placeDataSource.evaluate({
     evaluation,
     placeId: place_id,
