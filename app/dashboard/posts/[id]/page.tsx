@@ -12,7 +12,6 @@ import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { verify } from '@/utils/verify';
-import { ExpandIcon } from 'lucide-react';
 import Image from 'next/image';
 import { RedirectType, redirect } from 'next/navigation';
 import { PlaceComments } from './_components/PlaceComments';
@@ -131,15 +130,6 @@ export default async function Page(props: PageProps) {
                     'relative aspect-video w-full h-full max-h-[600px] max-w-[1300px] rounded-md',
                   )}
                 >
-                  <Button
-                    title="expandir"
-                    className="absolute top-2 right-2 z-10"
-                    size="sm"
-                    variant="secondary"
-                  >
-                    <ExpandIcon className="size-4" />
-                  </Button>
-
                   <Image
                     priority
                     fill
