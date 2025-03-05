@@ -48,16 +48,18 @@ export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
 
       <div className="grid gap-6 md:grid-cols-3 md:place-items-center place-items-start">
         <div>
-          <TextInfo label="Rua" value={place.street} />
+          <TextInfo label="Rua" value={place.street ?? '-'} />
 
-          <TextInfo label="Número" value={String(place.num_place)} />
+          <TextInfo
+            label="Número"
+            value={place.num_place ? String(place.num_place) : '-'}
+          />
 
           <TextInfo label="Complemento" value={place.complement ?? '-'} />
-
-          <TextInfo label="Descrição" value={place.description ?? '-'} />
         </div>
 
         <div>
+          <TextInfo label="Descrição" value={place.description ?? '-'} />
           <TextInfo label="Categoria" value={postCategory?.name ?? '-'} />
 
           {place.status !== 'PENDING' && (
