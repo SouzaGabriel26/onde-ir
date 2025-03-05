@@ -23,6 +23,7 @@ type LoadPlacesActionInput = {
   status: 'APPROVED' | 'PENDING';
   userId?: string;
   postCategory?: string;
+  searchTerm?: string;
 };
 
 export async function loadPlacesAction({
@@ -31,6 +32,7 @@ export async function loadPlacesAction({
   postCategory,
   status,
   userId,
+  searchTerm,
 }: LoadPlacesActionInput) {
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
@@ -40,6 +42,7 @@ export async function loadPlacesAction({
       status,
       categoryName: postCategory,
       createdBy: userId,
+      searchTerm: searchTerm ? searchTerm?.toLowerCase() : undefined,
     },
   });
 
