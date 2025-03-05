@@ -82,7 +82,7 @@ export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
             <span className="text-slate-500">Avaliações </span>
             <div className="flex items-center gap-1">
               {!place.average_rating || place.average_rating === 0 ? (
-                <span className="text-muted-foreground">Sem avaliações</span>
+                <span>Sem avaliações</span>
               ) : (
                 <>
                   <span>{place.average_rating}</span>

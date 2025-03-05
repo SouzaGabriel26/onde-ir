@@ -1001,6 +1001,9 @@ describe('> models/place', () => {
       const places = await placeDataSource.findAll({
         limit: 1,
         offset: 0,
+        where: {
+          status: 'APPROVED',
+        },
       });
 
       const result = await place.createComment(
@@ -1032,6 +1035,9 @@ describe('> models/place', () => {
       const places = await placeDataSource.findAll({
         limit: 1,
         offset: 0,
+        where: {
+          status: 'APPROVED',
+        },
       });
 
       const result = await place.createComment(
@@ -1062,6 +1068,9 @@ describe('> models/place', () => {
       const places = await placeDataSource.findAll({
         limit: 1,
         offset: 0,
+        where: {
+          status: 'APPROVED',
+        },
       });
 
       const result = await place.createComment(
@@ -1085,6 +1094,39 @@ describe('> models/place', () => {
       expect(comments[0].parent_comment_id).toBeNull();
 
       await orchestrator.resetDatabase();
+    });
+
+    test('Trying to comment on a post that is "PENDING"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: pendingPlaces } = await place.findAll(placeDataSource, {
+        where: {
+          status: 'PENDING',
+        },
+        limit: 1,
+      });
+
+      const placeId = pendingPlaces![0].id;
+      const userId = await getNormalUserId();
+
+      const result = await place.createComment(
+        userDataSource,
+        placeDataSource,
+        {
+          placeId,
+          userId,
+          description: 'test comment',
+        },
+      );
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Você não pode comentar em um post que não foi aprovado.',
+          fields: ['place_id'],
+        },
+      });
     });
   });
 

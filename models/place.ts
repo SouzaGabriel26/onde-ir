@@ -382,6 +382,13 @@ async function createComment(
     });
   }
 
+  if (place.status !== 'APPROVED') {
+    return operationResult.failure({
+      message: 'Você não pode comentar em um post que não foi aprovado.',
+      fields: ['place_id'],
+    });
+  }
+
   const userExists = await userDataSource.checkById({ id: user_id });
   if (!userExists) {
     return operationResult.failure({
