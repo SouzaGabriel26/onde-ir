@@ -120,7 +120,7 @@ export function createPlaceDataSource() {
       GROUP BY
         places.id, places_average_rating.average_rating
       ORDER BY
-        places.name
+        places.created_at DESC
       LIMIT $1
       OFFSET $2;
     `;

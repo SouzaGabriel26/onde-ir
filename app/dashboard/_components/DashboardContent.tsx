@@ -42,13 +42,16 @@ export function DashboardContent({
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMorePlaces, setIsLoadingPlaces] = useState(false);
   const [isToFetchMorePlaces, setIsToFetchMorePlaces] = useState(true);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const [page, setPage] = useState(1);
 
   async function handleSearch(value: string) {
     setIsLoading(true);
+    setDebouncedSearch(value);
 
     if (!value) {
+      setPage(1);
       setFilteredPlaces(places);
       setIsLoading(false);
       return;
@@ -60,7 +63,7 @@ export function DashboardContent({
     setIsLoading(false);
   }
 
-  const loadMoreUsers = useCallback(async () => {
+  const loadMorePlaces = useCallback(async () => {
     setIsLoadingPlaces(true);
     const nextPage = page + 1;
 
@@ -74,10 +77,13 @@ export function DashboardContent({
             ? 'PENDING'
             : 'APPROVED',
         userId: userIsRequestingPendingPosts ? userId : undefined,
+        searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
       });
 
       if (newPlaces.length === 0) {
         setIsToFetchMorePlaces(false);
+        setIsLoadingPlaces(false);
+        return;
       }
 
       setPage(nextPage);
@@ -87,6 +93,7 @@ export function DashboardContent({
   }, [
     page,
     postCategory,
+    debouncedSearch,
     userIsRequestingPendingPosts,
     adminIsRequestingPendingPosts,
     userId,
@@ -94,13 +101,13 @@ export function DashboardContent({
 
   useEffect(() => {
     if (inView && isToFetchMorePlaces) {
-      loadMoreUsers();
+      loadMorePlaces();
     }
 
     if (!inView) {
       setIsToFetchMorePlaces(true);
     }
-  }, [inView, loadMoreUsers, isToFetchMorePlaces]);
+  }, [inView, loadMorePlaces, isToFetchMorePlaces]);
 
   return (
     <div className="flex h-full flex-col gap-4 w-full">

@@ -40,7 +40,7 @@ CREATE TABLE places (
   country VARCHAR(100) NOT NULL,
   state VARCHAR(100) NOT NULL,
   city VARCHAR(255) NOT NULL,
-  street VARCHAR(255) NOT NULL,
+  street VARCHAR(255),
   num_place INTEGER,
   complement VARCHAR(255),
   description VARCHAR(255),

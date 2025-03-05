@@ -22,6 +22,7 @@ type CustomSelectProps = Omit<JSX.IntrinsicElements['button'], 'name'> & {
   actionOnSelect?: (value: string | number) => Promise<void>;
   required?: boolean;
   searchable?: boolean;
+  useLabelAsValue?: boolean;
 };
 
 export function CustomSelect({
@@ -32,6 +33,7 @@ export function CustomSelect({
   label,
   searchable = false,
   required = false,
+  useLabelAsValue = false,
   actionOnSelect,
   ...props
 }: CustomSelectProps) {
@@ -50,14 +52,23 @@ export function CustomSelect({
   }, [options, searchTerm]);
 
   const handleSelect = useCallback(
-    (value: string | number) => {
-      setSelectedValue((prevState) => (prevState === value ? '' : value));
+    (option: Option) => {
+      if (useLabelAsValue) {
+        setSelectedValue((prevState) =>
+          prevState === option.label ? '' : option.label,
+        );
+      } else {
+        setSelectedValue((prevState) =>
+          prevState === option.value ? '' : option.value,
+        );
+      }
+
       setOpen(false);
       setSearchTerm('');
 
-      actionOnSelect?.(value);
+      actionOnSelect?.(option.value);
     },
-    [actionOnSelect],
+    [actionOnSelect, useLabelAsValue],
   );
 
   const title = selectedValue
@@ -77,7 +88,8 @@ export function CustomSelect({
           {...props}
         >
           {selectedValue ? (
-            options.find((option) => option.value === selectedValue)?.label
+            options.find((option) => option.value === selectedValue)?.label ||
+            options.find((option) => option.label === selectedValue)?.label
           ) : (
             <span className="text-muted-foreground">{label}</span>
           )}
@@ -117,7 +129,7 @@ export function CustomSelect({
               <button
                 role="option"
                 aria-selected={selectedValue === option.value}
-                onClick={() => handleSelect(option.value)}
+                onClick={() => handleSelect(option)}
                 className={`
                   flex
                   h-7
