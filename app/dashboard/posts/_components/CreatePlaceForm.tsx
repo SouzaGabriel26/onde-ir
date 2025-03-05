@@ -96,6 +96,7 @@ export function CreatePlaceForm({
         defaultValue={createdPlaceResult.inputs?.state}
         name="state"
         options={stateOptions}
+        useLabelAsValue
         actionOnSelect={fetchCitiesByState}
       />
 
@@ -106,6 +107,7 @@ export function CreatePlaceForm({
           label="Cidade*"
           defaultValue={createdPlaceResult.inputs?.city}
           name="city"
+          useLabelAsValue
           options={cityOptions}
         />
       ) : (
@@ -127,11 +129,28 @@ export function CreatePlaceForm({
         </fieldset>
       )}
 
+      <textarea
+        name="description"
+        defaultValue={createdPlaceResult.inputs?.description}
+        className="max-h-32 w-full p-2 text-sm rounded outline-none bg-slate-200 dark:bg-slate-900"
+        placeholder="Descrição do local"
+      />
+
+      <CustomSelect
+        required
+        label="Categoria*"
+        defaultValue={createdPlaceResult.inputs?.category_id}
+        name="category_id"
+        options={activeCategories.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))}
+      />
+
       <Input
         name="street"
-        placeholder="Rua*"
+        placeholder="Rua"
         defaultValue={createdPlaceResult.inputs?.street}
-        required
         error={setInputError('street', {
           fields: createdPlaceResult?.error?.fields,
           message: createdPlaceResult?.error?.message,
@@ -157,25 +176,6 @@ export function CreatePlaceForm({
           fields: createdPlaceResult?.error?.fields,
           message: createdPlaceResult?.error?.message,
         })}
-      />
-
-      <textarea
-        name="description"
-        defaultValue={createdPlaceResult.inputs?.description}
-        className="max-h-32 w-full p-2 text-sm"
-        placeholder="Descrição do local"
-        // add `setInputError`
-      />
-
-      <CustomSelect
-        required
-        label="Categoria*"
-        defaultValue={createdPlaceResult.inputs?.category_id}
-        name="category_id"
-        options={activeCategories.map((category) => ({
-          label: category.name,
-          value: category.id,
-        }))}
       />
 
       <div className="flex gap-4">
