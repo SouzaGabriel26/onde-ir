@@ -14,7 +14,7 @@ Email Integration: The project will integrate with an email provider using Resen
 
 Photo Upload: Users will be able to upload photos of food establishments, enhancing the overall user experience. This feature will be integrated with Cloudinary, a powerful cloud-based image and video management service, ensuring efficient and optimized media handling.
 
-## Features in Development 🔋
+## Features
 
 - **Authentication System**: The full authentication system is currently being developed and will include features like password reset and forgot password workflows.
 - **Email Provider Integration**: Integration with Resend for email notifications and verifications is planned.
