@@ -60,6 +60,7 @@ export type PlaceComment = {
   updated_at: Date;
   user_name: string;
   avatar_url: string;
+  likes_count: number;
 };
 
 export function createPlaceDataSource() {
@@ -393,6 +394,7 @@ export function createPlaceDataSource() {
           c.description,
           c.created_at,
           c.updated_at,
+          c.likes_count,
           u.name as user_name,
           u.avatar_url
         FROM
@@ -418,6 +420,7 @@ export function createPlaceDataSource() {
       parent_comment_id: comment.parent_comment_id,
       created_at: comment.created_at,
       updated_at: comment.updated_at,
+      likes_count: comment.likes_count,
       avatar_url: comment.avatar_url,
       user_name: comment.user_name,
     }));

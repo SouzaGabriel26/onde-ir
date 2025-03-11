@@ -115,7 +115,7 @@ export function PlaceComment({
                 className="w-fit group"
               >
                 <Heart className="mr-2 size-4 group-hover:fill-red-500" />
-                Curtir
+                {comment.likes_count}
               </Button>
 
               <Button
