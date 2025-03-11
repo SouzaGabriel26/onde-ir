@@ -17,6 +17,7 @@ export const place = Object.freeze({
   updateComment,
   evaluate,
   findUserRating,
+  likeComment,
 });
 
 type FindAllInput = {
@@ -634,4 +635,61 @@ async function findUserRating(
   }
 
   return operationResult.success(userRating);
+}
+
+export type LikeCommentInput = {
+  commentId: ValidationSchema['comment_id'];
+  userId: ValidationSchema['user_id'];
+};
+
+async function likeComment(
+  userDataSource: UserDataSource,
+  placeDataSource: PlaceDataSource,
+  input: LikeCommentInput,
+) {
+  const validationResult = validator(
+    {
+      comment_id: input.commentId,
+      user_id: input.userId,
+    },
+    {
+      comment_id: 'required',
+      user_id: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { comment_id, user_id } = validationResult.data;
+
+  const commentExists = await placeDataSource.checkCommentById(comment_id);
+  if (!commentExists) {
+    return operationResult.failure({
+      message: 'Comentário não encontrado.',
+      fields: ['comment_id'],
+    });
+  }
+
+  const userExists = await userDataSource.checkById({ id: user_id });
+  if (!userExists) {
+    return operationResult.failure({
+      message: 'Usuário não encontrado.',
+      fields: ['user_id'],
+    });
+  }
+
+  const userAlreadyLiked = await placeDataSource.checkCommentLike({
+    commentId: comment_id,
+    userId: user_id,
+  });
+
+  if (userAlreadyLiked) {
+    return operationResult.failure({
+      message: 'Você já curtiu este comentário.',
+    });
+  }
+
+  await placeDataSource.likeComment({ commentId: comment_id, userId: user_id });
+
+  return operationResult.success({});
 }

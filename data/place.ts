@@ -7,6 +7,7 @@ import type {
   EvaluateInput,
   FindCategoriesInput,
   FindUserRatingInput,
+  LikeCommentInput,
   UpdateInput,
 } from '@/models/place';
 import { sql } from '@/utils/syntax-highlighting';
@@ -81,6 +82,8 @@ export function createPlaceDataSource() {
     updateComment,
     evaluate,
     findUserRating,
+    likeComment,
+    checkCommentLike,
   });
 
   type FindAllInput = {
@@ -403,7 +406,7 @@ export function createPlaceDataSource() {
         WHERE
           c.place_id = $1
         ORDER BY
-          c.created_at ASC
+          c.created_at DESC
       `,
       values: [placeId],
     };
@@ -575,5 +578,40 @@ export function createPlaceDataSource() {
       id: String(queryResult.rows[0].id),
       rating: Number(queryResult.rows[0].rating),
     };
+  }
+
+  async function checkCommentLike(input: LikeCommentInput) {
+    const query = {
+      text: sql`
+        SELECT
+          id
+        FROM
+          place_comment_likes
+        WHERE
+          comment_id = $1
+          AND user_id = $2
+      `,
+      values: [input.commentId, input.userId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    if (!queryResult || !queryResult.rows.length) return false;
+
+    return true;
+  }
+
+  async function likeComment(input: LikeCommentInput) {
+    const query = {
+      text: sql`
+        INSERT INTO place_comment_likes
+          (comment_id, user_id)
+        VALUES
+          ($1, $2)
+      `,
+      values: [input.commentId, input.userId],
+    };
+
+    await placePool.query(query);
   }
 }
