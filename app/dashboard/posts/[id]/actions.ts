@@ -7,6 +7,7 @@ import {
   type CreateCommentInput,
   type DeleteCommentInput,
   type EvaluateInput,
+  type LikeCommentInput,
   type UpdateCommentInput,
   place,
 } from '@/models/place';
@@ -68,6 +69,85 @@ export async function rejectPlaceAction(
 
   revalidatePath(`/dashboard/posts/${input.placeId}`);
 }
+
+export async function ratePlaceAction(formData: FormData) {
+  const data = form.sanitizeData<EvaluateInput>(formData);
+
+  const placeDataSource = createPlaceDataSource();
+
+  const result = await place.evaluate(placeDataSource, data);
+
+  if (result.error) {
+    return await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: result.error.message,
+    });
+  }
+
+  revalidatePath(`/dashboard/posts/${data.placeId}`);
+  return await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Local avaliado com sucesso!',
+  });
+}
+
+export async function checkUserCommentLikeAction(
+  commentId: string,
+  userId: string,
+) {
+  const placeDataSource = createPlaceDataSource();
+
+  const userAlreadyLikedComment = await placeDataSource.checkCommentLike({
+    commentId,
+    userId,
+  });
+
+  return userAlreadyLikedComment;
+}
+
+export async function likeCommentAction(
+  input: LikeCommentInput & { placeId: string },
+) {
+  const userDateSource = createUserDataSource();
+  const placeDataSource = createPlaceDataSource();
+
+  const result = await place.likeComment(
+    userDateSource,
+    placeDataSource,
+    input,
+  );
+
+  revalidatePath(`/dashboard/posts/${input.placeId}`);
+
+  if (result.error) {
+    await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: 'Erro ao curtir comentário',
+    });
+    return { success: false };
+  }
+
+  await feedbackMessage.setFeedbackMessage({
+    type: 'success',
+    content: 'Comentário curtido com sucesso!',
+  });
+  return { success: true };
+}
+
+// TODO
+export async function unlikeCommentAction(
+  _input: LikeCommentInput & { placeId: string },
+) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  await feedbackMessage.setFeedbackMessage({
+    type: 'error',
+    content: 'Erro ao descurtir comentário',
+  });
+  return { success: false };
+}
+
+// use with "useActionState" hook
 export async function commentAction(_prevState: unknown, formData: FormData) {
   const data = form.sanitizeData<CreateCommentInput>(formData);
 
@@ -149,26 +229,5 @@ export async function updateCommentAction(
   return await feedbackMessage.setFeedbackMessage({
     type: 'success',
     content: 'Comentário atualizado com sucesso!',
-  });
-}
-
-export async function ratePlaceAction(formData: FormData) {
-  const data = form.sanitizeData<EvaluateInput>(formData);
-
-  const placeDataSource = createPlaceDataSource();
-
-  const result = await place.evaluate(placeDataSource, data);
-
-  if (result.error) {
-    return await feedbackMessage.setFeedbackMessage({
-      type: 'error',
-      content: result.error.message,
-    });
-  }
-
-  revalidatePath(`/dashboard/posts/${data.placeId}`);
-  return await feedbackMessage.setFeedbackMessage({
-    type: 'success',
-    content: 'Local avaliado com sucesso!',
   });
 }
