@@ -8,20 +8,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/Popover';
 import type { FormattedComment } from '@/models/place';
-import {
-  Edit,
-  Heart,
-  MessageCircle,
-  MoreHorizontal,
-  Trash,
-  X,
-} from 'lucide-react';
+import { Edit, MessageCircle, MoreHorizontal, Trash, X } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import {
   commentAction,
   deleteCommentAction,
   updateCommentAction,
 } from '../actions';
+import { LikeComment } from './LikeComment';
 
 type PlaceComment = {
   comment: FormattedComment;
@@ -108,15 +102,12 @@ export function PlaceComment({
         {!isChildComment && (
           <div className="flex justify-between items-center">
             <fieldset className="flex flex-col md:flex-row">
-              <Button
-                disabled={!userId}
-                variant="ghost"
-                size="sm"
-                className="w-fit group"
-              >
-                <Heart className="mr-2 size-4 group-hover:fill-red-500" />
-                {comment.likes_count}
-              </Button>
+              <LikeComment
+                userId={userId}
+                placeId={placeId}
+                commentId={comment.id}
+                likesCount={comment.likes_count}
+              />
 
               <Button
                 onClick={() => setIsAnswering((prevState) => !prevState)}
