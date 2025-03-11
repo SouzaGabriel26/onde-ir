@@ -791,6 +791,7 @@ describe('> models/place', () => {
             parent_comment_id: null,
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            likes_count: 0,
             avatar_url: null,
             user_name: 'Admin user',
           },
@@ -803,6 +804,7 @@ describe('> models/place', () => {
             parent_comment_id: null,
             created_at: expect.any(Date),
             updated_at: expect.any(Date),
+            likes_count: 0,
             avatar_url: null,
             user_name: 'Normal user',
             child_comments: [
@@ -814,6 +816,7 @@ describe('> models/place', () => {
                 parent_comment_id: expect.any(String),
                 created_at: expect.any(Date),
                 updated_at: expect.any(Date),
+                likes_count: 0,
                 avatar_url: null,
                 user_name: 'Admin user',
               },
@@ -1204,6 +1207,106 @@ describe('> models/place', () => {
         id: expect.any(String),
         rating: 4,
       });
+    });
+  });
+
+  describe('Invoking "likeComment" method', () => {
+    test('Providing unexistent "commentId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const commentId = randomUUID();
+      const userId = randomUUID();
+
+      const result = await place.likeComment(userDataSource, placeDataSource, {
+        commentId,
+        userId,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Comentário não encontrado.',
+          fields: ['comment_id'],
+        },
+      });
+    });
+
+    test('Providing unexistent "userId"', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: placeWithComments } = await place.findAll(placeDataSource, {
+        where: {
+          name: 'Churrascaria Espeto de Ouro',
+        },
+      });
+
+      const { data: placeComments } = await place.findComments(
+        placeDataSource,
+        placeWithComments![0].id,
+      );
+
+      const commentId = placeComments![0].id;
+      const userId = randomUUID();
+
+      const result = await place.likeComment(userDataSource, placeDataSource, {
+        commentId,
+        userId,
+      });
+
+      expect(result).toStrictEqual({
+        data: null,
+        error: {
+          message: 'Usuário não encontrado.',
+          fields: ['user_id'],
+        },
+      });
+    });
+
+    test('Providing valid arguments', async () => {
+      const placeDataSource = createPlaceDataSource();
+      const userDataSource = createUserDataSource();
+
+      const { data: placeToComment } = await place.findAll(placeDataSource, {
+        limit: 1,
+        where: { status: 'APPROVED' },
+      });
+
+      const userId = await getNormalUserId();
+      const placeId = placeToComment![0].id;
+
+      await placeDataSource.createComment({
+        userId,
+        placeId,
+        description: 'test comment',
+      });
+
+      const { data: placeComments } = await place.findComments(
+        placeDataSource,
+        placeId,
+      );
+
+      expect(placeComments![0].likes_count).toBe(0);
+
+      const commentId = placeComments![0].id;
+
+      const result = await place.likeComment(userDataSource, placeDataSource, {
+        commentId,
+        userId,
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const { data: placeCommentsAfterLike } = await place.findComments(
+        placeDataSource,
+        placeId,
+      );
+
+      expect(placeCommentsAfterLike![0].likes_count).toBe(1);
     });
   });
 });
