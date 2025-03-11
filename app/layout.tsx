@@ -37,7 +37,7 @@ export default async function RootLayout({
           disableTransitionOnChange
           storageKey={constants.themeKey}
         >
-          <Toaster message={message} />
+          <Toaster message={message} position="top-center" />
           {children}
         </ThemeProvider>
       </body>
