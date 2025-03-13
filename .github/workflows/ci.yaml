@@ -92,6 +92,8 @@ jobs:
   run-test:
     name: Run Tests
     runs-on: ubuntu-22.04
+    env:
+      NODE_ENV: GH_ACTIONS
     steps:
       - name: Checkout
         uses: actions/checkout@v4

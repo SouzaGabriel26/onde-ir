@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
 
+// @ts-expect-error - workaround to make the dotenv work with the GH Actions
+const envPath = process.env.NODE_ENV === 'GH_ACTIONS' ? '.env' : '.env.local';
+
 dotenv.config({
-  path: '.env.local',
+  path: envPath,
 });
 
 const envSchema = z.object({
@@ -17,7 +20,7 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string(),
   LAMBDA_FUNCTION_URL: z.string(),
   NODE_ENV: z
-    .enum(['development', 'production', 'test'])
+    .enum(['development', 'production', 'test', 'GH_ACTIONS'])
     .default('development'),
 });
 
