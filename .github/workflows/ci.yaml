@@ -124,11 +124,11 @@ jobs:
         run: pnpm i
 
       - name: Start containers
-        run: pnpm services:up
+        run: pnpm ci:services:up
 
       - name: Run web server & Run test script
         run: pnpm next & pnpm test
 
       - name: Stop containers
         if: always()
-        run: pnpm services:down
+        run: pnpm ci:services:down
