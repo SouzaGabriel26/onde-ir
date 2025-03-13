@@ -55,7 +55,7 @@ async function forgot(
 
   const forgetPasswordToken = await auth.generateAccessToken({
     id: userFoundByEmail.id,
-    secretKey: env.reset_password_jwt_secret,
+    secretKey: env.RESET_PASSWORD_JWT_SECRET_KEY,
     expiresIn: '5min',
   });
 
@@ -126,7 +126,7 @@ async function reset(
 
   const tokenPayload = await auth.verifyToken({
     token: reset_token,
-    secret: env.reset_password_jwt_secret,
+    secret: env.RESET_PASSWORD_JWT_SECRET_KEY,
   });
 
   if (!tokenPayload) {

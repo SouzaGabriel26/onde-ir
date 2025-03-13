@@ -192,7 +192,7 @@ async function signIn(
 
   const accessToken = await generateAccessToken({
     id: user.id,
-    secretKey: env.jwt_secret,
+    secretKey: env.JWT_SECRET_KEY,
     expiresIn: '7d',
   });
 

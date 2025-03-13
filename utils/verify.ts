@@ -14,7 +14,7 @@ async function loggedUser() {
     return operationResult.failure({ message: 'Usuário não logado.' });
 
   const payload = await auth.verifyToken({
-    secret: env.jwt_secret,
+    secret: env.JWT_SECRET_KEY,
     token,
   });
 

@@ -9,7 +9,7 @@ type GetPresignedURLResponse = {
 
 export async function getPresignedURL(file: File) {
   const { data } = await axios.post<GetPresignedURLResponse>(
-    env.lambda_function_url,
+    env.LAMBDA_FUNCTION_URL,
     {
       fileName: file.name,
     },
