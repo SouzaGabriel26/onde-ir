@@ -26,9 +26,10 @@ export function LikeComment({
   const [userAlreadyLikedComment, setUserAlreadyLikedComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [optimisticLikedState, setOptimisticLikedState] = useOptimistic(false);
-  const [optimisticLikesCount, setOptimisticLikesCount] =
-    useOptimistic(likesCount);
+  const [optimisticLike, setOptimisticLike] = useOptimistic({
+    count: likesCount,
+    liked: false,
+  });
 
   useEffect(() => {
     if (!userId) return;
@@ -41,24 +42,30 @@ export function LikeComment({
     checkUserCommentLike();
   }, [userId, commentId]);
 
+  function optimisticLikeComment() {
+    startTransition(() => {
+      setOptimisticLike((prev) => ({ count: prev.count + 1, liked: true }));
+    });
+  }
+
+  function optimisticUnlikeComment() {
+    startTransition(() => {
+      setOptimisticLike((prev) => ({ count: prev.count - 1, liked: false }));
+    });
+  }
+
   async function handleLikeComment() {
     if (!userId || isLoading) return;
 
     setIsLoading(true);
 
-    startTransition(() => {
-      setOptimisticLikesCount((prev) => prev + 1);
-      setOptimisticLikedState(true);
-    });
+    optimisticLikeComment();
+    setUserAlreadyLikedComment(true);
 
     const { success } = await likeCommentAction({ commentId, userId, placeId });
     setUserAlreadyLikedComment(success);
 
-    if (!success) {
-      startTransition(() => {
-        setOptimisticLikesCount((prev) => prev - 1);
-      });
-    }
+    if (!success) optimisticUnlikeComment();
 
     setIsLoading(false);
   }
@@ -68,10 +75,8 @@ export function LikeComment({
 
     setIsLoading(true);
 
-    startTransition(() => {
-      setOptimisticLikesCount((prev) => prev - 1);
-      setOptimisticLikedState(false);
-    });
+    optimisticUnlikeComment();
+    setUserAlreadyLikedComment(false);
 
     const { success } = await unlikeCommentAction({
       commentId,
@@ -80,11 +85,7 @@ export function LikeComment({
     });
     setUserAlreadyLikedComment(!success);
 
-    if (!success) {
-      startTransition(() => {
-        setOptimisticLikesCount((prev) => prev + 1);
-      });
-    }
+    if (!success) optimisticLikeComment();
 
     setIsLoading(false);
   }
@@ -107,11 +108,11 @@ export function LikeComment({
       <Heart
         className={sanitizeClassName(
           'mr-2 size-4 group-hover:fill-red-400',
-          (userAlreadyLikedComment || optimisticLikedState) &&
+          (userAlreadyLikedComment || optimisticLike.liked) &&
             'fill-red-500 group-hover:fill-none',
         )}
       />
-      {optimisticLikesCount}
+      {optimisticLike.count}
     </Button>
   );
 }
