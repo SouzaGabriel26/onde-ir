@@ -2,7 +2,7 @@ import pg, { type QueryConfig } from 'pg';
 
 import { env } from '@/utils/env';
 
-const IS_PRODUCTION_ENVIRONMENT = process.env.NODE_ENV === 'production';
+const IS_PRODUCTION_ENVIRONMENT = env.NODE_ENV === 'production';
 
 type Query = Pick<QueryConfig, 'text' | 'values'> | string;
 
@@ -12,9 +12,15 @@ export const database = Object.freeze({
   endAllPools,
 });
 
-const { db_user, db_password, db_host, db_port, default_db } = env;
+const {
+  DEFAULT_POSTGRES_USER,
+  DEFAULT_POSTGRES_PASSWORD,
+  DEFAULT_POSTGRES_HOST,
+  DEFAULT_POSTGRES_PORT,
+  DEFAULT_POSTGRES_DB,
+} = env;
 
-const databaseConnectionString = `postgres://${db_user}:${db_password}@${db_host}:${db_port}/${default_db}`;
+const databaseConnectionString = `postgres://${DEFAULT_POSTGRES_USER}:${DEFAULT_POSTGRES_PASSWORD}@${DEFAULT_POSTGRES_HOST}:${DEFAULT_POSTGRES_PORT}/${DEFAULT_POSTGRES_DB}`;
 
 const pools: Array<pg.Pool> = [];
 
