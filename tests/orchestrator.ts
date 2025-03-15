@@ -5,6 +5,7 @@ import { database } from '../infra/database';
 
 export const orchestrator = Object.freeze({
   resetDatabase,
+  populateTables,
 });
 
 async function resetDatabase() {
@@ -37,6 +38,31 @@ async function resetDatabase() {
 
   const client = database.getClient();
   await client.query(resetDatabaseQuery);
+
+  for (const queryFileNameToPopulateTable of queryFileNamesToPopulateDatabase) {
+    const populateTableQuery = readFileSync(
+      resolve(queriesFolderPath, queryFileNameToPopulateTable),
+      { encoding: 'utf-8' },
+    );
+
+    const client = database.getClient();
+    await client.query(populateTableQuery);
+  }
+}
+
+async function populateTables() {
+  const queriesFolderPath = resolve('.', 'infra', 'queries');
+  const queries = readdirSync(queriesFolderPath, {
+    encoding: 'utf-8',
+  });
+
+  const queryFileNamesToPopulateDatabase: string[] = [];
+
+  for (const query of queries) {
+    if (query.startsWith('drop-schema')) continue;
+
+    queryFileNamesToPopulateDatabase.push(query);
+  }
 
   for (const queryFileNameToPopulateTable of queryFileNamesToPopulateDatabase) {
     const populateTableQuery = readFileSync(
