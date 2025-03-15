@@ -62,3 +62,67 @@ pnpm dev
 ## Database Modeling 🐳
 
 ![modeling](./onde-ir-data-modeling.png)
+
+
+## 📌 Migrations
+
+Migrations are used to create or modify the database schema in a controlled and versioned manner.
+
+### Creating a New Migration
+
+To create a new migration, run:
+```bash
+pnpm migrate:create {migration-name}
+```
+
+This will generate a new file inside the infra/migrations directory.
+
+After creation, add the SQL scripts for:
+
+- **Up Migration** → Defines the changes that should be applied to the database.
+
+- **Down Migration** → Defines how to revert the changes made in the Up Migration.
+
+### Running Pending Migrations
+
+To apply all pending migrations to the local database, run:
+
+```bash
+pnpm migrate:up
+```
+
+This will execute all migrations that have not been applied yet.
+
+### Reverting Migrations
+
+If you need to undo the latest migration, run:
+
+```bash
+pnpm migrate:down
+```
+
+To revert a specific number of migrations, use:
+
+```bash
+pnpm migrate:down {N}
+```
+
+Where {N} represents the number of migrations you want to revert, starting from the most recent.
+
+### 📂 Migrations Structure
+
+Migrations are stored in the following directory:
+
+```bash
+infra/
+  ├── migrations/
+  │    ├── 001_initial_schema.sql
+  │    ├── 002_categories_places.sql
+  │    ├── 003_reviews_ratings.sql
+  │    ├── ...
+```
+
+Each migration file contains the necessary SQL commands to incrementally modify the database.
+
+⚠ **Warning**: Always review your migrations before running them in production environments to prevent data loss.
+
