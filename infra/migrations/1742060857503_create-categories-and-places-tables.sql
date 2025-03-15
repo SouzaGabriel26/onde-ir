@@ -1,0 +1,42 @@
+-- Up Migration
+CREATE TYPE STATUS AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+CREATE TABLE categories (
+	id UUID DEFAULT uuid_generate_v4() CONSTRAINT categories_pkey PRIMARY KEY,
+  name VARCHAR(50) UNIQUE NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE places (
+  id UUID DEFAULT uuid_generate_v4() CONSTRAINT places_pkey PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  city VARCHAR(255) NOT NULL,
+  street VARCHAR(255),
+  num_place INTEGER,
+  complement VARCHAR(255),
+  description VARCHAR(255),
+  category_id UUID NOT NULL REFERENCES categories(id),
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
+  status STATUS DEFAULT('PENDING'),
+  reviewed_by UUID REFERENCES users(id),
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+);
+
+CREATE TABLE place_images (
+  id UUID DEFAULT uuid_generate_v4() CONSTRAINT place_images_pkey PRIMARY KEY,
+  place_id UUID NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+  url VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+);
+
+-- Down Migration
+DROP TABLE IF EXISTS place_images;
+DROP TABLE IF EXISTS places;
+DROP TABLE IF EXISTS categories;
+DROP TYPE IF EXISTS STATUS;
