@@ -30,7 +30,9 @@ export function UserOptions({ user }: UserOptionsProps) {
       <PopoverContent>
         <div className="mt-4 flex flex-col gap-2 w-full">
           <Button className="w-full" variant="outline" asChild>
-            <Link href="#">Perfil {user.name ? `de: ${user.name}` : ''}</Link>
+            <Link href={`/dashboard/profile/${user.id}`}>
+              Perfil {user.name ? `de: ${user.name}` : ''}
+            </Link>
           </Button>
 
           <form action={signOut}>
