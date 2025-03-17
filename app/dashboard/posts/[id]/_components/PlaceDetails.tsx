@@ -8,6 +8,7 @@ import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { MapPin, Star } from 'lucide-react';
+import Link from 'next/link';
 import { TextInfo } from './TextInfo';
 
 export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
@@ -66,7 +67,15 @@ export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
             <TextInfo label="Revisado por" value={reviewedBy?.name ?? '-'} />
           )}
 
-          <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />
+          <div className="flex gap-2 items-end">
+            <TextInfo label="Criado por" value={postOwner?.name ?? '-'} />-
+            <Link
+              href={`/dashboard/profile/${postOwner?.id}`}
+              className="hover:underline"
+            >
+              Ir para o perfil
+            </Link>
+          </div>
         </div>
 
         <div>
