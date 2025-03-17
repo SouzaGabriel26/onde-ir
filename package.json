@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm services:up && pnpm services:wait && pnpm migrate:up && pnpm database:populate && pnpm next",
+    "dev": "pnpm services:up && pnpm services:wait && pnpm migrate:up && pnpm database:seed && pnpm next",
     "next": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "database:populate": "node --import tsx infra/scripts/populate-tables.ts",
+    "database:seed": "node --import tsx infra/scripts/populate-tables.ts",
     "services:wait": "node --import tsx infra/scripts/wait-services.ts",
     "docker:compose": "docker compose -f ./infra/compose.yaml",
     "services:up": "pnpm docker:compose --env-file .env.local up -d",

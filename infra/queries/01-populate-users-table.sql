@@ -1,3 +1,5 @@
+DELETE FROM users;
+
 INSERT INTO users
 	(
     email,

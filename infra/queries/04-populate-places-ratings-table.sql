@@ -1,3 +1,5 @@
+DELETE FROM place_ratings;
+
 WITH approved_places as (
 	SELECT
     id,

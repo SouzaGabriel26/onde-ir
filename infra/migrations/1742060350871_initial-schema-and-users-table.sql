@@ -19,7 +19,7 @@ CREATE TABLE users (
 
 CREATE TABLE reset_password_tokens (
   id UUID DEFAULT uuid_generate_v4() CONSTRAINT reset_password_tokens_pkey PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   reset_token VARCHAR(255) NOT NULL,
   used BOOLEAN DEFAULT FALSE,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),

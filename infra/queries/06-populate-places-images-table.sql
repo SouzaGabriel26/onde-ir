@@ -1,3 +1,5 @@
+DELETE FROM place_images;
+
 INSERT INTO place_images
 	(
     place_id,
