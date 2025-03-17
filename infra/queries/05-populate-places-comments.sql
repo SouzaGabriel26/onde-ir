@@ -1,3 +1,5 @@
+DELETE FROM place_comments;
+
 INSERT INTO place_comments
 	(
     place_id,
