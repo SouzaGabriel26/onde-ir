@@ -1,4 +1,5 @@
 import { verify } from '@/utils/verify';
+import { PersonalProfile } from '../_components/PersonalProfile';
 import { UserProfile } from '../_components/UserProfile';
 
 type Props = {
@@ -15,7 +16,11 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
-      {isLoggedUserProfile ? <div>Seu perfil</div> : <UserProfile id={id} />}
+      {isLoggedUserProfile ? (
+        <PersonalProfile user={user} />
+      ) : (
+        <UserProfile id={id} />
+      )}
     </div>
   );
 }
