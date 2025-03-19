@@ -84,6 +84,7 @@ export function createPlaceDataSource() {
     findUserRating,
     likeComment,
     checkCommentLike,
+    countPlacesByUser,
   });
 
   type FindAllInput = {
@@ -613,5 +614,27 @@ export function createPlaceDataSource() {
     };
 
     await placePool.query(query);
+  }
+
+  type CountPlacesByUserInput = {
+    userId: string;
+  };
+
+  async function countPlacesByUser({ userId }: CountPlacesByUserInput) {
+    const query = {
+      text: sql`
+        SELECT
+          COUNT(*)
+        FROM
+          places
+        WHERE
+          created_by = $1
+      `,
+      values: [userId],
+    };
+
+    const queryResult = await placePool.query(query);
+
+    return Number(queryResult?.rows[0]?.count) ?? 0;
   }
 }
