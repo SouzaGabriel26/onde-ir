@@ -9,9 +9,13 @@ import Link from 'next/link';
 
 type PersonalProfileProps = {
   user: Partial<User>;
+  editable: boolean;
 };
 
-export async function PersonalProfile({ user }: PersonalProfileProps) {
+export async function PersonalProfile({
+  user,
+  editable,
+}: PersonalProfileProps) {
   const placeDataSource = createPlaceDataSource();
   const placesCreated = placeDataSource.countPlacesByUser({
     userId: user.id ?? '',
@@ -41,10 +45,12 @@ export async function PersonalProfile({ user }: PersonalProfileProps) {
             <Badge>{user.userRole}</Badge>
           </div>
 
-          <Button className="w-full flex items-center gap-2">
-            <Edit2Icon className="size-4" />
-            <span>Editar perfil</span>
-          </Button>
+          {editable && (
+            <Button className="w-full flex items-center gap-2">
+              <Edit2Icon className="size-4" />
+              <span>Editar perfil</span>
+            </Button>
+          )}
         </div>
 
         <div className="border sm:min-w-[400px] rounded-md p-4 md:p-8 space-y-3">
