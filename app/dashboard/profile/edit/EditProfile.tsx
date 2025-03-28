@@ -4,16 +4,22 @@ import { UserAvatar } from '@/components/UserAvatar';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { User } from '@/types';
+import { setInputError } from '@/utils/inputError';
 import { Edit, Trash } from 'lucide-react';
 import { useActionState, useRef, useState } from 'react';
-import { editUserAction } from './action';
+import { editUserAction, updatePasswordAction } from './action';
 
 type EditProfileProps = {
   user: Partial<User>;
 };
 
 export function EditProfile({ user }: EditProfileProps) {
-  const [_state, action, _loading] = useActionState(editUserAction, null);
+  const [_editUserState, editUser, _loadingEditUser] = useActionState(
+    editUserAction,
+    null,
+  );
+  const [updatePasswordState, updatePassword, loadingUpdatePassword] =
+    useActionState(updatePasswordAction, null);
   const imgInputRef = useRef<HTMLInputElement>(null);
   const [newPhotoPreview, setNewPhotoPreview] = useState<string>('');
 
@@ -42,7 +48,7 @@ export function EditProfile({ user }: EditProfileProps) {
 
   return (
     <div className="p-4 space-y-10">
-      <form action={action}>
+      <form action={editUser}>
         {user.name && (
           <div className="flex justify-center gap-2">
             <div
@@ -100,7 +106,7 @@ export function EditProfile({ user }: EditProfileProps) {
         </fieldset>
       </form>
 
-      <form className="flex flex-col">
+      <form action={updatePassword} className="flex flex-col">
         <p className="text-muted-foreground mb-2 text-md">
           Atualização de senha:
         </p>
@@ -110,22 +116,41 @@ export function EditProfile({ user }: EditProfileProps) {
               type="password"
               name="current_password"
               placeholder="Senha atual"
+              defaultValue={
+                updatePasswordState?.error?.fields?.current_password
+              }
+              error={setInputError('current_password', {
+                fields: updatePasswordState?.error?.errorFields,
+                message: updatePasswordState?.error?.message,
+              })}
             />
             <Input
               type="password"
               name="new_password"
               placeholder="Nova senha"
+              defaultValue={updatePasswordState?.error?.fields?.new_password}
+              error={setInputError('new_password', {
+                fields: updatePasswordState?.error?.errorFields,
+                message: updatePasswordState?.error?.message,
+              })}
             />
             <Input
               type="password"
-              name="new_password_confirmation"
+              name="confirm_new_password"
               placeholder="Confirmação de nova senha"
+              defaultValue={
+                updatePasswordState?.error?.fields?.confirm_new_password
+              }
+              error={setInputError('confirm_new_password', {
+                fields: updatePasswordState?.error?.errorFields,
+                message: updatePasswordState?.error?.message,
+              })}
             />
           </div>
         </div>
         <Button className="w-full flex gap-2">
           <Edit className="size-5" />
-          Atualizar senha
+          {loadingUpdatePassword ? 'Atualizando senha' : 'Atualizar senha'}
         </Button>
       </form>
     </div>
