@@ -45,16 +45,6 @@ export function EditProfile({ user }: EditProfileProps) {
     setNewPhotoPreview('');
     imgInputRef.current.value = '';
   }
-  /*
-    useEffect(() => {
-      if (updatePasswordState?.error) {
-        toast.error(updatePasswordState.error.message)
-      }
-
-      if (updatePasswordState?.success) {
-        toast.success('Senha atualizada com sucesso!');
-      }
-    }, [updatePasswordState]) */
 
   return (
     <div className="p-4 space-y-10">
