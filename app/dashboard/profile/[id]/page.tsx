@@ -17,7 +17,7 @@ export default async function Page({ params }: Props) {
   return (
     <div>
       {isLoggedUserProfile ? (
-        <PersonalProfile user={user} />
+        <PersonalProfile user={user} editable />
       ) : (
         <UserProfile id={id} />
       )}

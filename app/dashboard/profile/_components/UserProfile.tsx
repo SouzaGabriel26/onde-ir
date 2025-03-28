@@ -1,6 +1,7 @@
 import { createUserDataSource } from '@/data/user';
 import { user } from '@/models/user';
 import { redirect } from 'next/navigation';
+import { PersonalProfile as Profile } from './PersonalProfile';
 
 type UserProfileProps = {
   id: string;
@@ -8,11 +9,11 @@ type UserProfileProps = {
 
 export async function UserProfile({ id }: UserProfileProps) {
   const userDataSource = createUserDataSource();
-  const { data } = await user.findById(userDataSource, { id });
+  const { data: foundUser } = await user.findById(userDataSource, { id });
 
-  if (!data) {
+  if (!foundUser) {
     return redirect('/dashboard');
   }
 
-  return <div>Perfil de um usuário do sistema.</div>;
+  return <Profile user={foundUser} editable={false} />;
 }
