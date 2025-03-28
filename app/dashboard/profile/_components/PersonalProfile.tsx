@@ -46,9 +46,11 @@ export async function PersonalProfile({
           </div>
 
           {editable && (
-            <Button className="w-full flex items-center gap-2">
-              <Edit2Icon className="size-4" />
-              <span>Editar perfil</span>
+            <Button asChild className="w-full flex items-center gap-2">
+              <Link href="/dashboard/profile/edit">
+                <Edit2Icon className="size-4" />
+                <span>Editar perfil</span>
+              </Link>
             </Button>
           )}
         </div>
