@@ -182,6 +182,53 @@ describe('> models/user', () => {
       });
     });
   });
+
+  describe('Invoking "update" method', () => {
+    test('Providing all properties but "avatar_url"', async () => {
+      const userDatasource = createUserDataSource();
+      const userIdFromDatabase = await getUserIdFromDatabase();
+
+      const userBeforeUpdate = await user.findById(userDatasource, {
+        id: userIdFromDatabase,
+        select: ['email', 'name', 'user_name'],
+      });
+
+      expect(userBeforeUpdate).toStrictEqual({
+        data: {
+          email: 'user@email.com',
+          name: 'Normal user',
+          user_name: 'normal_user',
+        },
+        error: null,
+      });
+
+      const result = await user.update(userDatasource, {
+        user_id: userIdFromDatabase,
+        email: 'edited@email.com',
+        name: 'Edited User',
+        user_name: 'edited_user',
+      });
+
+      expect(result).toStrictEqual({
+        data: {},
+        error: null,
+      });
+
+      const userAfterUpdate = await user.findById(userDatasource, {
+        id: userIdFromDatabase,
+        select: ['email', 'name', 'user_name'],
+      });
+
+      expect(userAfterUpdate).toStrictEqual({
+        data: {
+          email: 'edited@email.com',
+          name: 'Edited User',
+          user_name: 'edited_user',
+        },
+        error: null,
+      });
+    });
+  });
 });
 
 async function getUserIdFromDatabase() {
