@@ -1,4 +1,5 @@
 import { database } from '@/infra/database';
+import type { UpdateUserInput } from '@/models/user';
 import type { User } from '@/types';
 import { sql } from '@/utils/syntax-highlighting';
 
@@ -10,6 +11,7 @@ export function createUserDataSource() {
   return Object.freeze({
     findById,
     checkById,
+    update,
   });
 
   type FindByIdInput = {
@@ -113,5 +115,45 @@ export function createUserDataSource() {
     const queryResult = await userPool.query(query);
 
     return !!queryResult?.rows[0];
+  }
+
+  async function update(input: UpdateUserInput) {
+    const query = {
+      text: sql`
+      UPDATE
+        users
+      SET
+        $setFields
+      WHERE
+        id = $1
+    `,
+      values: [input.user_id],
+    };
+
+    let index = query.values.length + 1;
+
+    setFields();
+
+    await userPool.query(query);
+
+    function setFields() {
+      const fields = [];
+
+      for (const [key, value] of Object.entries(input)) {
+        if (key === 'user_id') continue;
+
+        if (value !== undefined) {
+          fields.push(`${key} = $${index}`);
+          query.values.push(value);
+          index++;
+        }
+      }
+
+      if (fields.length === 0) {
+        return;
+      }
+
+      query.text = query.text.replace('$setFields', fields.join(','));
+    }
   }
 }
