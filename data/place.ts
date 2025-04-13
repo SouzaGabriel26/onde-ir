@@ -85,6 +85,7 @@ export function createPlaceDataSource() {
     likeComment,
     checkCommentLike,
     countPlacesByUser,
+    unlikeComment,
   });
 
   type FindAllInput = {
@@ -609,6 +610,21 @@ export function createPlaceDataSource() {
           (comment_id, user_id)
         VALUES
           ($1, $2)
+      `,
+      values: [input.commentId, input.userId],
+    };
+
+    await placePool.query(query);
+  }
+
+  async function unlikeComment(input: LikeCommentInput) {
+    const query = {
+      text: sql`
+        DELETE FROM
+          place_comment_likes
+        WHERE
+          comment_id = $1
+          AND user_id = $2
       `,
       values: [input.commentId, input.userId],
     };

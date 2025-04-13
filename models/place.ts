@@ -18,6 +18,7 @@ export const place = Object.freeze({
   evaluate,
   findUserRating,
   likeComment,
+  unlikeComment,
 });
 
 type FindAllInput = {
@@ -690,6 +691,33 @@ async function likeComment(
   }
 
   await placeDataSource.likeComment({ commentId: comment_id, userId: user_id });
+
+  return operationResult.success({});
+}
+
+async function unlikeComment(
+  placeDataSource: PlaceDataSource,
+  input: LikeCommentInput,
+) {
+  const validationResult = validator(
+    {
+      comment_id: input.commentId,
+      user_id: input.userId,
+    },
+    {
+      comment_id: 'required',
+      user_id: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const { comment_id, user_id } = validationResult.data;
+
+  await placeDataSource.unlikeComment({
+    commentId: comment_id,
+    userId: user_id,
+  });
 
   return operationResult.success({});
 }
