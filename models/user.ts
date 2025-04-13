@@ -66,9 +66,26 @@ async function update(userDataSource: UserDataSource, input: UpdateUserInput) {
     },
   );
 
-  if (validatedInput.error) return validatedInput;
+  if (validatedInput.error) {
+    return operationResult.failure({
+      message: 'Erro ao validar os dados',
+      errorFields: validatedInput.error.fields,
+    });
+  }
 
   const { email, name, user_name, avatar_url, user_id } = validatedInput.data;
+
+  if (user_name) {
+    const userNameAlreadyExists =
+      await userDataSource.checkByUsername(user_name);
+
+    if (userNameAlreadyExists) {
+      return operationResult.failure({
+        message: 'O nome de usuário já existe',
+        errorFields: ['user_name'],
+      });
+    }
+  }
 
   await userDataSource.update({
     user_id,
