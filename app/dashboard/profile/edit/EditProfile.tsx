@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/Input';
 import type { User } from '@/types';
 import { setInputError } from '@/utils/inputError';
 import { Edit, Trash } from 'lucide-react';
-import { useActionState, useRef, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { editUserAction, updatePasswordAction } from './action';
 
 type EditProfileProps = {
@@ -14,7 +15,7 @@ type EditProfileProps = {
 };
 
 export function EditProfile({ user }: EditProfileProps) {
-  const [_editUserState, editUser, _loadingEditUser] = useActionState(
+  const [editUserState, editUser, loadingEditUser] = useActionState(
     editUserAction,
     null,
   );
@@ -22,6 +23,21 @@ export function EditProfile({ user }: EditProfileProps) {
     useActionState(updatePasswordAction, null);
   const imgInputRef = useRef<HTMLInputElement>(null);
   const [newPhotoPreview, setNewPhotoPreview] = useState<string>('');
+
+  useEffect(() => {
+    if (editUserState?.success) {
+      toast.success('Ĩnformações do usuário atualizadas com sucesso', {
+        style: { color: 'green' },
+      });
+      onRemovePhoto();
+    } else {
+      if (editUserState?.error) {
+        toast.error(editUserState.error.message, {
+          style: { color: 'red' },
+        });
+      }
+    }
+  }, [editUserState]);
 
   function handleClickAvatar() {
     if (!imgInputRef.current) return;
@@ -91,17 +107,44 @@ export function EditProfile({ user }: EditProfileProps) {
         </p>
         <fieldset className="space-y-4">
           <div className="flex gap-2 flex-col md:flex-row">
-            <Input placeholder="Email" name="email" defaultValue={user.email} />
-            <Input placeholder="Nome" name="name" defaultValue={user.name} />
+            <Input
+              placeholder="Email"
+              name="email"
+              defaultValue={editUserState?.error?.fields.email ?? user.email}
+              error={setInputError('email', {
+                fields: editUserState?.error?.errorFields,
+                message: editUserState?.error?.message,
+              })}
+            />
+            <Input
+              placeholder="Nome"
+              name="name"
+              defaultValue={editUserState?.error?.fields.name ?? user.name}
+              error={setInputError('name', {
+                fields: editUserState?.error?.errorFields,
+                message: editUserState?.error?.message,
+              })}
+            />
             <Input
               placeholder="Username"
               name="username"
-              defaultValue={user.user_name}
+              defaultValue={
+                editUserState?.error?.fields.username ?? user.user_name
+              }
+              required
+              pattern="^[a-zA-Z0-9_]+$"
+              title="Use apenas letras, números e underline. Espaços não são permitidos."
+              error={setInputError('user_name', {
+                fields: editUserState?.error?.errorFields,
+                message: editUserState?.error?.message,
+              })}
             />
           </div>
-          <Button className="w-full flex gap-2">
+          <Button className="w-full flex gap-2" disabled={loadingEditUser}>
             <Edit className="size-5" />
-            Atualizar informações do usuario
+            {loadingEditUser
+              ? 'Atualizando informações do usuário'
+              : 'Atualizar informações do usuário'}
           </Button>
         </fieldset>
       </form>
@@ -148,7 +191,7 @@ export function EditProfile({ user }: EditProfileProps) {
             />
           </div>
         </div>
-        <Button className="w-full flex gap-2">
+        <Button className="w-full flex gap-2" disabled={loadingUpdatePassword}>
           <Edit className="size-5" />
           {loadingUpdatePassword ? 'Atualizando senha' : 'Atualizar senha'}
         </Button>

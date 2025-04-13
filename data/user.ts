@@ -12,6 +12,7 @@ export function createUserDataSource() {
     findById,
     checkById,
     update,
+    checkByUsername,
   });
 
   type FindByIdInput = {
@@ -155,5 +156,26 @@ export function createUserDataSource() {
 
       query.text = query.text.replace('$setFields', fields.join(','));
     }
+  }
+
+  async function checkByUsername(username: string) {
+    const queryText = sql`
+      SELECT
+        id
+      FROM
+        users
+      WHERE
+        user_name = $1
+      LIMIT 1
+    `;
+
+    const query = {
+      text: queryText,
+      values: [username],
+    };
+
+    const queryResult = await userPool.query(query);
+
+    return !!queryResult?.rows[0];
   }
 }

@@ -134,17 +134,29 @@ export async function likeCommentAction(
   return { success: true };
 }
 
-// TODO
 export async function unlikeCommentAction(
   _input: LikeCommentInput & { placeId: string },
 ) {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const placeDataSource = createPlaceDataSource();
+  const result = await place.unlikeComment(placeDataSource, {
+    commentId: _input.commentId,
+    userId: _input.userId,
+  });
+
+  if (result.error) {
+    await feedbackMessage.setFeedbackMessage({
+      type: 'error',
+      content: 'Erro ao descurtir comentário',
+    });
+    return { success: false };
+  }
 
   await feedbackMessage.setFeedbackMessage({
-    type: 'error',
-    content: 'Erro ao descurtir comentário',
+    type: 'success',
+    content: 'Comentário descurtido com sucesso!',
   });
-  return { success: false };
+  revalidatePath(`/dashboard/posts/${_input.placeId}`);
+  return { success: true };
 }
 
 // use with "useActionState" hook
