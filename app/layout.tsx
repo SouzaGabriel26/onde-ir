@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={theme} style={{ colorScheme: theme }}>
-      <body className="h-screen text-slate-800 dark:text-white">
+      <body className="h-screen text-slate-800 dark:text-white md:!px-40 scroolbar">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

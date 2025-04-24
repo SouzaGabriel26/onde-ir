@@ -47,7 +47,7 @@
   .scroolbar::-webkit-scrollbar-thumb {
     background: hsl(var(--ring));
     border-radius: 0.5rem;
-    border: 2px solid hsl(var(--background));
+    border: 4px solid hsl(var(--background));
   }
 
   .scrollbar-hidden::-webkit-scrollbar {

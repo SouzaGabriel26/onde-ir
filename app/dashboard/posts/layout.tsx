@@ -11,16 +11,17 @@ type Props = {
 
 export default async function Layout({ children }: Props) {
   return (
-    <section className="flex h-full flex-col space-y-10 flex-1 relative">
-      <div>
-        <Link href="/dashboard" title="Voltar">
+    <section className="flex h-full flex-col space-y-10 flex-1">
+      <div className="flex flex-grow flex-col overflow-y-auto items-center rounded-md border scroolbar p-4 space-y-4 relative">
+        <Link
+          href="/dashboard"
+          title="Voltar"
+          className="absolute top-4 left-4"
+        >
           <Button variant="outline">
             <ArrowLeftIcon />
           </Button>
         </Link>
-      </div>
-
-      <div className="flex flex-grow flex-col overflow-y-auto items-center rounded-md border scroolbar p-4 space-y-4">
         <CreatePostBreadCrumb />
         {children}
       </div>
