@@ -3,19 +3,20 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import type { User } from '@/types';
 
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { NavButton } from './NavButton';
 import { UserOptions } from './UserOptions';
 
 type HeaderProps = {
   userData?: Partial<User> | null;
+  divider?: boolean;
 };
 
-export function Header({ userData }: HeaderProps) {
+export function Header({ userData, divider }: HeaderProps) {
   return (
     <header
-      className={`
-        fixed
-        z-50
+      className={sanitizeClassName(
+        `
         flex
         h-16
         w-full
@@ -24,12 +25,11 @@ export function Header({ userData }: HeaderProps) {
         bg-background
         px-4
         py-6
-        shadow-sm
-        dark:shadow-white
-        md:px-40
-      `}
+      `,
+        divider && 'border-b',
+      )}
     >
-      <Link href="/" className="text-2xl font-medium">
+      <Link href="/" className="text-2xl font-bold">
         Onde Ir?
       </Link>
 
