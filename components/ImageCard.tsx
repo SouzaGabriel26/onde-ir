@@ -36,7 +36,7 @@ export function ImageCard({
       <div
         onClick={() => clickable && setIsModalOpen(true)}
         className={sanitizeClassName(
-          'rounded-[20px] shadow w-[258px] md:w-[420px] relative',
+          'rounded-[20px] shadow w-[258px] md:w-[380px] relative',
           className,
         )}
       >
@@ -45,7 +45,7 @@ export function ImageCard({
             <div
               className={sanitizeClassName(
                 'relative',
-                'h-44 md:h-52 w-[258px] md:w-[420px]',
+                'h-44 md:h-52 w-[258px] md:w-[380px]',
               )}
             >
               <Image
@@ -60,7 +60,7 @@ export function ImageCard({
             <div
               className={sanitizeClassName(
                 `
-                  w-[258px] md:w-[420px]
+                  w-[258px] md:w-[380px]
                   space-y-2
                   rounded-b-[20px]
                   bg-white
