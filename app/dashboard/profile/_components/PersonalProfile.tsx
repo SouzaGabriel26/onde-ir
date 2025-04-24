@@ -25,7 +25,7 @@ export async function PersonalProfile({
     <div className="grid place-items-center h-full overflow-y-auto relative">
       <Button asChild className="absolute top-5 left-2">
         <Link href="/dashboard">
-          <ArrowLeft className="size-6" />
+          <ArrowLeft className="size-6 stroke-secondary" />
         </Link>
       </Button>
 
