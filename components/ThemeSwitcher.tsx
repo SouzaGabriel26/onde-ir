@@ -3,7 +3,6 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-import { Moon } from '@/components/icons/Moon';
 import { Sun } from '@/components/icons/Sun';
 import {
   DropdownMenu,
@@ -14,6 +13,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { constants } from '@/utils/constants';
 
+import { MoonIcon } from 'lucide-react';
 import { Skeleton } from './ui/Skeleton';
 
 export function ThemeSwitcher() {
@@ -49,7 +49,7 @@ export function ThemeSwitcher() {
         `}
       >
         <Sun className="dark:hidden" />
-        <Moon className="hidden dark:block" />
+        <MoonIcon className="hidden dark:block" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="rounded-md border shadow-md">
