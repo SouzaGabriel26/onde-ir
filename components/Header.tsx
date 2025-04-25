@@ -4,6 +4,7 @@ import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import type { User } from '@/types';
 
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
+import { Compass } from 'lucide-react';
 import { NavButton } from './NavButton';
 import { UserOptions } from './UserOptions';
 
@@ -29,7 +30,8 @@ export function Header({ userData, divider }: HeaderProps) {
         divider && 'border-b',
       )}
     >
-      <Link href="/" className="text-2xl font-bold">
+      <Link href="/" className="text-2xl font-bold flex items-center gap-2">
+        <Compass className="w-8 h-8 text-primary" />
         Onde Ir?
       </Link>
 

@@ -110,7 +110,7 @@ export function DashboardContent({
   }, [inView, loadMorePlaces, isToFetchMorePlaces]);
 
   return (
-    <div className="flex h-full flex-col gap-4 w-full">
+    <div className="flex h-full flex-col gap-4 w-full px-1">
       <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
         <fieldset className="flex gap-2 w-full justify-center md:justify-start items-center">
           <DebouncedInput
@@ -130,7 +130,7 @@ export function DashboardContent({
                 : '/dashboard/posts/create'
             }
           >
-            <Button variant="secondary" className="text-xs md:text-base">
+            <Button variant="outline" className="text-xs md:text-base">
               {userNotAuthenticated
                 ? 'Faça login para criar uma postagem'
                 : 'Crie sua postagem'}
@@ -150,7 +150,7 @@ export function DashboardContent({
               }}
             >
               <Button
-                variant="secondary"
+                variant="outline"
                 disabled={status === 'user-pendings'}
                 className="text-xs md:text-base"
               >
