@@ -36,16 +36,16 @@ export function ImageCard({
       <div
         onClick={() => clickable && setIsModalOpen(true)}
         className={sanitizeClassName(
-          'rounded-[20px] shadow w-[258px] md:w-[380px] relative',
+          'rounded-[20px] w-[258px] md:w-[380px] relative',
           className,
         )}
       >
         <CustomTooltip tip={place.name}>
-          <div className="rounded-[20px] border border-[#DCE2E5] transition hover:scale-105 hover:shadow-2xl">
+          <div className="rounded-[20px] border border-[#DCE2E5] transition hover:shadow-md overflow-hidden group">
             <div
               className={sanitizeClassName(
                 'relative',
-                'h-44 md:h-52 w-[258px] md:w-[380px]',
+                'h-44 md:h-52 w-[258px] md:w-[380px] overflow-hidden',
               )}
             >
               <Image
@@ -53,7 +53,7 @@ export function ImageCard({
                 src={place.images[0]}
                 alt={place.name}
                 sizes="100%"
-                className="rounded-t-[20px] object-cover"
+                className="absolute inset-0 rounded-t-[20px] object-cover group-hover:scale-105 transition duration-300"
               />
             </div>
 
