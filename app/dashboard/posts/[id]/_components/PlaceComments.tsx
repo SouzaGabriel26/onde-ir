@@ -62,7 +62,7 @@ export function PlaceComments({
               />
 
               {hasChildComments && (
-                <div className="ml-10 md:ml-24 border-l my-2 max-h-48 overflow-y-auto scroolbar divide-y">
+                <div className="ml-10 md:ml-24 border-l my-2 max-h-48 overflow-y-auto scrollbar divide-y">
                   {comment.child_comments?.map((childComment) => (
                     <PlaceComment
                       key={childComment.id}
