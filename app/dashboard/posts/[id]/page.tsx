@@ -62,14 +62,14 @@ export default async function Page(props: PageProps) {
   );
 
   return (
-    <div className="w-full space-y-6 pb-2">
+    <div className="w-full space-y-6 pb-10">
       {loggedUser && !userAlreadyEvaluated && (
         <RatingModal
           key={Date.now()}
           placeId={postId}
           userId={loggedUser?.id ?? ''}
           action={ratePlaceAction}
-          className="top-0 right-2 absolute"
+          className="top-2 right-2 absolute"
         />
       )}
 
@@ -136,7 +136,7 @@ export default async function Page(props: PageProps) {
                     src={url}
                     alt={`Foto ${index + 1} de ${postFound.name}`}
                     sizes="100%"
-                    className="rounded-[20px] object-cover"
+                    className="rounded-[20px] object-contain"
                   />
 
                   <Badge
