@@ -125,7 +125,7 @@ export function CmsSidebar({ className, ...props }: CmsSidebarProps) {
       <li
         className={sanitizeClassName(
           'transition-all',
-          isSelected && 'bg-accent text-blue-600 rounded',
+          isSelected && 'bg-accent text-primary rounded',
         )}
       >
         <Button

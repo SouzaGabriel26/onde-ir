@@ -2,9 +2,10 @@
 
 import { redirect } from 'next/navigation';
 
+import { getPresignedURL } from '@/app/actions/getPresignedURL';
 import { Welcome } from '@/components/email-templates/Welcome';
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
+import { uploadFileToS3 } from '@/data/lambda';
 import {
   type SignUpProps,
   type SignUpResponse,

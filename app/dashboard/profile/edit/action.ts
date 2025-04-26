@@ -1,7 +1,8 @@
 'use server';
 
+import { getPresignedURL } from '@/app/actions/getPresignedURL';
 import { createAuthenticationDataSource } from '@/data/authentication';
-import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
+import { uploadFileToS3 } from '@/data/lambda';
 import { createUserDataSource } from '@/data/user';
 import { password } from '@/models/password';
 import { user } from '@/models/user';

@@ -89,7 +89,7 @@ export function SignupForm() {
         type="file"
         accept="image/png, image/jpg, image/jpeg"
         name="avatar_file"
-        className="cursor-pointer hover:bg-primary-foreground transition-all"
+        className="cursor-pointer hover:bg-muted transition-all"
       />
 
       <SubmitButton>Cadastrar</SubmitButton>

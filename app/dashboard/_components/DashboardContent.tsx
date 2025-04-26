@@ -185,10 +185,11 @@ export function DashboardContent({
             rounded-[20px]
             gap-10
             overflow-y-auto
-            scroolbar
+            scrollbar
             pb-16
             px-4
             pt-4
+            justify-items-center
             items-center
           `}
         >

@@ -5,9 +5,10 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
+import { getPresignedURL } from '@/app/actions/getPresignedURL';
 import { Button } from '@/components/ui/Button';
 import { Progress } from '@/components/ui/Progress';
-import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
+import { uploadFileToS3 } from '@/data/lambda';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { useRouter } from 'next/navigation';
 
@@ -23,14 +24,17 @@ type ImageUploadProps = {
   successRedirectPath?: string;
 };
 
+const MAX_FILES = 5;
+
 export function ImageUpload({
   actionOnUpload,
   successRedirectPath,
 }: ImageUploadProps) {
   const route = useRouter();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [uploads, setUploads] = useState<Array<Upload>>([]);
+  const [isDropping, setIsDropping] = useState(false);
 
   const hasSomeInvalidFileType = useMemo(() => {
     return uploads.some(
@@ -38,8 +42,27 @@ export function ImageUpload({
     );
   }, [uploads]);
 
-  const onDrop = useCallback((acceptedFiles: Array<File>) => {
-    setUploads(acceptedFiles.map((file) => ({ file, progress: 0 })));
+  const onDrop = useCallback(async (acceptedFiles: Array<File>) => {
+    setIsDropping(true);
+
+    setUploads((prevUploads) => {
+      const uploadsToAdd = acceptedFiles.filter((file) => {
+        const isFileAlreadyAdded = prevUploads.some(
+          (upload) => upload.file.name === file.name,
+        );
+
+        return !isFileAlreadyAdded;
+      });
+
+      const newUploads = uploadsToAdd.map((file) => ({
+        file,
+        progress: 0,
+      }));
+
+      return [...prevUploads, ...newUploads];
+    });
+
+    setIsDropping(false);
   }, []);
 
   function handleDeleteUpload(name: string) {
@@ -50,7 +73,7 @@ export function ImageUpload({
 
   async function handleUpload() {
     try {
-      setIsLoading(true);
+      setIsUploadingFiles(true);
 
       const uploadObjects = await Promise.all(
         uploads.map(async ({ file }) => ({
@@ -92,27 +115,36 @@ export function ImageUpload({
       console.error('Erro ao recuperar as URLs de upload.');
       toast.error('Erro ao recuperar as URLs de upload.');
     } finally {
-      setIsLoading(false);
+      setIsUploadingFiles(false);
     }
   }
 
   return (
     <div className="flex h-full flex-col items-center gap-4">
-      <Dropzone onDrop={onDrop} />
-      <FilesPreview uploads={uploads} onDeleteUpload={handleDeleteUpload} />
+      <Dropzone
+        isUploadingFiles={isUploadingFiles}
+        isDropping={isDropping}
+        onDrop={onDrop}
+      />
+
+      <FilesPreview
+        isUploadingFiles={isUploadingFiles}
+        uploads={uploads}
+        onDeleteUpload={handleDeleteUpload}
+      />
 
       <Button
         className="self-end"
         type="button"
         onClick={handleUpload}
         disabled={
-          isLoading ||
+          isUploadingFiles ||
           !uploads.length ||
           hasSomeInvalidFileType ||
-          uploads.length > 4
+          uploads.length > MAX_FILES
         }
       >
-        {isLoading && <Loader2Icon className="mr-2 animate-spin" />}
+        {isUploadingFiles && <Loader2Icon className="mr-2 animate-spin" />}
         Enviar
       </Button>
     </div>
@@ -121,8 +153,14 @@ export function ImageUpload({
 
 type DropzoneProps = {
   onDrop: (files: Array<File>) => void;
+  isDropping: boolean;
+  isUploadingFiles: boolean;
 };
-export function Dropzone({ onDrop }: DropzoneProps) {
+export function Dropzone({
+  onDrop,
+  isDropping,
+  isUploadingFiles,
+}: DropzoneProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
@@ -135,21 +173,30 @@ export function Dropzone({ onDrop }: DropzoneProps) {
           rounded-md
           border
           p-2
-          hover:bg-primary-foreground
+          hover:bg-muted
+          transition-all
+          ease-in-out
           md:w-[500px]
         `,
         isDragActive && 'bg-primary-foreground',
+        isUploadingFiles && 'cursor-not-allowed pointer-events-none',
       )}
     >
+      {isDropping ? (
+        <div className="flex h-full flex-col items-center justify-center">
+          <Loader2Icon className="mb-2 size-12 animate-spin" />
+          <h2>Carregando suas fotos</h2>
+        </div>
+      ) : (
+        <div className="flex h-full flex-col items-center justify-center">
+          <PackageOpenIcon className="mb-2 size-12" />
+          <h2>Solte suas fotos aqui</h2>
+          <p className="text-center text-sm text-zinc-500">
+            São permitidos apenas arquivos png e jpeg
+          </p>
+        </div>
+      )}
       <input accept="image/png, image/jpg, image/jpeg" {...getInputProps()} />
-
-      <div className="flex h-full flex-col items-center justify-center">
-        <PackageOpenIcon className="mb-2 size-12" />
-        <h2>Solte suas fotos aqui</h2>
-        <p className="text-center text-sm text-zinc-500">
-          São permitidos apenas arquivos png e jpeg
-        </p>
-      </div>
     </div>
   );
 }
@@ -157,20 +204,30 @@ export function Dropzone({ onDrop }: DropzoneProps) {
 type FilesPreviewProps = {
   uploads: Array<Upload>;
   onDeleteUpload: (name: string) => void;
+  isUploadingFiles: boolean;
 };
 
-function FilesPreview({ uploads, onDeleteUpload }: FilesPreviewProps) {
+function FilesPreview({
+  uploads,
+  isUploadingFiles,
+  onDeleteUpload,
+}: FilesPreviewProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 shadow-md p-3 rounded-md">
       <span className="text-xl">Arquivos selecionados: {uploads.length}</span>
 
-      {uploads.length > 4 && (
+      {uploads.length > MAX_FILES && (
         <span className="text-sm block text-destructive">
-          O número máximo de arquivos permitidos é 4
+          O número máximo de arquivos permitidos é {MAX_FILES}
         </span>
       )}
 
-      <div className="max-h-80 space-y-2 overflow-y-auto rounded-md p-2">
+      <div
+        className={sanitizeClassName(
+          'max-h-80 space-y-2 overflow-y-auto scrollbar rounded-md p-2',
+          isUploadingFiles && 'pointer-events-none cursor-not-allowed',
+        )}
+      >
         {uploads.map(({ file, progress }) => (
           <FileItem
             key={file.name}
@@ -222,7 +279,7 @@ function FileItem({ file, progress, onDelete }: FileItemProps) {
             className="bg-red-600 px-3 transition-all hover:bg-red-700"
             title="Deletar"
           >
-            <Trash2Icon className="size-4 stroke-primary" />
+            <Trash2Icon className="size-4" />
           </Button>
         </div>
 
