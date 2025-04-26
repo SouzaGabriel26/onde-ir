@@ -23,7 +23,7 @@ export function CustomBreadcrumb({ items, progress }: CustomBreadcrumbProps) {
               key={item.label.concat(`-${index}`)}
               className={sanitizeClassName(
                 'flex items-center gap-2',
-                item.finished && 'text-green-500',
+                item.finished && 'text-primary',
                 item.isCurrent && 'font-bold',
               )}
             >
