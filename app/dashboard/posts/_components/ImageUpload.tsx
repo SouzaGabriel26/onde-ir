@@ -5,9 +5,10 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 
+import { getPresignedURL } from '@/app/actions/getPresignedURL';
 import { Button } from '@/components/ui/Button';
 import { Progress } from '@/components/ui/Progress';
-import { getPresignedURL, uploadFileToS3 } from '@/data/lambda';
+import { uploadFileToS3 } from '@/data/lambda';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { useRouter } from 'next/navigation';
 
