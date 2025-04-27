@@ -1,5 +1,3 @@
-DELETE FROM categories;
-
 INSERT INTO categories
 	(name, is_active)
 VALUES
