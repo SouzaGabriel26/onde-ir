@@ -1,6 +1,7 @@
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { AnimatedComponent } from '../AnimatedComponent';
 import { Button } from '../ui/Button';
 import { PlaceCard } from './PlaceCard';
 
@@ -33,28 +34,49 @@ export function HeroSection() {
         xl:text-start
       `}
       >
-        <h2
+        <AnimatedComponent
+          variant="h2"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className={`
-          w-fit
-          text-5xl
-          font-semibold
-          leading-tight
-        `}
+            w-fit
+            text-5xl
+            font-semibold
+            leading-tight
+          `}
         >
           Viva uma grande
           <br />
           <span className="text-primary"> experiência</span>
-        </h2>
+        </AnimatedComponent>
 
-        <p className="max-w-64 text-muted-foreground lg:max-w-full lg:text-lg">
+        <AnimatedComponent
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: -5 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          variant="p"
+          className="max-w-64 text-muted-foreground lg:max-w-full lg:text-lg"
+        >
           Descubra locais incríveis para se visitar em cidades maravilhosas.
-        </p>
+        </AnimatedComponent>
 
         <div className="flex flex-col md:flex-row items-center w-full gap-4">
           <Link href="/dashboard">
-            <Button className="flex items-center gap-2" size="lg">
-              Descobrir todos lugares
-              <ChevronRight className="w-4 h-4" />
+            <Button asChild className="flex items-center gap-2" size="lg">
+              <AnimatedComponent
+                variant="button"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.5, delay: 0.6 },
+                }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Descobrir todos lugares
+                <ChevronRight className="w-4 h-4" />
+              </AnimatedComponent>
             </Button>
           </Link>
 
@@ -63,26 +85,40 @@ export function HeroSection() {
               variant="outline"
               className="flex items-center gap-2"
               size="lg"
+              asChild
             >
-              Compartilhar experiência
-              <ChevronRight className="w-4 h-4" />
+              <AnimatedComponent
+                variant="button"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.5, delay: 0.8 },
+                }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Compartilhar experiência
+                <ChevronRight className="w-4 h-4" />
+              </AnimatedComponent>
             </Button>
           </Link>
         </div>
       </section>
 
-      <section className="flex flex-1 flex-col gap-4 lg:flex-row rounded-xl w-full relative xl:h-[700px]">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 -z-10 to-purple-500/50 rounded-2xl blur-xl opacity-50 w-1/2 mx-auto xl:w-full" />
-        <div className="grid grid-cols-1 xl:grid-cols-2 auto-rows-fr h-full gap-2 md:gap-1.5 w-full sm:w-1/2 mx-auto xl:w-full p-2 md:p-1.5 bg-background rounded-xl">
+      <section className="flex flex-1 flex-col gap-4 lg:flex-row rounded-xl w-[90%] relative xl:h-[700px]">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 -z-10 to-purple-500/50 rounded-xl blur-xl opacity-50 w-1/2 mx-auto xl:w-full" />
+        <div className="grid grid-cols-1 xl:grid-cols-2 auto-rows-fr h-full gap-1 md:gap-1.5 w-[90%] sm:w-1/2 mx-auto xl:w-full p-1 md:p-1.5 bg-background rounded-xl">
           {mockedData.map((place, index) => {
             const isFirst = index === 0;
 
             return (
               <PlaceCard
+                index={index}
                 key={place.name + index}
                 name={place.name}
                 image={place.image || '/placeholder.svg'}
                 className={sanitizeClassName(
+                  'rounded-[calc(var(--radius)-4px)]',
                   isFirst && 'xl:col-span-2 xl:row-span-1',
                 )}
               />
