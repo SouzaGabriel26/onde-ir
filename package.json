@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm services:up && pnpm services:wait && pnpm migrate:up && pnpm database:seed && pnpm next",
+    "dev": "pnpm services:up && pnpm services:wait && pnpm database:seed && pnpm next",
     "next": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
