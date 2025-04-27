@@ -5,6 +5,7 @@ import type { User } from '@/types';
 
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { Compass } from 'lucide-react';
+import { AnimatedComponent } from './AnimatedComponent';
 import { NavButton } from './NavButton';
 import { UserOptions } from './UserOptions';
 
@@ -30,9 +31,14 @@ export function Header({ userData, divider }: HeaderProps) {
         divider && 'border-b',
       )}
     >
-      <Link href="/" className="text-2xl font-bold flex items-center gap-2">
-        <Compass className="w-8 h-8 text-primary" />
-        Onde Ir?
+      <Link href="/">
+        <AnimatedComponent
+          variant="button"
+          className="text-2xl font-bold flex items-center gap-2"
+        >
+          <Compass className="w-8 h-8 text-primary" />
+          Onde Ir?
+        </AnimatedComponent>
       </Link>
 
       <nav className="flex items-center gap-2 text-sm md:gap-4 md:text-base">
