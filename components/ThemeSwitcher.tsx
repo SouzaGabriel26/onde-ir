@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { constants } from '@/utils/constants';
 
+import { motion } from 'framer-motion';
+
 import { MoonIcon } from 'lucide-react';
 import { Skeleton } from './ui/Skeleton';
 
@@ -48,8 +50,26 @@ export function ThemeSwitcher() {
           focus:bg-muted
         `}
       >
-        <Sun className="dark:hidden" />
-        <MoonIcon className="hidden dark:block" />
+        {resolvedTheme === 'dark' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <MoonIcon />
+          </motion.div>
+        )}
+        {resolvedTheme === 'light' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Sun />
+          </motion.div>
+        )}
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="rounded-md border shadow-md">
