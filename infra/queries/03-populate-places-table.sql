@@ -1,5 +1,3 @@
-DELETE FROM places;
-
 INSERT INTO places
   (
     name,
