@@ -97,6 +97,10 @@ export function ImageCard({
           </div>
         </CustomTooltip>
 
+        <Badge className="absolute top-2 left-2 rounded-full bg-muted text-muted-foreground hover:bg-muted/80">
+          {place.category_name}
+        </Badge>
+
         {isOwner && (
           <Badge className="absolute top-2 right-2 rounded-full">
             <CustomTooltip tip="Você é o dono desse post">
