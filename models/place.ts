@@ -141,10 +141,11 @@ async function create(
 
   if (error) return operationResult.failure(error);
 
-  const categories = await placeDataSource.findCategories();
-  const categoryExists = categories.some(
-    (c) => c.id === validatedInput.category_id,
-  );
+  const categories = await placeDataSource.findCategories({
+    limit: 1,
+    where: { id: validatedInput.category_id },
+  });
+  const categoryExists = categories && categories.length > 0;
 
   if (!categoryExists) {
     return operationResult.failure({
@@ -218,6 +219,7 @@ async function createImages(
 }
 
 export type FindCategoriesInput = {
+  limit?: ValidationSchema['limit'];
   where?: {
     is_active?: boolean;
   };
@@ -227,7 +229,23 @@ async function findCategories(
   placeDataSource: PlaceDataSource,
   input?: FindCategoriesInput,
 ) {
-  const categories = await placeDataSource.findCategories(input);
+  const defaultLimit = 15;
+
+  const validationResult = validator(
+    {
+      limit: input?.limit ?? defaultLimit,
+    },
+    {
+      limit: 'required',
+    },
+  );
+
+  if (validationResult.error) return validationResult;
+
+  const categories = await placeDataSource.findCategories({
+    limit: validationResult.data.limit,
+    where: input?.where,
+  });
 
   return operationResult.success(categories);
 }

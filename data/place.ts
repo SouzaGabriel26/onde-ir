@@ -5,11 +5,11 @@ import type {
   CreatePlaceInput,
   DeleteCommentInput,
   EvaluateInput,
-  FindCategoriesInput,
   FindUserRatingInput,
   LikeCommentInput,
   UpdateInput,
 } from '@/models/place';
+import type { ValidationSchema } from '@/models/validator';
 import { sql } from '@/utils/syntax-highlighting';
 
 export type PlaceStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
@@ -49,6 +49,7 @@ export type FindAllPlacesOutput = {
   updated_at: Date;
   average_rating?: number;
   images: string[];
+  category_name?: string;
 };
 
 export type PlaceComment = {
@@ -101,6 +102,14 @@ export function createPlaceDataSource() {
     };
   };
 
+  type FindCategoriesInput = {
+    limit: ValidationSchema['limit'];
+    where?: {
+      is_active?: boolean;
+      id?: string;
+    };
+  };
+
   async function findAll(input: FindAllInput) {
     const { limit, offset, where } = input;
 
@@ -116,15 +125,16 @@ export function createPlaceDataSource() {
       SELECT
         places.*,
         array_remove(ARRAY_AGG(place_images.url), NULL) AS images,
-        places_average_rating.average_rating
+        places_average_rating.average_rating,
+        categories.name as category_name
       FROM
         places
         LEFT JOIN place_images ON place_images.place_id = places.id
         LEFT JOIN places_average_rating ON places_average_rating.id = places.id
-        $joinClause
+        LEFT JOIN categories ON categories.id = places.category_id
         $whereClause
       GROUP BY
-        places.id, places_average_rating.average_rating
+        places.id, places_average_rating.average_rating, categories.name
       ORDER BY
         places.created_at DESC
       LIMIT $1
@@ -143,35 +153,17 @@ export function createPlaceDataSource() {
 
     let index = query.values.length;
 
-    setJoinClause();
     setWhereClause();
 
     const queryResult = await placePool.query(query);
     return (queryResult?.rows as Array<FindAllPlacesOutput>) ?? [];
-
-    function setJoinClause() {
-      const clauses: string[] = [];
-
-      if (input.where?.categoryName) {
-        clauses.push(sql`
-          LEFT JOIN categories ON categories.id = places.category_id
-        `);
-      }
-
-      if (!clauses.length) {
-        query.text = query.text.replace('$joinClause', '');
-        return;
-      }
-
-      query.text = query.text.replace('$joinClause', clauses.join(' '));
-    }
 
     function setWhereClause() {
       const whereClauses = [];
 
       if (where?.searchTerm) {
         // postgres POSIX operator
-        whereClauses.push(sql`name ~* `.concat(`$${++index}`));
+        whereClauses.push(sql`places.name ~* `.concat(`$${++index}`));
         query.values.push(where.searchTerm);
       }
 
@@ -181,7 +173,7 @@ export function createPlaceDataSource() {
       }
 
       if (where?.name) {
-        whereClauses.push(sql`name = `.concat(`$${++index}`));
+        whereClauses.push(sql`places.name = `.concat(`$${++index}`));
         query.values.push(where.name);
       }
 
@@ -337,15 +329,22 @@ export function createPlaceDataSource() {
     }
   }
 
-  async function findCategories({ where }: FindCategoriesInput = {}) {
-    const query = {
+  async function findCategories({ limit, where }: FindCategoriesInput) {
+    type Query = {
+      text: string;
+      values: Array<string | number | boolean>;
+    };
+
+    const query: Query = {
       text: sql`
         SELECT
           *
         FROM
           categories
         $whereClause
+        LIMIT $1
       `,
+      values: [limit],
     };
 
     setWhereClause();
@@ -357,16 +356,26 @@ export function createPlaceDataSource() {
     return queryResult.rows as Category[];
 
     function setWhereClause() {
-      if (where?.is_active === undefined) {
-        query.text = query.text.replace('$whereClause', '');
-        return;
-      }
+      const clauses = [];
 
       if (where?.is_active !== undefined) {
+        clauses.push(
+          sql`is_active = `.concat(where.is_active ? 'TRUE' : 'FALSE'),
+        );
+      }
+
+      if (where?.id) {
+        clauses.push(sql`id = `.concat(`$${query.values.length + 1}`));
+        query.values.push(where.id);
+      }
+
+      if (clauses.length > 0) {
         query.text = query.text.replace(
           '$whereClause',
-          sql`WHERE is_active = `.concat(where.is_active ? 'TRUE' : 'FALSE'),
+          'WHERE '.concat(clauses.join(' AND ')),
         );
+      } else {
+        query.text = query.text.replace('$whereClause', '');
       }
     }
   }

@@ -12,7 +12,8 @@ type AnimatedComponentVariants =
   | 'h6'
   | 'p'
   | 'span'
-  | 'button';
+  | 'button'
+  | 'div';
 type AnimatedComponentProps = {
   children: ReactNode;
   className?: string;

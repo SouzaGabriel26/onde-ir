@@ -16,7 +16,7 @@ export function PlaceCard({ name, image, index, className }: PlaceCardProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: index * 0.2, ease: 'easeOut' }}
+      transition={{ duration: 0.5, delay: index * 0.4, ease: 'easeOut' }}
       className={sanitizeClassName(
         `
         min-h-[250px]

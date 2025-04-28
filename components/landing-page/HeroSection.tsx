@@ -9,30 +9,29 @@ export function HeroSection() {
   return (
     <main
       className={`
-      mt-5
-      flex
-      flex-1
-      flex-col
-      items-center
-      justify-between
-      gap-6
-      xl:flex-row
-      pt-2
-      p-4
-    `}
-    >
-      <section
-        className={`
+        mt-5
         flex
         flex-col
         items-center
-        xl:items-start
-        justify-center
-        flex-1
-        gap-4
-        text-center
-        xl:text-start
+        justify-between
+        gap-6
+        xl:flex-row
+        pt-2
+        p-4
       `}
+    >
+      <section
+        className={`
+          flex
+          flex-col
+          items-center
+          xl:items-start
+          justify-center
+          flex-1
+          gap-4
+          text-center
+          xl:text-start
+        `}
       >
         <AnimatedComponent
           variant="h2"
@@ -105,9 +104,9 @@ export function HeroSection() {
         </div>
       </section>
 
-      <section className="flex flex-1 flex-col gap-4 lg:flex-row rounded-xl w-[90%] relative xl:h-[700px]">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 -z-10 to-purple-500/50 rounded-xl blur-xl opacity-50 w-1/2 mx-auto xl:w-full" />
-        <div className="grid grid-cols-1 xl:grid-cols-2 auto-rows-fr h-full gap-1 md:gap-1.5 w-[90%] sm:w-1/2 mx-auto xl:w-full p-1 md:p-1.5 bg-background rounded-xl">
+      <section className="hidden xl:flex flex-1 flex-col gap-4 lg:flex-row rounded-xl w-[90%] relative h-[600px]">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/50 -z-10 to-purple-500/50 rounded-xl blur-xl opacity-50 mx-auto w-full" />
+        <div className="grid grid-cols-2 auto-rows-fr h-full gap-1.5 w-full p-1 md:p-1.5 bg-background rounded-xl">
           {mockedData.map((place, index) => {
             const isFirst = index === 0;
 

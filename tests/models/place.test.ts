@@ -107,6 +107,7 @@ describe('> models/place', () => {
             state: 'ES',
             city: 'Vila Velha',
             street: 'Av. Hugo Musso',
+            category_name: 'restaurantes',
             num_place: 505,
             complement: null,
             description:
@@ -214,7 +215,7 @@ describe('> models/place', () => {
       const placeDataSource = createPlaceDataSource();
 
       const createdBy = await getUserId();
-      const categories = await placeDataSource.findCategories();
+      const categories = await placeDataSource.findCategories({ limit: 1 });
 
       const result = await place.create(userDataSource, placeDataSource, {
         name: 'Bar do Zé',
@@ -266,7 +267,7 @@ describe('> models/place', () => {
       const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
 
-      const categories = await placeDataSource.findCategories();
+      const categories = await placeDataSource.findCategories({ limit: 1 });
       const uuid = crypto.randomUUID();
 
       const result = await place.create(userDataSource, placeDataSource, {
@@ -447,7 +448,7 @@ describe('> models/place', () => {
     test('Providing valid place "id"', async () => {
       const userDataSource = createUserDataSource();
       const placeDataSource = createPlaceDataSource();
-      const categories = await placeDataSource.findCategories();
+      const categories = await placeDataSource.findCategories({ limit: 1 });
       const name = randomBytes(10).toString('hex');
 
       const createdBy = await getUserId();
@@ -522,6 +523,16 @@ describe('> models/place', () => {
             name: 'bares',
             is_active: true,
           },
+          {
+            id: expect.any(String),
+            name: 'praias',
+            is_active: true,
+          },
+          {
+            id: expect.any(String),
+            name: 'pontos turisticos',
+            is_active: true,
+          },
         ],
         error: null,
       });
@@ -543,6 +554,16 @@ describe('> models/place', () => {
           {
             id: expect.any(String),
             name: 'bares',
+            is_active: true,
+          },
+          {
+            id: expect.any(String),
+            name: 'praias',
+            is_active: true,
+          },
+          {
+            id: expect.any(String),
+            name: 'pontos turisticos',
             is_active: true,
           },
         ],
@@ -708,7 +729,7 @@ describe('> models/place', () => {
         userDataSource,
         placeDataSource,
         {
-          category_id: categories[0].id,
+          category_id: categories![0].id,
           city: 'Vila Velha',
           country: 'Brasil',
           created_by: adminUser,

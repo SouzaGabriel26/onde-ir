@@ -43,7 +43,7 @@ export default async function Page({ searchParams }: Props) {
   return (
     <DashboardContent
       key={Date.now()}
-      categories={categories}
+      categories={categories ?? []}
       places={places}
       userId={user?.id ?? ''}
       userNotAuthenticated={!!userNotAuthenticated}
