@@ -372,4 +372,8 @@ const schema = z.object({
     .max(5, {
       message: '"evaluation" precisa ser um número menor que 6.',
     }),
+  rank_by_rating: z.boolean({
+    invalid_type_error: '"rank_by_rating" precisa ser um booleano.',
+    required_error: '"rank_by_rating" é obrigatório.',
+  }),
 });

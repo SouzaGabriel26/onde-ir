@@ -92,13 +92,14 @@ export function createPlaceDataSource() {
   type FindAllInput = {
     limit: number;
     offset: number;
+    rank_by_rating?: boolean;
     where?: {
-      searchTerm?: string;
+      search_term?: string;
       status?: PlaceStatus;
       state?: string;
       name?: string;
-      categoryName?: string;
-      createdBy?: string;
+      category_name?: string;
+      created_by?: string;
     };
   };
 
@@ -111,7 +112,7 @@ export function createPlaceDataSource() {
   };
 
   async function findAll(input: FindAllInput) {
-    const { limit, offset, where } = input;
+    const { limit, offset, rank_by_rating, where } = input;
 
     const queryText = sql`
       WITH places_average_rating AS (
@@ -136,7 +137,7 @@ export function createPlaceDataSource() {
       GROUP BY
         places.id, places_average_rating.average_rating, categories.name
       ORDER BY
-        places.created_at DESC
+        $orderBy
       LIMIT $1
       OFFSET $2;
     `;
@@ -154,6 +155,7 @@ export function createPlaceDataSource() {
     let index = query.values.length;
 
     setWhereClause();
+    setOrderByClause();
 
     const queryResult = await placePool.query(query);
     return (queryResult?.rows as Array<FindAllPlacesOutput>) ?? [];
@@ -161,10 +163,10 @@ export function createPlaceDataSource() {
     function setWhereClause() {
       const whereClauses = [];
 
-      if (where?.searchTerm) {
+      if (where?.search_term) {
         // postgres POSIX operator
         whereClauses.push(sql`places.name ~* `.concat(`$${++index}`));
-        query.values.push(where.searchTerm);
+        query.values.push(where.search_term);
       }
 
       if (where?.state) {
@@ -182,14 +184,14 @@ export function createPlaceDataSource() {
         query.values.push(where.status);
       }
 
-      if (where?.categoryName) {
+      if (where?.category_name) {
         whereClauses.push(sql`categories.name = `.concat(`$${++index}`));
-        query.values.push(where.categoryName);
+        query.values.push(where.category_name);
       }
 
-      if (where?.createdBy) {
+      if (where?.created_by) {
         whereClauses.push(sql`created_by = `.concat(`$${++index}`));
-        query.values.push(where.createdBy);
+        query.values.push(where.created_by);
       }
 
       let whereClauseText = '';
@@ -198,6 +200,16 @@ export function createPlaceDataSource() {
       }
 
       query.text = query.text.replace('$whereClause', whereClauseText);
+    }
+
+    function setOrderByClause() {
+      let orderBy = sql`places.created_at DESC`;
+
+      if (rank_by_rating) {
+        orderBy = sql`places_average_rating.average_rating DESC`;
+      }
+
+      query.text = query.text.replace('$orderBy', orderBy);
     }
   }
 

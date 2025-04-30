@@ -24,13 +24,14 @@ export const place = Object.freeze({
 type FindAllInput = {
   page?: ValidationSchema['page'];
   limit?: ValidationSchema['limit'];
+  rank_by_rating?: ValidationSchema['rank_by_rating'];
   where?: {
-    searchTerm?: string;
+    search_term?: string;
     status?: PlaceStatus;
     state?: string;
     name?: string;
-    categoryName?: string;
-    createdBy?: string;
+    category_name?: string;
+    created_by?: string;
   };
 };
 
@@ -49,16 +50,18 @@ async function findAll(
     {
       page: input.page,
       limit: input.limit,
-      search_term: input.where?.searchTerm,
+      rank_by_rating: input.rank_by_rating,
+      search_term: input.where?.search_term,
       state: input.where?.state,
       name: input.where?.name,
       status: input.where?.status,
-      category_name: input.where?.categoryName,
-      created_by: input.where?.createdBy,
+      category_name: input.where?.category_name,
+      created_by: input.where?.created_by,
     },
     {
       limit: 'required',
       page: 'required',
+      rank_by_rating: 'optional',
       search_term: 'optional',
       state: 'optional',
       name: 'optional',
@@ -76,7 +79,15 @@ async function findAll(
   const places = await placeDataSource.findAll({
     offset,
     limit,
-    where: input.where,
+    rank_by_rating: secureInput.rank_by_rating,
+    where: {
+      category_name: secureInput.category_name,
+      search_term: secureInput.search_term,
+      state: secureInput.state,
+      name: secureInput.name,
+      created_by: secureInput.created_by,
+      status: secureInput.status,
+    },
   });
 
   return operationResult.success(places);
