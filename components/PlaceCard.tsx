@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-
 import { CustomTooltip } from '@/components/CustomTooltip';
 import { Badge } from '@/components/ui/Badge';
 import type { FindAllPlacesOutput } from '@/data/place';
@@ -11,24 +9,27 @@ import type { Route } from 'next';
 import { useState } from 'react';
 
 import { PostPreviewModal } from './PostPreviewModal';
+import { ImageCard } from './landing-page/ImageCard';
 
-type ImageCardProps = {
+type PlaceCardProps = {
   place: FindAllPlacesOutput;
   variant?: 'md' | 'lg';
   className?: string;
   href?: Route;
   isOwner?: boolean;
   clickable?: boolean;
+  tipDisabled?: boolean;
 };
 
-export function ImageCard({
+export function PlaceCard({
   className,
   place,
   variant = 'lg',
   href,
   isOwner,
   clickable = true,
-}: ImageCardProps) {
+  tipDisabled,
+}: PlaceCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -36,59 +37,51 @@ export function ImageCard({
       <div
         onClick={() => clickable && setIsModalOpen(true)}
         className={sanitizeClassName(
-          'rounded-[20px] w-[258px] md:w-[380px] relative',
+          'rounded-[20px] w-full max-w-[90vw] sm:max-w-[280px] md:max-w-[380px] relative cursor-pointer',
           className,
         )}
       >
-        <CustomTooltip tip={place.name}>
-          <div className="rounded-[20px] border border-[#DCE2E5] transition hover:shadow-md overflow-hidden group">
-            <div
-              className={sanitizeClassName(
-                'relative',
-                'h-44 md:h-52 w-[258px] md:w-[380px] overflow-hidden',
-              )}
-            >
-              <Image
-                fill
-                src={place.images[0]}
-                alt={place.name}
-                sizes="100%"
-                className="absolute inset-0 rounded-t-[20px] object-cover group-hover:scale-105 transition duration-300"
+        <CustomTooltip tip={place.name} disabled={tipDisabled}>
+          <div className="rounded-[20px] border transition hover:shadow-md overflow-hidden group">
+            <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <ImageCard
+                image={place.images[0]}
+                name={place.name}
+                index={0}
+                className="rounded-t-[20px]"
               />
             </div>
 
             <div
               className={sanitizeClassName(
                 `
-                  w-[258px] md:w-[380px]
-                  space-y-2
-                  rounded-b-[20px]
-                  bg-white
-                  p-6
-                  md:flex
-                  md:justify-between
-                `,
-                variant === 'md' ? 'h-20' : 'h-28',
+            w-full
+            space-y-2
+            rounded-b-[20px]
+            px-4
+            py-3
+            md:flex
+            md:justify-between
+          `,
+                variant === 'md' ? 'h-24' : 'h-32',
               )}
             >
-              <div>
+              <div className="flex flex-col gap-2 justify-center w-full">
                 <h3
                   className={`
-                    overflow-hidden
-                    text-start
-                    text-ellipsis
-                    whitespace-nowrap
-                    text-base
-                    md:text-xl
-                    items-end
-                    font-semibold
-                    leading-5
-                    text-[#123952]
-                  `}
+              overflow-hidden
+              text-start
+              text-ellipsis
+              whitespace-nowrap
+              text-base
+              md:text-xl
+              font-semibold
+              leading-5
+            `}
                 >
                   {place.name}
                 </h3>
-                <p className="text-start text-muted-foreground text-sm md:text-sm flex gap-1 items-center">
+                <p className="text-start text-muted-foreground text-sm flex gap-1 items-center">
                   <MapPin className="size-4" />
                   {place.city}, {place.state}
                 </p>
@@ -109,6 +102,7 @@ export function ImageCard({
           </Badge>
         )}
       </div>
+
       <PostPreviewModal
         place={place}
         href={href ?? '#'}
