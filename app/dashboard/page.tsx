@@ -31,8 +31,8 @@ export default async function Page({ searchParams }: Props) {
         userIsRequestingPendingPosts || adminIsRequestingPendingPosts
           ? 'PENDING'
           : 'APPROVED',
-      categoryName: type,
-      createdBy: userIsRequestingPendingPosts ? user.id : undefined,
+      category_name: type,
+      created_by: userIsRequestingPendingPosts ? user.id : undefined,
     },
   });
 
