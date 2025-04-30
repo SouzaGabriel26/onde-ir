@@ -15,7 +15,9 @@ export async function PlaceDetails({ place }: { place: FindAllPlacesOutput }) {
   const placeDataSource = createPlaceDataSource();
   const userDataSource = createUserDataSource();
 
-  const categories = await placeDataSource.findCategories();
+  const categories = await placeDataSource.findCategories({
+    limit: 100,
+  });
   const postCategory = categories.find(
     (category) => category.id === place.category_id,
   );

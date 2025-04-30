@@ -64,7 +64,11 @@ export async function PlacesSection() {
             }}
             exit={{ opacity: 0, transition: { duration: 0.1 } }}
           >
-            <PlaceCard tipDisabled place={place} />
+            <PlaceCard
+              tipDisabled
+              place={place}
+              href={`/dashboard/posts/${place.id}`}
+            />
           </AnimatedComponent>
         ))}
       </div>
