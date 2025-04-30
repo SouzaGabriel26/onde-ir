@@ -4,14 +4,14 @@ import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-type PlaceCardProps = {
+type ImageCardProps = {
   name: string;
   image: string;
   index: number;
   className?: string;
 };
 
-export function PlaceCard({ name, image, index, className }: PlaceCardProps) {
+export function ImageCard({ name, image, index, className }: ImageCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}

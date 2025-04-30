@@ -200,7 +200,7 @@ describe('> models/place', () => {
 
       const result = await place.findAll(placeDataSource, {
         where: {
-          categoryName: 'restaurantes',
+          category_name: 'restaurantes',
           status: 'APPROVED',
         },
       });

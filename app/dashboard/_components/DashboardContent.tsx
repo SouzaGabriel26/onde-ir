@@ -1,7 +1,8 @@
 'use client';
 
+import { AnimatedComponent } from '@/components/AnimatedComponent';
 import { DebouncedInput } from '@/components/DebouncedInput';
-import { ImageCard } from '@/components/ImageCard';
+import { PlaceCard } from '@/components/PlaceCard';
 import { Button } from '@/components/ui/Button';
 import type { Category, FindAllPlacesOutput } from '@/data/place';
 import { Loader2Icon } from 'lucide-react';
@@ -191,18 +192,31 @@ export function DashboardContent({
             pt-4
             justify-items-center
             items-center
+            w-full
           `}
         >
-          {filteredPlaces?.map((place) => {
+          {filteredPlaces?.map((place, index) => {
             const isPostOwner = place.created_by === userId;
 
             return (
-              <ImageCard
-                href={`/dashboard/posts/${place.id}` as Route}
+              <AnimatedComponent
                 key={place.id}
-                isOwner={isPostOwner}
-                place={place}
-              />
+                variant="div"
+                className="w-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.5, delay: index * 0.1 },
+                }}
+              >
+                <PlaceCard
+                  href={`/dashboard/posts/${place.id}` as Route}
+                  key={place.id}
+                  isOwner={isPostOwner}
+                  place={place}
+                />
+              </AnimatedComponent>
             );
           })}
 

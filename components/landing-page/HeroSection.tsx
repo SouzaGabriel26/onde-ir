@@ -3,17 +3,17 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { AnimatedComponent } from '../AnimatedComponent';
 import { Button } from '../ui/Button';
-import { PlaceCard } from './PlaceCard';
+import { ImageCard } from './ImageCard';
 
 export function HeroSection() {
   return (
     <main
       className={`
-        mt-5
         flex
         flex-col
         items-center
         justify-between
+        min-h-screen
         gap-6
         xl:flex-row
         pt-2
@@ -111,7 +111,7 @@ export function HeroSection() {
             const isFirst = index === 0;
 
             return (
-              <PlaceCard
+              <ImageCard
                 index={index}
                 key={place.name + index}
                 name={place.name}

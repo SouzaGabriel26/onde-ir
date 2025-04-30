@@ -9,13 +9,22 @@ import type { ReactNode } from 'react';
 type CustomTooltipProps = {
   tip: string;
   children: ReactNode;
+  disabled?: boolean;
 };
 
-export function CustomTooltip({ tip, children }: CustomTooltipProps) {
+export function CustomTooltip({
+  tip,
+  children,
+  disabled = false,
+}: CustomTooltipProps) {
+  if (disabled) {
+    return <>{children}</>;
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>{children}</TooltipTrigger>
+        <TooltipTrigger className="w-full">{children}</TooltipTrigger>
         <TooltipContent>
           <p>{tip}</p>
         </TooltipContent>

@@ -7,7 +7,7 @@ export async function getPlacesAction(searchTerm: string) {
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     where: {
-      searchTerm: searchTerm.toLowerCase(),
+      search_term: searchTerm.toLowerCase(),
       status: 'APPROVED',
     },
   });
@@ -40,9 +40,9 @@ export async function loadPlacesAction({
     page,
     where: {
       status,
-      categoryName: postCategory,
-      createdBy: userId,
-      searchTerm: searchTerm ? searchTerm?.toLowerCase() : undefined,
+      category_name: postCategory,
+      created_by: userId,
+      search_term: searchTerm ? searchTerm?.toLowerCase() : undefined,
     },
   });
 
