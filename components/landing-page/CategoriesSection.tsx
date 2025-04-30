@@ -34,8 +34,12 @@ export function CategoriesSection() {
           variant="h3"
           className="text-3xl font-bold"
           initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          whileInView={{
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.5, delay: 0.2 },
+          }}
+          exit={{ opacity: 0, transition: { duration: 0.1 } }}
         >
           Categorias
         </AnimatedComponent>
@@ -43,11 +47,15 @@ export function CategoriesSection() {
         <Link href="/dashboard">
           <Button asChild variant="ghost">
             <AnimatedComponent
-              className="flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-1"
               variant="button"
               initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              whileInView={{
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.5, delay: 0.2 },
+              }}
+              exit={{ opacity: 0, transition: { duration: 0.1 } }}
             >
               Ver todas
               <ChevronRight className="size-4" />
@@ -61,8 +69,12 @@ export function CategoriesSection() {
           <motion.div
             key={category.name}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.5, delay: index * 0.3 },
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.1 } }}
           >
             <motion.div
               whileHover={{ y: -5 }}
