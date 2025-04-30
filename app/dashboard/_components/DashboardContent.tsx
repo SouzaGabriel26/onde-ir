@@ -65,13 +65,19 @@ export function DashboardContent({
   }
 
   const loadMorePlaces = useCallback(async () => {
+    if (!isToFetchMorePlaces) {
+      return;
+    }
+
     setIsLoadingPlaces(true);
     const nextPage = page + 1;
 
     setTimeout(async () => {
+      const limit = 10;
+
       const { places: newPlaces } = await loadPlacesAction({
         page: nextPage,
-        limit: 10,
+        limit,
         postCategory: postCategory ?? undefined,
         status:
           userIsRequestingPendingPosts || adminIsRequestingPendingPosts
@@ -81,14 +87,19 @@ export function DashboardContent({
         searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
       });
 
-      if (newPlaces.length === 0) {
+      const newUniquePlaces = newPlaces.filter(
+        (newPlaces) =>
+          !filteredPlaces?.some((place) => place.id === newPlaces.id),
+      );
+      setFilteredPlaces((prev) => [...(prev ?? []), ...newUniquePlaces]);
+      setPage(nextPage);
+
+      if (newPlaces.length < limit) {
         setIsToFetchMorePlaces(false);
         setIsLoadingPlaces(false);
         return;
       }
 
-      setPage(nextPage);
-      setFilteredPlaces((prev) => [...(prev ?? []), ...newPlaces]);
       setIsLoadingPlaces(false);
     }, 500);
   }, [
@@ -98,17 +109,19 @@ export function DashboardContent({
     userIsRequestingPendingPosts,
     adminIsRequestingPendingPosts,
     userId,
+    filteredPlaces,
+    isToFetchMorePlaces,
   ]);
 
   useEffect(() => {
-    if (inView && isToFetchMorePlaces) {
+    if (inView) {
       loadMorePlaces();
     }
 
     if (!inView) {
       setIsToFetchMorePlaces(true);
     }
-  }, [inView, loadMorePlaces, isToFetchMorePlaces]);
+  }, [inView, loadMorePlaces]);
 
   return (
     <div className="flex h-full flex-col gap-4 w-full px-1">
