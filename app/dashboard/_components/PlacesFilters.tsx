@@ -29,8 +29,8 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
   const hiddenCategoryNames = rest.map(({ name }) => name);
 
   return (
-    <nav className="flex justify-center">
-      <ul className="flex gap-2 bg-muted p-1 rounded-lg items-center text-xs md:text-base">
+    <nav className="flex justify-arro h-9">
+      <ul className="flex bg-muted p-1 rounded-lg justify-around items-center text-md">
         <motion.li
           onHoverStart={() => setHoveredTab('all')}
           onHoverEnd={() => setHoveredTab(currentFilter ?? 'all')}
@@ -87,22 +87,22 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
         <li>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" className="text-xs md:text-base px-2">
+              <Button variant="ghost" className="text-md px-2">
                 <motion.span
                   onHoverStart={() => setHoveredTab('see-more')}
                   onHoverEnd={() => setHoveredTab(currentFilter ?? 'all')}
-                  className="cursor-pointer relative"
+                  className="cursor-pointer relative text-md"
                 >
                   Ver mais
-                  {hoveredTab === 'see-more' ||
-                  hiddenCategoryNames.includes(currentFilter!) ? (
+                  {(hoveredTab === 'see-more' ||
+                    hiddenCategoryNames.includes(currentFilter!)) && (
                     <motion.div
                       layoutId="underline"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
+                      className="absolute bottom-0 left-0 right-0 bg-primary h-[2px]"
                       transition={{ duration: 0.4 }}
                       exit={{ opacity: 0, transition: { duration: 0.4 } }}
                     />
-                  ) : null}
+                  )}
                 </motion.span>
               </Button>
             </PopoverTrigger>

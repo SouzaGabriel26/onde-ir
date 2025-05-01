@@ -12,6 +12,8 @@ import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { getPlacesAction, loadPlacesAction } from '../actions';
+import { ChangeVisualizationType } from './ChangeVisualizationType';
+import { FilterBy } from './FilterBy';
 import { PlacesFilters } from './PlacesFilters';
 
 type PlacesListProps = {
@@ -126,56 +128,61 @@ export function DashboardContent({
   return (
     <div className="flex h-full flex-col gap-4 w-full px-1">
       <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
-        <fieldset className="flex gap-2 w-full justify-center md:justify-start items-center">
-          <DebouncedInput
-            className="w-full"
-            onDebounce={handleSearch}
-            placeholder="Qual lugar você procura?"
-          />
+        <div className="flex gap-4 flex-col md:flex-row">
+          <fieldset className="flex gap-2 justify-center md:justify-start items-center">
+            <DebouncedInput
+              className="w-full"
+              onDebounce={handleSearch}
+              placeholder="Qual lugar você procura?"
+            />
 
-          {isLoading && <Loader2Icon className="size-6 animate-spin" />}
-        </fieldset>
+            {isLoading && <Loader2Icon className="size-6 animate-spin" />}
+          </fieldset>
 
-        <div className="flex gap-4 flex-col items-center md:flex-row">
-          <Link
-            href={
-              userNotAuthenticated
-                ? '/auth/signin?redirect_reason=not-authenticated'
-                : '/dashboard/posts/create'
-            }
-          >
-            <Button variant="outline" className="text-xs md:text-base">
-              {userNotAuthenticated
-                ? 'Faça login para criar uma postagem'
-                : 'Crie sua postagem'}
-            </Button>
-          </Link>
+          <PlacesFilters categories={categories} />
+        </div>
 
-          {userId && (
-            <Link
-              className={
-                status === 'user-pendings' ? 'pointer-events-none' : ''
-              }
-              href={{
-                href: '/dashboard/',
-                query: {
-                  status: 'user-pendings',
-                },
-              }}
-            >
-              <Button
-                variant="outline"
-                disabled={status === 'user-pendings'}
-                className="text-xs md:text-base"
-              >
-                Ver seus posts pendentes
-              </Button>
-            </Link>
-          )}
+        <div className="flex gap-4 items-center flex-row">
+          <FilterBy />
+
+          <ChangeVisualizationType />
         </div>
       </form>
 
-      <PlacesFilters categories={categories} />
+      <div className="flex items-center flex-col md:flex-row justify-center">
+        <Link
+          href={
+            userNotAuthenticated
+              ? '/auth/signin?redirect_reason=not-authenticated'
+              : '/dashboard/posts/create'
+          }
+        >
+          <Button className="text-xs md:text-base">
+            {userNotAuthenticated
+              ? 'Faça login para criar uma postagem'
+              : 'Crie sua postagem'}
+          </Button>
+        </Link>
+
+        {userId && (
+          <Link
+            className={status === 'user-pendings' ? 'pointer-events-none' : ''}
+            href={{
+              href: '/dashboard/',
+              query: {
+                status: 'user-pendings',
+              },
+            }}
+          >
+            <Button
+              disabled={status === 'user-pendings'}
+              className="text-xs md:text-base"
+            >
+              Ver seus posts pendentes
+            </Button>
+          </Link>
+        )}
+      </div>
 
       {status === 'user-pendings' && (
         <Link className="w-fit self-end" href="/dashboard/" as="/dashboard/">
