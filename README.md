@@ -47,10 +47,19 @@ cp .env .env.local
 
 ### Step 2:
 
-- With docker running on your machine, run the development server:
+- With docker running on your machine, following commands:
 
-> it will compose the docker file and run development server
+> it will compose the docker file
+```bash
+pnpm services:up
+```
 
+> run pending migrations
+```bash
+pnpm migrate:up
+```
+
+> run development server
 ```bash
 pnpm dev
 ```
