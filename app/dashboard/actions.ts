@@ -2,12 +2,20 @@
 
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
+import type { FilterByOptionValues } from './_components/FilterBy';
 
-export async function getPlacesAction(searchTerm: string) {
+type GetPlacesActionInput = {
+  searchTerm?: string;
+  rankBy?: FilterByOptionValues;
+};
+
+export async function getPlacesAction(input: GetPlacesActionInput) {
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
+    rank_by_rating: input.rankBy === 'rating',
+    rank_by_comments: input.rankBy === 'comments',
     where: {
-      search_term: searchTerm.toLowerCase(),
+      search_term: input.searchTerm?.toLowerCase(),
       status: 'APPROVED',
     },
   });
@@ -20,6 +28,7 @@ export async function getPlacesAction(searchTerm: string) {
 type LoadPlacesActionInput = {
   page: number;
   limit: number;
+  rankBy?: FilterByOptionValues;
   status: 'APPROVED' | 'PENDING';
   userId?: string;
   postCategory?: string;
@@ -33,11 +42,14 @@ export async function loadPlacesAction({
   status,
   userId,
   searchTerm,
+  rankBy,
 }: LoadPlacesActionInput) {
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     limit,
     page,
+    rank_by_rating: rankBy === 'rating',
+    rank_by_comments: rankBy === 'comments',
     where: {
       status,
       category_name: postCategory,
