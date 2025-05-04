@@ -9,11 +9,11 @@ import { Loader2Icon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { startTransition, useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { getPlacesAction, loadPlacesAction } from '../actions';
 import { ChangeVisualizationType } from './ChangeVisualizationType';
-import { FilterBy } from './FilterBy';
+import { FilterBy, type FilterByOptionValues } from './FilterBy';
 import { PlacesFilters } from './PlacesFilters';
 
 type PlacesListProps = {
@@ -46,6 +46,8 @@ export function DashboardContent({
   const [isLoadingMorePlaces, setIsLoadingPlaces] = useState(false);
   const [isToFetchMorePlaces, setIsToFetchMorePlaces] = useState(true);
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [selectedFilterBy, setSelectedFilterBy] =
+    useState<FilterByOptionValues>('recent');
 
   const [page, setPage] = useState(1);
 
@@ -54,13 +56,28 @@ export function DashboardContent({
     setDebouncedSearch(value);
 
     if (!value) {
-      setPage(1);
-      setFilteredPlaces(places);
-      setIsLoading(false);
-      return;
+      startTransition(() => {
+        setPage(1);
+      });
     }
 
-    const { places: filteredPlaces } = await getPlacesAction(value);
+    const { places: filteredPlaces } = await getPlacesAction({
+      searchTerm: value ? value.toLowerCase() : undefined,
+      rankBy: selectedFilterBy,
+    });
+
+    setFilteredPlaces(filteredPlaces);
+    setIsLoading(false);
+  }
+
+  async function handleChangeFilterBy(value: FilterByOptionValues) {
+    setIsLoading(true);
+    setSelectedFilterBy(value);
+
+    const { places: filteredPlaces } = await getPlacesAction({
+      searchTerm: debouncedSearch ? debouncedSearch : undefined,
+      rankBy: value,
+    });
 
     setFilteredPlaces(filteredPlaces);
     setIsLoading(false);
@@ -87,6 +104,7 @@ export function DashboardContent({
             : 'APPROVED',
         userId: userIsRequestingPendingPosts ? userId : undefined,
         searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
+        rankBy: selectedFilterBy,
       });
 
       const newUniquePlaces = newPlaces.filter(
@@ -113,6 +131,7 @@ export function DashboardContent({
     userId,
     filteredPlaces,
     isToFetchMorePlaces,
+    selectedFilterBy,
   ]);
 
   useEffect(() => {
@@ -129,27 +148,32 @@ export function DashboardContent({
     <div className="flex h-full flex-col gap-4 w-full px-1">
       <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
         <div className="flex gap-4 flex-col md:flex-row">
-          <fieldset className="flex gap-2 justify-center md:justify-start items-center">
+          <fieldset className="flex gap-2 justify-center md:justify-start items-center relative">
             <DebouncedInput
               className="w-full"
               onDebounce={handleSearch}
               placeholder="Qual lugar você procura?"
             />
 
-            {isLoading && <Loader2Icon className="size-6 animate-spin" />}
+            {isLoading && (
+              <Loader2Icon className="size-4 animate-spin absolute top-2.5 right-2.5" />
+            )}
           </fieldset>
 
           <PlacesFilters categories={categories} />
         </div>
 
         <div className="flex gap-4 items-center flex-row">
-          <FilterBy />
+          <FilterBy
+            selectedValue={selectedFilterBy}
+            onChange={handleChangeFilterBy}
+          />
 
           <ChangeVisualizationType />
         </div>
       </form>
 
-      <div className="flex items-center flex-col md:flex-row justify-center">
+      <div className="flex items-center flex-col gap-2 md:flex-row justify-center md:justify-start">
         <Link
           href={
             userNotAuthenticated
@@ -201,7 +225,7 @@ export function DashboardContent({
           className={`
             grid
             grid-cols-1
-            lg:grid-cols-2
+            md:grid-cols-2
             2xl:grid-cols-3
             rounded-[20px]
             gap-10
@@ -232,7 +256,6 @@ export function DashboardContent({
               >
                 <PlaceCard
                   href={`/dashboard/posts/${place.id}` as Route}
-                  key={place.id}
                   isOwner={isPostOwner}
                   place={place}
                 />
