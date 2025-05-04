@@ -1,9 +1,10 @@
 'use client';
 
+import { AvatarPreview } from '@/components/AvatarPreview';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Input } from '@/components/ui/Input';
 import { setInputError } from '@/utils/inputError';
-import { useActionState } from 'react';
+import { useActionState, useRef, useState } from 'react';
 import { type SignUpActionResponse, signUpAction } from './store';
 
 const initialState: SignUpActionResponse = {
@@ -19,6 +20,25 @@ export function SignupForm() {
     signUpAction,
     initialState,
   );
+  const imgInputRef = useRef<HTMLInputElement>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+  function onUploadFile(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return;
+
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const previewUrl = URL.createObjectURL(file);
+    setPhotoPreview(previewUrl);
+  }
+
+  function onRemovePhoto() {
+    if (!imgInputRef.current) return;
+
+    imgInputRef.current.value = '';
+    setPhotoPreview(null);
+  }
 
   return (
     <form className="flex flex-col gap-3" action={action}>
@@ -86,11 +106,20 @@ export function SignupForm() {
       />
 
       <Input
+        onChange={onUploadFile}
+        ref={imgInputRef}
         type="file"
         accept="image/png, image/jpg, image/jpeg"
         name="avatar_file"
         className="cursor-pointer hover:bg-muted transition-all"
       />
+
+      <div className="w-full flex justify-center">
+        <AvatarPreview
+          onRemove={onRemovePhoto}
+          previewUrl={photoPreview ?? ''}
+        />
+      </div>
 
       <SubmitButton>Cadastrar</SubmitButton>
     </form>
