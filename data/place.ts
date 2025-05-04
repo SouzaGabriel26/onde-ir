@@ -93,6 +93,7 @@ export function createPlaceDataSource() {
     limit: number;
     offset: number;
     rank_by_rating?: boolean;
+    rank_by_comments?: boolean;
     where?: {
       search_term?: string;
       status?: PlaceStatus;
@@ -112,7 +113,7 @@ export function createPlaceDataSource() {
   };
 
   async function findAll(input: FindAllInput) {
-    const { limit, offset, rank_by_rating, where } = input;
+    const { limit, offset, rank_by_rating, rank_by_comments, where } = input;
 
     const queryText = sql`
       WITH places_average_rating AS (
@@ -122,20 +123,28 @@ export function createPlaceDataSource() {
         FROM places
         LEFT JOIN place_ratings ON place_ratings.place_id = places.id
         GROUP BY places.id
+      ),
+      place_images_agg AS (
+        SELECT
+          place_id,
+          array_remove(ARRAY_AGG(url), NULL) AS images
+        FROM place_images
+        GROUP BY place_id
       )
       SELECT
         places.*,
-        array_remove(ARRAY_AGG(place_images.url), NULL) AS images,
+        COALESCE(place_images_agg.images, '{}') AS images,
         places_average_rating.average_rating,
         categories.name as category_name
       FROM
         places
-        LEFT JOIN place_images ON place_images.place_id = places.id
+        LEFT JOIN place_images_agg ON place_images_agg.place_id = places.id
         LEFT JOIN places_average_rating ON places_average_rating.id = places.id
         LEFT JOIN categories ON categories.id = places.category_id
+        LEFT JOIN place_comments ON place_comments.place_id = places.id
         $whereClause
       GROUP BY
-        places.id, places_average_rating.average_rating, categories.name
+        places.id, places_average_rating.average_rating, categories.name, place_images_agg.images
       ORDER BY
         $orderBy
       LIMIT $1
@@ -207,6 +216,10 @@ export function createPlaceDataSource() {
 
       if (rank_by_rating) {
         orderBy = sql`places_average_rating.average_rating DESC`;
+      }
+
+      if (rank_by_comments) {
+        orderBy = sql`COUNT(place_comments.id) DESC`;
       }
 
       query.text = query.text.replace('$orderBy', orderBy);

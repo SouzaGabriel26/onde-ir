@@ -376,4 +376,8 @@ const schema = z.object({
     invalid_type_error: '"rank_by_rating" precisa ser um booleano.',
     required_error: '"rank_by_rating" é obrigatório.',
   }),
+  rank_by_comments: z.boolean({
+    invalid_type_error: '"rank_by_comments" precisa ser um booleano.',
+    required_error: '"rank_by_comments" é obrigatório.',
+  }),
 });

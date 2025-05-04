@@ -35,9 +35,11 @@ export function PlaceCard({
   return (
     <>
       <div
-        onClick={() => clickable && setIsModalOpen(true)}
+        onClick={() => {
+          if (clickable) setIsModalOpen(true);
+        }}
         className={sanitizeClassName(
-          'rounded-[20px] w-full max-w-[90vw] sm:max-w-[280px] md:max-w-[380px] relative cursor-pointer',
+          'rounded-[20px] w-full max-w-[90vw] md:max-w-[380px] relative cursor-pointer',
           className,
         )}
       >
@@ -55,29 +57,29 @@ export function PlaceCard({
             <div
               className={sanitizeClassName(
                 `
-            w-full
-            space-y-2
-            rounded-b-[20px]
-            px-4
-            py-3
-            md:flex
-            md:justify-between
-          `,
+                  w-full
+                  space-y-2
+                  rounded-b-[20px]
+                  px-4
+                  py-3
+                  md:flex
+                  md:justify-between
+                `,
                 variant === 'md' ? 'h-24' : 'h-32',
               )}
             >
               <div className="flex flex-col gap-2 justify-center w-full">
                 <h3
                   className={`
-              overflow-hidden
-              text-start
-              text-ellipsis
-              whitespace-nowrap
-              text-base
-              md:text-xl
-              font-semibold
-              leading-5
-            `}
+                    overflow-hidden
+                    text-start
+                    text-ellipsis
+                    whitespace-nowrap
+                    text-base
+                    md:text-xl
+                    font-semibold
+                    leading-5
+                  `}
                 >
                   {place.name}
                 </h3>
