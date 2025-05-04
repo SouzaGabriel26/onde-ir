@@ -25,6 +25,7 @@ type FindAllInput = {
   page?: ValidationSchema['page'];
   limit?: ValidationSchema['limit'];
   rank_by_rating?: ValidationSchema['rank_by_rating'];
+  rank_by_comments?: ValidationSchema['rank_by_comments'];
   where?: {
     search_term?: string;
     status?: PlaceStatus;
@@ -51,6 +52,7 @@ async function findAll(
       page: input.page,
       limit: input.limit,
       rank_by_rating: input.rank_by_rating,
+      rank_by_comments: input.rank_by_comments,
       search_term: input.where?.search_term,
       state: input.where?.state,
       name: input.where?.name,
@@ -62,6 +64,7 @@ async function findAll(
       limit: 'required',
       page: 'required',
       rank_by_rating: 'optional',
+      rank_by_comments: 'optional',
       search_term: 'optional',
       state: 'optional',
       name: 'optional',
@@ -80,6 +83,7 @@ async function findAll(
     offset,
     limit,
     rank_by_rating: secureInput.rank_by_rating,
+    rank_by_comments: secureInput.rank_by_comments,
     where: {
       category_name: secureInput.category_name,
       search_term: secureInput.search_term,
