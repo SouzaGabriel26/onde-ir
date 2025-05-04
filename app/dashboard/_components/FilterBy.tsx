@@ -6,9 +6,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/Popover';
-import { FilterIcon } from 'lucide-react';
+import { Check, FilterIcon } from 'lucide-react';
 
-export function FilterBy() {
+export type FilterByOptionValues = 'rating' | 'comments' | 'recent';
+
+type FilterByOption = {
+  label: string;
+  value: FilterByOptionValues;
+};
+
+const filterByOptions: Array<FilterByOption> = [
+  {
+    label: 'Melhor Avaliado',
+    value: 'rating',
+  },
+  {
+    label: 'Mais comentado',
+    value: 'comments',
+  },
+  {
+    label: 'Mais recente',
+    value: 'recent',
+  },
+];
+
+type FilterByProps = {
+  onChange: (value: FilterByOptionValues) => void;
+  selectedValue: FilterByOptionValues;
+};
+
+export function FilterBy({ onChange, selectedValue }: FilterByProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -18,21 +45,23 @@ export function FilterBy() {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-fit p-1">
-        <span className="py-2 px-4 text-sm border-b font-bold">
+      <PopoverContent className="w-44 p-1">
+        <span className="py-2 px-4 text-sm border-b font-bold w-full flex">
           Filtrar por
         </span>
 
         <div className="flex flex-col w-full pt-2">
-          <Button variant="ghost" className="w-full cursor-default">
-            Categoria 1
-          </Button>
-          <Button variant="ghost" className="w-full cursor-default">
-            Categoria 2
-          </Button>
-          <Button variant="ghost" className="w-full cursor-default">
-            Categoria 3
-          </Button>
+          {filterByOptions.map((option) => (
+            <Button
+              onClick={() => onChange(option.value)}
+              key={option.value}
+              variant="ghost"
+              className="w-full cursor-default flex items-center justify-between"
+            >
+              {option.label}
+              {selectedValue === option.value && <Check className="size-4" />}
+            </Button>
+          ))}
         </div>
       </PopoverContent>
     </Popover>
