@@ -29,8 +29,8 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
   const hiddenCategoryNames = rest.map(({ name }) => name);
 
   return (
-    <nav className="flex justify-arro h-9">
-      <ul className="flex bg-muted p-1 rounded-lg justify-around items-center text-md">
+    <nav className="flex justify-around h-9">
+      <ul className="flex bg-muted p-1 rounded-md justify-around items-center text-md">
         <motion.li
           onHoverStart={() => setHoveredTab('all')}
           onHoverEnd={() => setHoveredTab(currentFilter ?? 'all')}
