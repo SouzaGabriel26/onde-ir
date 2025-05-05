@@ -3,24 +3,23 @@
 import { Button } from '@/components/ui/Button';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { Grid3X3, List } from 'lucide-react';
-import { useState } from 'react';
 
-export function ChangeVisualizationType() {
-  const [visualizationType, setVisualizationType] = useState<'grid' | 'list'>(
-    'grid',
-  );
+type ChangeVisualizationTypeProps = {
+  visualizationType: 'grid' | 'list';
+  onChangeVisualizationType: (type: 'grid' | 'list') => void;
+};
 
-  function handleChangeVisualizationType(type: 'grid' | 'list') {
-    setVisualizationType(type);
-  }
-
+export function ChangeVisualizationType({
+  visualizationType,
+  onChangeVisualizationType,
+}: ChangeVisualizationTypeProps) {
   return (
     <div className="flex items-center">
       <Button
         title="Grid"
         type="button"
         variant="outline"
-        onClick={() => handleChangeVisualizationType('grid')}
+        onClick={() => onChangeVisualizationType('grid')}
         className={sanitizeClassName(
           'p-2 rounded-r-none size-8',
           visualizationType === 'grid' ? 'bg-accent' : '',
@@ -32,7 +31,7 @@ export function ChangeVisualizationType() {
         title="List"
         type="button"
         variant="outline"
-        onClick={() => handleChangeVisualizationType('list')}
+        onClick={() => onChangeVisualizationType('list')}
         className={sanitizeClassName(
           'p-2 rounded-l-none size-8',
           visualizationType === 'list' ? 'bg-accent' : '',
