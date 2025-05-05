@@ -3,8 +3,11 @@
 import { AnimatedComponent } from '@/components/AnimatedComponent';
 import { DebouncedInput } from '@/components/DebouncedInput';
 import { PlaceCard } from '@/components/PlaceCard';
+import { PlaceListItem } from '@/components/PlaceListItem';
 import { Button } from '@/components/ui/Button';
 import type { Category, FindAllPlacesOutput } from '@/data/place';
+import { useVisualizationType } from '@/hooks/useVisualizationType';
+import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { Loader2Icon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
@@ -42,6 +45,7 @@ export function DashboardContent({
   const [filteredPlaces, setFilteredPlaces] = useState<
     FindAllPlacesOutput[] | null
   >(places);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMorePlaces, setIsLoadingPlaces] = useState(false);
   const [isToFetchMorePlaces, setIsToFetchMorePlaces] = useState(true);
@@ -49,7 +53,8 @@ export function DashboardContent({
   const [selectedFilterBy, setSelectedFilterBy] =
     useState<FilterByOptionValues>('recent');
 
-  const [page, setPage] = useState(1);
+  const { visualizationType, handleChangeVisualizationType } =
+    useVisualizationType();
 
   async function handleSearch(value: string) {
     setIsLoading(true);
@@ -169,7 +174,10 @@ export function DashboardContent({
             onChange={handleChangeFilterBy}
           />
 
-          <ChangeVisualizationType />
+          <ChangeVisualizationType
+            onChangeVisualizationType={handleChangeVisualizationType}
+            visualizationType={visualizationType}
+          />
         </div>
       </form>
 
@@ -222,8 +230,8 @@ export function DashboardContent({
         </div>
       ) : (
         <section
-          className={`
-            grid
+          className={sanitizeClassName(
+            `
             grid-cols-1
             md:grid-cols-2
             2xl:grid-cols-3
@@ -237,7 +245,9 @@ export function DashboardContent({
             justify-items-center
             items-center
             w-full
-          `}
+          `,
+            visualizationType === 'grid' ? 'grid' : 'flex flex-col gap-3',
+          )}
         >
           {filteredPlaces?.map((place, index) => {
             const isPostOwner = place.created_by === userId;
@@ -254,11 +264,19 @@ export function DashboardContent({
                   transition: { duration: 0.5, delay: index * 0.1 },
                 }}
               >
-                <PlaceCard
-                  href={`/dashboard/posts/${place.id}` as Route}
-                  isOwner={isPostOwner}
-                  place={place}
-                />
+                {visualizationType === 'grid' ? (
+                  <PlaceCard
+                    href={`/dashboard/posts/${place.id}` as Route}
+                    isOwner={isPostOwner}
+                    place={place}
+                  />
+                ) : (
+                  <PlaceListItem
+                    href={`/dashboard/posts/${place.id}` as Route}
+                    isOwner={isPostOwner}
+                    place={place}
+                  />
+                )}
               </AnimatedComponent>
             );
           })}
