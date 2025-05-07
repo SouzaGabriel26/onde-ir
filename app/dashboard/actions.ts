@@ -2,6 +2,8 @@
 
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
+import { env } from '@/utils/env';
+import { sleep } from '@/utils/sleep';
 import type { FilterByOptionValues } from './_components/FilterBy';
 
 type GetPlacesActionInput = {
@@ -44,6 +46,8 @@ export async function loadPlacesAction({
   searchTerm,
   rankBy,
 }: LoadPlacesActionInput) {
+  if (env.NODE_ENV !== 'production') await sleep();
+
   const placeDataSource = createPlaceDataSource();
   const { data: places } = await place.findAll(placeDataSource, {
     limit,
