@@ -39,7 +39,7 @@ export function PlaceCard({
           if (clickable) setIsModalOpen(true);
         }}
         className={sanitizeClassName(
-          'rounded-[20px] w-full max-w-[90vw] md:max-w-[380px] relative cursor-pointer',
+          'rounded-[20px] w-full relative cursor-pointer',
           className,
         )}
       >

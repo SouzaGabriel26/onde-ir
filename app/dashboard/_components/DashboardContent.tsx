@@ -28,6 +28,8 @@ type PlacesListProps = {
   adminIsRequestingPendingPosts: boolean;
 };
 
+const PER_PAGE = 10;
+
 export function DashboardContent({
   places,
   categories,
@@ -96,37 +98,33 @@ export function DashboardContent({
     setIsLoadingPlaces(true);
     const nextPage = page + 1;
 
-    setTimeout(async () => {
-      const limit = 10;
+    const { places: newPlaces } = await loadPlacesAction({
+      page: nextPage,
+      limit: PER_PAGE,
+      postCategory: postCategory ?? undefined,
+      status:
+        userIsRequestingPendingPosts || adminIsRequestingPendingPosts
+          ? 'PENDING'
+          : 'APPROVED',
+      userId: userIsRequestingPendingPosts ? userId : undefined,
+      searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
+      rankBy: selectedFilterBy,
+    });
 
-      const { places: newPlaces } = await loadPlacesAction({
-        page: nextPage,
-        limit,
-        postCategory: postCategory ?? undefined,
-        status:
-          userIsRequestingPendingPosts || adminIsRequestingPendingPosts
-            ? 'PENDING'
-            : 'APPROVED',
-        userId: userIsRequestingPendingPosts ? userId : undefined,
-        searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
-        rankBy: selectedFilterBy,
-      });
+    const newUniquePlaces = newPlaces.filter(
+      (newPlaces) =>
+        !filteredPlaces?.some((place) => place.id === newPlaces.id),
+    );
+    setFilteredPlaces((prev) => [...(prev ?? []), ...newUniquePlaces]);
+    setPage(nextPage);
 
-      const newUniquePlaces = newPlaces.filter(
-        (newPlaces) =>
-          !filteredPlaces?.some((place) => place.id === newPlaces.id),
-      );
-      setFilteredPlaces((prev) => [...(prev ?? []), ...newUniquePlaces]);
-      setPage(nextPage);
-
-      if (newPlaces.length < limit) {
-        setIsToFetchMorePlaces(false);
-        setIsLoadingPlaces(false);
-        return;
-      }
-
+    if (newPlaces.length < PER_PAGE) {
+      setIsToFetchMorePlaces(false);
       setIsLoadingPlaces(false);
-    }, 500);
+      return;
+    }
+
+    setIsLoadingPlaces(false);
   }, [
     page,
     postCategory,
@@ -240,7 +238,6 @@ export function DashboardContent({
             overflow-y-auto
             scrollbar
             pb-16
-            px-4
             pt-4
             justify-items-center
             items-center
@@ -251,6 +248,7 @@ export function DashboardContent({
         >
           {filteredPlaces?.map((place, index) => {
             const isPostOwner = place.created_by === userId;
+            const animationDelay = (index % PER_PAGE) * 0.1;
 
             return (
               <AnimatedComponent
@@ -261,7 +259,7 @@ export function DashboardContent({
                 animate={{
                   opacity: 1,
                   y: 0,
-                  transition: { duration: 0.5, delay: index * 0.1 },
+                  transition: { duration: 0.5, delay: animationDelay },
                 }}
               >
                 {visualizationType === 'grid' ? (
