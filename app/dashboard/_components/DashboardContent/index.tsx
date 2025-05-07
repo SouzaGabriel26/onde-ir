@@ -6,18 +6,15 @@ import { PlaceCard } from '@/components/PlaceCard';
 import { PlaceListItem } from '@/components/PlaceListItem';
 import { Button } from '@/components/ui/Button';
 import type { Category, FindAllPlacesOutput } from '@/data/place';
-import { useVisualizationType } from '@/hooks/useVisualizationType';
 import { sanitizeClassName } from '@/utils/sanitizeClassName';
 import { Loader2Icon } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { startTransition, useCallback, useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { getPlacesAction, loadPlacesAction } from '../actions';
-import { ChangeVisualizationType } from './ChangeVisualizationType';
-import { FilterBy, type FilterByOptionValues } from './FilterBy';
-import { PlacesFilters } from './PlacesFilters';
+import { ChangeVisualizationType } from '../ChangeVisualizationType';
+import { FilterBy } from '../FilterBy';
+import { PlacesFilters } from '../PlacesFilters';
+import { useDashboardContent } from './useDashboardContent';
 
 type PlacesListProps = {
   places: FindAllPlacesOutput[] | null;
@@ -42,110 +39,24 @@ export function DashboardContent({
   const status = searchParams.get('status');
   const postCategory = searchParams.get('type');
 
-  const { ref, inView } = useInView();
-
-  const [filteredPlaces, setFilteredPlaces] = useState<
-    FindAllPlacesOutput[] | null
-  >(places);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingMorePlaces, setIsLoadingPlaces] = useState(false);
-  const [isToFetchMorePlaces, setIsToFetchMorePlaces] = useState(true);
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [selectedFilterBy, setSelectedFilterBy] =
-    useState<FilterByOptionValues>('recent');
-
-  const { visualizationType, handleChangeVisualizationType } =
-    useVisualizationType();
-
-  async function handleSearch(value: string) {
-    setIsLoading(true);
-    setDebouncedSearch(value);
-
-    if (!value) {
-      startTransition(() => {
-        setPage(1);
-      });
-    }
-
-    const { places: filteredPlaces } = await getPlacesAction({
-      searchTerm: value ? value.toLowerCase() : undefined,
-      rankBy: selectedFilterBy,
-    });
-
-    setFilteredPlaces(filteredPlaces);
-    setIsLoading(false);
-  }
-
-  async function handleChangeFilterBy(value: FilterByOptionValues) {
-    setIsLoading(true);
-    setSelectedFilterBy(value);
-
-    const { places: filteredPlaces } = await getPlacesAction({
-      searchTerm: debouncedSearch ? debouncedSearch : undefined,
-      rankBy: value,
-    });
-
-    setFilteredPlaces(filteredPlaces);
-    setIsLoading(false);
-  }
-
-  const loadMorePlaces = useCallback(async () => {
-    if (!isToFetchMorePlaces) {
-      return;
-    }
-
-    setIsLoadingPlaces(true);
-    const nextPage = page + 1;
-
-    const { places: newPlaces } = await loadPlacesAction({
-      page: nextPage,
-      limit: PER_PAGE,
-      postCategory: postCategory ?? undefined,
-      status:
-        userIsRequestingPendingPosts || adminIsRequestingPendingPosts
-          ? 'PENDING'
-          : 'APPROVED',
-      userId: userIsRequestingPendingPosts ? userId : undefined,
-      searchTerm: debouncedSearch ? debouncedSearch.toLowerCase() : undefined,
-      rankBy: selectedFilterBy,
-    });
-
-    const newUniquePlaces = newPlaces.filter(
-      (newPlaces) =>
-        !filteredPlaces?.some((place) => place.id === newPlaces.id),
-    );
-    setFilteredPlaces((prev) => [...(prev ?? []), ...newUniquePlaces]);
-    setPage(nextPage);
-
-    if (newPlaces.length < PER_PAGE) {
-      setIsToFetchMorePlaces(false);
-      setIsLoadingPlaces(false);
-      return;
-    }
-
-    setIsLoadingPlaces(false);
-  }, [
-    page,
+  const {
+    isLoadingFilter,
+    isLoadingMorePlaces,
+    visualizationType,
+    filteredPlaces,
+    selectedFilterBy,
+    handleSearch,
+    loadMorePlacesRef,
+    handleChangeFilterBy,
+    handleChangeVisualizationType,
+  } = useDashboardContent({
+    userId,
+    places,
+    perPage: PER_PAGE,
     postCategory,
-    debouncedSearch,
     userIsRequestingPendingPosts,
     adminIsRequestingPendingPosts,
-    userId,
-    filteredPlaces,
-    isToFetchMorePlaces,
-    selectedFilterBy,
-  ]);
-
-  useEffect(() => {
-    if (inView) {
-      loadMorePlaces();
-    }
-
-    if (!inView) {
-      setIsToFetchMorePlaces(true);
-    }
-  }, [inView, loadMorePlaces]);
+  });
 
   return (
     <div className="flex h-full flex-col gap-4 w-full px-1">
@@ -158,7 +69,7 @@ export function DashboardContent({
               placeholder="Qual lugar você procura?"
             />
 
-            {isLoading && (
+            {isLoadingFilter && (
               <Loader2Icon className="size-4 animate-spin absolute top-2.5 right-2.5" />
             )}
           </fieldset>
@@ -279,7 +190,10 @@ export function DashboardContent({
             );
           })}
 
-          <div className="grid w-full place-items-center" ref={ref}>
+          <div
+            className="grid w-full place-items-center"
+            ref={loadMorePlacesRef}
+          >
             <div className="flex gap-2 text-muted-foreground">
               {isLoadingMorePlaces && (
                 <>
