@@ -12,21 +12,13 @@ export const database = Object.freeze({
   endAllPools,
 });
 
-const {
-  DEFAULT_POSTGRES_USER,
-  DEFAULT_POSTGRES_PASSWORD,
-  DEFAULT_POSTGRES_HOST,
-  DEFAULT_POSTGRES_PORT,
-  DEFAULT_POSTGRES_DB,
-} = env;
-
-const databaseConnectionString = `postgres://${DEFAULT_POSTGRES_USER}:${DEFAULT_POSTGRES_PASSWORD}@${DEFAULT_POSTGRES_HOST}:${DEFAULT_POSTGRES_PORT}/${DEFAULT_POSTGRES_DB}`;
+const { DEFAULT_DATABASE_URL } = env;
 
 const pools: Array<pg.Pool> = [];
 
 function getClient() {
   const client = new pg.Client({
-    connectionString: databaseConnectionString,
+    connectionString: DEFAULT_DATABASE_URL,
     ssl: IS_PRODUCTION_ENVIRONMENT,
   });
 
@@ -48,7 +40,7 @@ function getClient() {
 
 function getPool() {
   const pool = new pg.Pool({
-    connectionString: databaseConnectionString,
+    connectionString: DEFAULT_DATABASE_URL,
     ssl: IS_PRODUCTION_ENVIRONMENT,
     max: 20,
   });
