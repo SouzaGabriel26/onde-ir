@@ -16,10 +16,14 @@ const { DEFAULT_DATABASE_URL } = env;
 
 const pools: Array<pg.Pool> = [];
 
+const sslConfig = IS_PRODUCTION_ENVIRONMENT
+  ? { rejectUnauthorized: false }
+  : false;
+
 function getClient() {
   const client = new pg.Client({
     connectionString: DEFAULT_DATABASE_URL,
-    ssl: IS_PRODUCTION_ENVIRONMENT,
+    ssl: sslConfig,
   });
 
   async function query(query: Query) {
@@ -41,7 +45,7 @@ function getClient() {
 function getPool() {
   const pool = new pg.Pool({
     connectionString: DEFAULT_DATABASE_URL,
-    ssl: IS_PRODUCTION_ENVIRONMENT,
+    ssl: sslConfig,
     max: 20,
   });
 
