@@ -23,8 +23,10 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
 
   const [hoveredTab, setHoveredTab] = useState<string>(currentFilter ?? 'all');
 
+  if (categories.length === 0) return null;
+
   const [first, second, ...rest] = categories;
-  const firstTwoCatgories = [first, second];
+  const firstTwoCatgories = [first, second].filter(Boolean);
 
   const hiddenCategoryNames = rest.map(({ name }) => name);
 
@@ -54,10 +56,10 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
           )}
         </motion.li>
 
-        {firstTwoCatgories.map(({ id, name }) => (
+        {firstTwoCatgories?.map((category) => (
           <motion.li
-            key={id}
-            onHoverStart={() => setHoveredTab(name)}
+            key={category?.id}
+            onHoverStart={() => setHoveredTab(category?.name)}
             onHoverEnd={() => setHoveredTab(currentFilter ?? 'all')}
             className="cursor-pointer relative m-2"
           >
@@ -65,15 +67,15 @@ export function PlacesFilters({ categories }: PlacesFiltersProps) {
               href={{
                 href: '/dashboard/',
                 query: {
-                  type: name,
+                  type: category?.name,
                 },
               }}
               className="capitalize rounded-[calc(var(--radius)-2px)]"
             >
-              {name}
+              {category?.name}
             </Link>
 
-            {hoveredTab === name && (
+            {hoveredTab === category?.name && (
               <motion.div
                 layoutId="underline"
                 className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
