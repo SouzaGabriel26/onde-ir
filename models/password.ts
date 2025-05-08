@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 import type { AuthenticationDataSource } from '@/data/authentication';
 import { createUserDataSource } from '@/data/user';
