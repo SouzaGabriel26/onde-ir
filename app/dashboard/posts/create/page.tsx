@@ -34,9 +34,8 @@ export default async function Page() {
     where: { is_active: true },
   });
 
-  const activeCategories: Category[] = categories.filter(
-    (category) => category.is_active,
-  );
+  const activeCategories: Category[] =
+    categories?.filter((category) => category.is_active) ?? [];
 
   if (uncompletedPlaceCreated) {
     return (
