@@ -59,7 +59,7 @@ export function DashboardContent({
   });
 
   return (
-    <div className="flex h-full flex-col gap-4 w-full px-1">
+    <div className="flex h-full flex-col gap-4 w-full px-1 mt-10">
       <form className="flex flex-col md:flex-row gap-4 justify-center items-center md:justify-between">
         <div className="flex gap-4 flex-col md:flex-row">
           <fieldset className="flex gap-2 justify-center md:justify-start items-center relative">

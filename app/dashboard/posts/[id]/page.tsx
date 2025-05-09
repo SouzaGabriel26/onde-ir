@@ -62,7 +62,7 @@ export default async function Page(props: PageProps) {
   );
 
   return (
-    <div className="w-full space-y-6 pb-10">
+    <div className="w-full space-y-6 p-6 pb-14">
       {loggedUser && !userAlreadyEvaluated && (
         <RatingModal
           key={Date.now()}

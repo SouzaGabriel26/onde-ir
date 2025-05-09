@@ -30,7 +30,7 @@ export default async function Page(props: Props) {
   }
 
   return (
-    <form className="space-y-4">
+    <form className="space-y-4 p-6">
       <div className="flex gap-2 items-center">
         <h1 className="text-xl">Adicionar imagens ao local:</h1>
         <h2>{placeFound.name}</h2>
