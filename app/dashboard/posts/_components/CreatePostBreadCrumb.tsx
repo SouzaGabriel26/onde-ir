@@ -1,6 +1,7 @@
 'use client';
 
 import { CustomBreadcrumb } from '@/components/CustomBreadcrumb';
+import { ImageIcon, MapPinIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -13,27 +14,19 @@ export function CreatePostBreadCrumb() {
     pathName.includes('/dashboard/posts') &&
     pathName.includes('/create/images');
 
-  const isCreatePostResultPage =
-    pathName.includes('/dashboard/posts') &&
-    pathName.includes('/create/result');
-
   const progress = useMemo(() => {
     if (isCreatePostPage) {
-      return 0;
+      return 10;
     }
 
     if (isCreatePostImagesPage) {
-      return 50;
-    }
-
-    if (isCreatePostResultPage) {
       return 100;
     }
 
     return 0;
-  }, [isCreatePostPage, isCreatePostImagesPage, isCreatePostResultPage]);
+  }, [isCreatePostPage, isCreatePostImagesPage]);
 
-  if (!isCreatePostPage && !isCreatePostImagesPage && !isCreatePostResultPage) {
+  if (!isCreatePostPage && !isCreatePostImagesPage) {
     return null;
   }
 
@@ -43,18 +36,15 @@ export function CreatePostBreadCrumb() {
       items={[
         {
           label: 'Lugar',
-          finished: isCreatePostImagesPage || isCreatePostResultPage,
+          finished: isCreatePostImagesPage,
           isCurrent: isCreatePostPage,
+          icon: <MapPinIcon className="w-4 h-4" />,
         },
         {
           label: 'Imagens',
-          finished: isCreatePostResultPage,
+          finished: !isCreatePostImagesPage,
           isCurrent: isCreatePostImagesPage,
-        },
-        {
-          label: 'Resultado',
-          finished: false,
-          isCurrent: isCreatePostResultPage,
+          icon: <ImageIcon className="w-4 h-4" />,
         },
       ]}
     />

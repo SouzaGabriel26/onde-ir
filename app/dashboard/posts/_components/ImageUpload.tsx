@@ -24,6 +24,8 @@ type ImageUploadProps = {
   successRedirectPath?: string;
 };
 
+// TODO: Images preview
+
 const MAX_FILES = 5;
 
 export function ImageUpload({
