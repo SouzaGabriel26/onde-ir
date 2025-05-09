@@ -47,7 +47,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex-1 space-y-4">
+    <div className="flex-1 space-y-4 p-6">
       <CreatePlaceForm
         createdBy={userData?.id}
         stateOptions={stateOptions}

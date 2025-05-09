@@ -1,5 +1,6 @@
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
+import { CheckIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
@@ -15,13 +16,19 @@ export default async function Page(props: Props) {
   const { data: createdPlace } = await place.findById(placeDataSource, id);
 
   return (
-    <div className="flex items-center justify-center rounded-md py-10">
-      <div className="max-w-2xl w-full shadow-md rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-center text-green-600 mb-6">
-          Parabéns! Seu post foi criado com sucesso.
-        </h1>
+    <div className="flex items-center justify-center rounded-md">
+      <div className="max-w-3xl w-full shadow-md">
+        <div className="p-6 bg-gradient-to-r flex flex-col justify-center items-center gap-3 from-green-500 to-emerald-600 rounded-t-md">
+          <span className="bg-white/20 rounded-full p-2">
+            <CheckIcon className="w-6 h-" />
+          </span>
 
-        <div className="space-y-4">
+          <h1 className="text-2xl font-bold text-center">
+            Parabéns! Seu post foi criado com sucesso.
+          </h1>
+        </div>
+
+        <div className="space-y-4 p-6">
           <h2 className="text-xl font-semibold">
             Informações sobre o lugar recentemente criado:
           </h2>
@@ -57,7 +64,7 @@ export default async function Page(props: Props) {
           <div className="mt-6 text-center">
             <Link
               href={`/dashboard/posts/${id}`}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
             >
               Clique para ver mais informações sobre o seu post
             </Link>
