@@ -95,6 +95,15 @@ export async function createPlaceImagesAction(input: CreatePlaceImagesInput) {
   return revalidatePath('/dashboard/posts/create');
 }
 
+export async function createPlacesWithImagesAction(
+  placeInput: CreatePlaceInput,
+  images: string[],
+) {
+  // TODO: implement this method to create noth place and images
+
+  console.log({ placeInput, images });
+}
+
 export async function dismissUncompletedPlaceCreationAction() {
   // TODO: delete uncompleted place created from database
 
@@ -115,4 +124,11 @@ export async function getUncompletedPlaceCreatedAction() {
     : null;
 
   return parsedUncompletedPlace;
+}
+
+export async function getPlaceById(id: string) {
+  const placeDataSource = createPlaceDataSource();
+  const result = await place.findById(placeDataSource, id);
+
+  return result;
 }

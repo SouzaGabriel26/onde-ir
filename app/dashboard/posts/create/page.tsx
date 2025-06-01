@@ -1,13 +1,13 @@
 import { type Category, createPlaceDataSource } from '@/data/place';
 import { verify } from '@/utils/verify';
 
-import { CreatePlaceForm } from '@/app/dashboard/posts/_components/CreatePlaceForm';
 import { UncompletedPlaceCreation } from '@/app/dashboard/posts/_components/UncompletedPlaceCreation';
-import { getUncompletedPlaceCreatedAction } from '@/app/dashboard/posts/actions';
+import { getUncompletedPlaceCreatedAction } from '@/app/dashboard/posts/create/_components/actions';
 import type { Option } from '@/components/CustomSelect';
 import { location } from '@/models/location';
 import { place } from '@/models/place';
 import { RedirectType, redirect } from 'next/navigation';
+import { CreatePlaceForm } from './_components/CreatePlaceForm';
 
 export default async function Page() {
   const { error: userNotAuthenticated } = await verify.loggedUser();

@@ -2,7 +2,7 @@ import { ImageUpload } from '@/app/dashboard/posts/_components/ImageUpload';
 import {
   createPlaceImagesAction,
   getUncompletedPlaceCreatedAction,
-} from '@/app/dashboard/posts/actions';
+} from '@/app/dashboard/posts/create/_components/actions';
 import { createPlaceDataSource } from '@/data/place';
 import { place } from '@/models/place';
 import { constants } from '@/utils/constants';
