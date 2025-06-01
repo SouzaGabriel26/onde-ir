@@ -3,7 +3,6 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { Button } from '@/components/ui/Button';
-import { CreatePostBreadCrumb } from './_components/CreatePostBreadCrumb';
 
 type Props = {
   children: ReactNode;
@@ -23,7 +22,6 @@ export default async function Layout({ children }: Props) {
           </Button>
         </Link>
         <div className="border rounded-md w-full overflow-y-auto scrollbar">
-          <CreatePostBreadCrumb />
           {children}
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/Button';
 import { redirect } from 'next/navigation';
-import { dismissUncompletedPlaceCreationAction } from '../actions';
+import { dismissUncompletedPlaceCreationAction } from '../create/_components/actions';
 
 export type UncompletedPlaceCreationProps = {
   placeId: string;
