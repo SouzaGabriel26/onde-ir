@@ -17,7 +17,7 @@ export function CustomBreadcrumb({ items, progress }: CustomBreadcrumbProps) {
   const currentStepNumber = items.findIndex((item) => item.isCurrent) + 1;
 
   return (
-    <nav className="space-y-2 p-6 pb-0 max-w-3xl w-full">
+    <nav className="space-y-2 p-6 pb-0 w-full">
       <div className="flex justify-between w-full items-center">
         <h2 className="font-semibold text-lg">Criar novo post</h2>
         <p className="text-muted-foreground text-sm">
