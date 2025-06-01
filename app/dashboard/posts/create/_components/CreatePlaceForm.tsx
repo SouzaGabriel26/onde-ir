@@ -7,12 +7,12 @@ import type { City } from '@/types';
 import { setInputError } from '@/utils/inputError';
 import { Loader2Icon } from 'lucide-react';
 import { useActionState, useState } from 'react';
+import { ButtonLoading } from '../../_components/ButtonLoading';
 import {
   type CreatePlaceActionResponse,
   createPlaceAction,
   getCitiesByStateAction,
-} from '../actions';
-import { ButtonLoading } from './ButtonLoading';
+} from './actions';
 
 const initialState: CreatePlaceActionResponse = {
   data: null,
@@ -22,16 +22,18 @@ const initialState: CreatePlaceActionResponse = {
   },
 };
 
-type CreatePlaceFormProps = {
+export type CreatePlaceFormProps = {
   createdBy?: string;
   stateOptions: Option[];
   activeCategories: Category[];
+  onSave?: () => void;
 };
 
 export function CreatePlaceForm({
   createdBy,
   stateOptions,
   activeCategories,
+  onSave,
 }: CreatePlaceFormProps) {
   const [createdPlaceResult, action, _isPending] = useActionState(
     createPlaceAction,
@@ -68,7 +70,13 @@ export function CreatePlaceForm({
   }));
 
   return (
-    <form action={action} className="flex-1 space-y-4">
+    <form
+      action={async (formData: FormData) => {
+        action(formData);
+        onSave?.();
+      }}
+      className="flex-1 space-y-4"
+    >
       <Input
         name="name"
         placeholder="Nome*"
